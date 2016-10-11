@@ -64,16 +64,32 @@ public class FetchModel {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public String fetch(String urlString,String message) {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+			URI uri = new URI(urlString + URLEncoder.encode(message, "utf-8"));
+			httpGet.setURI(uri);
+			HttpResponse response = httpClient.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(entity.getContent()));
+			String line = null;
+			while ((line = bufferedReader.readLine()) != null) {
+				stringBuilder.append(line);
+			}
+		} catch (URISyntaxException | UnsupportedOperationException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return stringBuilder.toString();
+	}
+	
+	public static void main(String[] args) {
+		FetchModel fetchModel = new FetchModel();
+		String url = "http://localhost:3030/database1";
+		String query = "";
+		System.out.println(fetchModel.fetch(url, query));
+		
+	}
 
-	public boolean modelExist(URL url, String message) {
-		
-	}
-	
-	public String fetchModel(String urlString,String message) {
-		
-	}
-	
-	public String fetchModel(URL url, String message) {
-		
-	}
 }
