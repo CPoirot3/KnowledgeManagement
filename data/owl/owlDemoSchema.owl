@@ -1,0 +1,73 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+	xmlns:owl="http://www.w3.org/2002/07/owl#" 
+	xmlns:eg="urn:x-hp:eg/" 
+	xmlns="urn:x-hp:eg/" 
+	xml:base="urn:x-hp:eg/">
+	
+	<owl:Class rdf:about="urn:x-hp:eg/Computer">
+		<rdfs:subClassOf>
+			<rdf:Description>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="urn:x-hp:eg/hasMotherBoard"/>
+						<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</rdf:Description>
+		</rdfs:subClassOf>
+	</owl:Class>
+
+	<owl:Class rdf:about="urn:x-hp:eg/MotherBoard"/>
+	<owl:Class rdf:about="urn:x-hp:eg/GraphicsCard"/>
+	<owl:Class rdf:about="urn:x-hp:eg/Bundle"/>
+
+	<owl:Class rdf:about="urn:x-hp:eg/GameBundle">
+		<rdfs:subClassOf rdf:resource="urn:x-hp:eg/Bundle"/>
+	</owl:Class>
+
+	<eg:GraphicsCard rdf:about="urn:x-hp:eg/budgetGraphics"/>
+	<eg:GraphicsCard rdf:about="urn:x-hp:eg/gamingGraphics"/>
+	<eg:GraphicsCard rdf:about="urn:x-hp:eg/DTPGraphics"/>
+
+	<owl:ObjectProperty rdf:about="urn:x-hp:eg/hasComponent">
+		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+	</owl:ObjectProperty>
+
+	<owl:ObjectProperty rdf:about="urn:x-hp:eg/hasGraphics">
+		<rdfs:range rdf:resource="urn:x-hp:eg/GraphicsCard"/>
+		<rdfs:subPropertyOf rdf:resource="urn:x-hp:eg/hasComponent"/>
+	</owl:ObjectProperty>
+
+	<owl:ObjectProperty rdf:about="urn:x-hp:eg/hasMotherBoard">
+		<rdfs:range rdf:resource="urn:x-hp:eg/MotherBoard"/>
+		<rdfs:domain rdf:resource="urn:x-hp:eg/Computer"/>
+		<rdfs:subPropertyOf rdf:resource="urn:x-hp:eg/hasComponent"/>
+	</owl:ObjectProperty>
+
+	<owl:ObjectProperty rdf:about="urn:x-hp:eg/hasBundle">
+		<rdfs:domain rdf:resource="urn:x-hp:eg/Computer"/>
+	</owl:ObjectProperty>
+
+	<owl:Class rdf:about="urn:x-hp:eg/GamingComputer">
+		<owl:equivalentClass>
+			<rdf:Description>
+				<owl:intersectionOf rdf:parseType="Collection">
+			
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="urn:x-hp:eg/hasComponent"/>
+						<owl:hasValue rdf:resource="urn:x-hp:eg/gamingGraphics"/>
+					</owl:Restriction>
+				
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="urn:x-hp:eg/hasBundle"/>
+						<owl:someValuesFrom rdf:resource="urn:x-hp:eg/GameBundle"/>
+					</owl:Restriction>
+				
+					<owl:Class rdf:about="urn:x-hp:eg/Computer"/>
+				</owl:intersectionOf>
+			</rdf:Description>
+		</owl:equivalentClass>
+	</owl:Class>
+</rdf:RDF>
