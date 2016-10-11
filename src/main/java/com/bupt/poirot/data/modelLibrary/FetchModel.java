@@ -20,6 +20,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.jena.sparql.pfunction.library.str;
 
 /**
  * @author Poirot
@@ -36,11 +37,11 @@ public class FetchModel {
 		httpPost = new HttpPost();
 	}
 	
-	public boolean modelExist(String urlString, String message) throws UnsupportedEncodingException {
+	public boolean modelExist(String urlString, String queryString, String mark) throws UnsupportedEncodingException {
 		 
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
-			URI uri = new URI(urlString + URLEncoder.encode(message, "utf-8"));
+			URI uri = new URI(urlString + URLEncoder.encode(queryString, "utf-8"));
 			httpGet.setURI(uri);
 			HttpResponse response = httpClient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
@@ -53,22 +54,23 @@ public class FetchModel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (parse(stringBuilder.toString())) {
+		if (parse(stringBuilder.toString(), mark)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	private boolean parse(String string) {
+	// mark stands for domain
+	private boolean parse(String response, String mark) {
 		// TODO Auto-generated method stub
-		return false;
+		return response.contains(mark);
 	}
 	
-	public String fetch(String urlString,String message) {
+	public String fetch(String urlString, String sparqlQuery) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
-			URI uri = new URI(urlString + URLEncoder.encode(message, "utf-8"));
+			URI uri = new URI(urlString + URLEncoder.encode(sparqlQuery, "utf-8"));
 			httpGet.setURI(uri);
 			HttpResponse response = httpClient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
@@ -86,9 +88,11 @@ public class FetchModel {
 	
 	public static void main(String[] args) {
 		FetchModel fetchModel = new FetchModel();
-		String url = "http://localhost:3030/database1";
+		String url = "http://localhost:3030/database1?query=";
 		String query = "";
-		System.out.println(fetchModel.fetch(url, query));
+		
+		String model = fetchModel.fetch(url, query);
+		System.out.println(model);
 		
 	}
 
