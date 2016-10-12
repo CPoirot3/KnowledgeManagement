@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,11 +28,13 @@ public class DealData {
 
 	HashMap<String, LinkedList<SingleData>> map;
 	LinkedList<SingleData> totalDataByTime;
-	SaveToMongo saveToMongo = new SaveToMongo();
-	
+	SaveToMongo saveToMongo;
+	DateFormat formater;
 	public DealData() {
 		map = new HashMap<>();
 		totalDataByTime = new LinkedList<>();
+		saveToMongo = new SaveToMongo();
+		formater = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
 	}
 	
 	public static void stringToOwl(String message) {
@@ -104,7 +109,15 @@ public class DealData {
 		String states = strs[4]; // 状态
 		String speed = strs[5]; // 速度
 		String direction = strs[6]; // 方向
-
+		
+		try {
+			Date date = formater.parse(time);
+			System.out.println(date.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(time);
 		// JsonObject jsonObject = new JsonObject();
 		// jsonObject.put("CarName", carName);
 		// jsonObject.put("Time", time);

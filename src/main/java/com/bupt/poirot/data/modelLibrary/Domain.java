@@ -3,7 +3,7 @@ package com.bupt.poirot.data.modelLibrary;
 import java.util.HashMap;
 
 public class Domain {
-	public static HashMap<String, String> domainMap;
+	public static HashMap<String, String> domainMap = new HashMap<>();
 	
 	public static String getDomain(String message) {
 		return domainMap.containsKey(message) ? domainMap.get(message) : "交通";
