@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,18 +28,18 @@ public class DealData {
 	public static double MAXY = Double.MIN_VALUE;
 	public static double MINY = Double.MAX_VALUE;
 
-	HashMap<String, LinkedList<SingleData>> map;
+	HashMap<String, LinkedList<SingleData>> carToInfoMap;
 	LinkedList<SingleData> totalDataByTime;
 	SaveToMongo saveToMongo;
 	DateFormat formater;
 	public DealData() {
-		map = new HashMap<>();
+		carToInfoMap = new HashMap<>();
 		totalDataByTime = new LinkedList<>();
 		saveToMongo = new SaveToMongo();
 		formater = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
 	}
 	
-	public static void stringToOwl(String message) {
+	public static void stringToObject(String message) {
 		if (message == null || message.length() == 0) {
 			return;
 		}
@@ -50,13 +52,11 @@ public class DealData {
 		String states = strs[4]; // 状态
 		String speed = strs[5]; // 速度
 		String direction = strs[6]; // 方向
-		
-		System.out.println(time + " " + x + " " + y);
-
-		for (String string : strs) {
-			System.out.print(string + " ");
-		}
-		System.out.println();
+//		System.out.println(time + " " + x + " " + y);
+//		for (String string : strs) {
+//			System.out.print(string + " ");
+//		}
+//		System.out.println();
 
 		String carURI = "http://bupt/wangfu/" + carName;
 		// create an empty Model
@@ -73,111 +73,147 @@ public class DealData {
 		System.out.println();
 	}
 
-	public void deduce(String message) {
+	public void deduce(int sectionsNumber) {
+		int[] count = new int[sectionsNumber * sectionsNumber];
+		double width = (MAXX - MINX) / sectionsNumber;
+		double height = (MAXY - MINY) / sectionsNumber;
+		System.out.println("total size : " + totalDataByTime.size());
+		System.out.println(width + "  " + height);
+		System.out.println(MINX + " " + MINY);
+		System.out.println(MAXX + " " + MAXY);
+		Collections.sort(totalDataByTime, new Comparator<SingleData>() {
 
-	}
-
-	public void dealSingleData(String line) {
-		String[] strs = line.split(",");
-		if (strs.length < 4)
-			return;
-		double y = Double.parseDouble(strs[2]);
-		double x = Double.parseDouble(strs[3]);
-		if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
-			return;
+			@Override
+			public int compare(SingleData o1, SingleData o2) {
+				// TODO Auto-generated method stub
+				return (int)(o1.time - o2.time);
+			}
+		});
+		for (SingleData singleData : totalDataByTime) {
+			float x = singleData.x;
+			float y = singleData.y;
+			int m = (int)((x - MINX) / width);
+			int n = (int)((y - MINY) / height);
+			if (x == MAXX) {
+				m--;
+			} 
+			if (y == MAXY) {
+				n--;
+			}
+			count[m * sectionsNumber + n]++;
+//			try {
+//				count[m * sectionsNumber + n]++;
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				System.out.println(x + " " + y + "  " + (m * sectionsNumber + n));
+//			}
 		}
-		MAXX = Math.max(x, MAXX);
-		MINX = Math.min(x, MINX);
-		MAXY = Math.max(y, MAXY);
-		MINY = Math.min(y, MINY);
-	}
-	
-	public void deduceWithSection(int count) {
 		
+		for (int i = 0; i < count.length; i++) {
+			System.out.print(count[i] + " ");
+		}
+//		for ()
 	}
+
+//	public void dealSingleData(String line) {
+//		String[] strs = line.split(",");
+//		if (strs.length < 4)
+//			return;
+//		double y = Double.parseDouble(strs[2]);
+//		double x = Double.parseDouble(strs[3]);
+//		if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
+//			return;
+//		}
+//		MAXX = Math.max(x, MAXX);
+//		MINX = Math.min(x, MINX);
+//		MAXY = Math.max(y, MAXY);
+//		MINY = Math.min(y, MINY);
+//	}
 	
 	public void deal(String message) {
 		if (message == null || message.length() == 0) {
 			return;
 		}
 		String[] strs = message.split(",");
-
+		if (strs.length < 7) {
+			return;
+		}
+//		System.out.println(message);
 		String carName = strs[0]; // 车名
 		String time = strs[1]; // 时间
-		String x = strs[2]; // 经度
-		String y = strs[3]; // 纬度
-		String states = strs[4]; // 状态
-		String speed = strs[5]; // 速度
-		String direction = strs[6]; // 方向
-		
+		boolean states = strs[4].equals("1") ? true : false; // 状态
+		float x, y, speed;
+		byte direction;
 		try {
-			Date date = formater.parse(time);
-			System.out.println(date.getTime());
-		} catch (ParseException e) {
+			x = Float.parseFloat(strs[3]); // 经度
+			y = Float.parseFloat(strs[2]); // 纬度
+			speed = Float.parseFloat(strs[5]); // 速度
+			direction = Byte.parseByte(strs[6]); // 方向
+		} catch (Exception e) {
+			// TODO: handle exception
+//			System.out.println(message);
+//			e.printStackTrace(); 
+			return;
+		}
+		if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
+			return;
+		}
+//		System.out.println(x + " " + y);
+		MAXX = Math.max(x, MAXX);
+		MINX = Math.min(x, MINX);
+		MAXY = Math.max(y, MAXY);
+		MINY = Math.min(y, MINY);
+		long t = 0;
+		try {
+			t = formater.parse(time).getTime();
+		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
+			return;
 		}
-		System.out.println(time);
-		// JsonObject jsonObject = new JsonObject();
-		// jsonObject.put("CarName", carName);
-		// jsonObject.put("Time", time);
-		// jsonObject.put("Longitude", x);
-		// jsonObject.put("Latitude", y);
-		// jsonObject.put("Speed", speed);
-		// jsonObject.put("Status", states);
-		// jsonObject.put("Direction", direction);
-		
 		// get SingleData
-		String id = "" + (new Date().getTime());
-		SingleData singleData = new SingleData(id, message, Domain.getDomain(message));
+		SingleData singleData = new SingleData(carName, t, Domain.getDomain(message), x, y, states, speed, direction);
 		
-		if (map.containsKey(carName)) {
-			map.get(carName).addLast(singleData);
-		} else {
-			LinkedList<SingleData> queue = new LinkedList<>();
-			queue.addLast(singleData);
-			map.put(carName, queue);
-		}
+//		if (carToInfoMap.containsKey(carName)) {
+//			carToInfoMap.get(carName).addLast(singleData);
+//		} else {
+//			LinkedList<SingleData> queue = new LinkedList<>();
+//			queue.addLast(singleData);
+//			carToInfoMap.put(carName, queue);
+//		}
 		totalDataByTime.addLast(singleData);
 		
 		// get Document
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("CarName", carName);
-		map.put("Time", time);
-		map.put("Longitude", x);
-		map.put("Latitude", y);
-		map.put("Speed", speed);
-		map.put("Status", states);
-		map.put("Direction", direction);
-		Document document = new Document(map);
-		saveToMongo.save(document);
+//		HashMap<String, Object> map = new HashMap<>();
+//		map.put("CarName", carName);
+//		map.put("Time", time);
+//		map.put("Longitude", x);
+//		map.put("Latitude", y);
+//		map.put("Speed", speed);
+//		map.put("Status", states);
+//		map.put("Direction", direction);
+//		Document document = new Document(map);
+//		saveToMongo.save(document);
 	}
 
-	public void deal(File file) {
+	public void dealFile(File file) {
 		if (file.isDirectory()) {
 			for (File f : file.listFiles()) {
-				deal(f);
+				dealFile(f);
 			}
 		}
 		if (!file.getName().startsWith("粤")) {
 			return;
 		}
-
+		if (totalDataByTime.size() > 110000) {
+			return;
+		}
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gbk"))) {
 			String line = reader.readLine();
 			while ((line = reader.readLine()) != null) {
-				String[] strs = line.split(",");
-				if (strs.length < 4)
-					continue;
-				double y = Double.parseDouble(strs[2]);
-				double x = Double.parseDouble(strs[3]);
-				if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
-					continue;
-				}
-				MAXX = Math.max(x, MAXX);
-				MINX = Math.min(x, MINX);
-				MAXY = Math.max(y, MAXY);
-				MINY = Math.min(y, MINY);
+//				dealSingleData(line);
+				deal(line);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,15 +224,17 @@ public class DealData {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+		DealData dealData = new DealData();
 		// test file
-//		File file = new File("/Users/hui.chen/Documents/track_exp");
-//		deal(file);
-//		System.out.println(MAXX);
-//		System.out.println(MINX);
-//		System.out.println(MAXY);
-//		System.out.println(MINY);
+		File file = new File("/Users/hui.chen/Documents/track_exp");
+		dealData.dealFile(file);
+		dealData.deduce(10);
+		System.out.println(MAXX);
+		System.out.println(MINX);
+		System.out.println(MAXY);
+		System.out.println(MINY);
 		
 		
 	}
+
 }

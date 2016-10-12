@@ -1,22 +1,28 @@
 package com.bupt.poirot.data;
 
 public class SingleData {
-	String id;
-	String message;
-	String domain;
+	String carName; // 车名
+	long time;
 	
-//	String carName; // 车名
+	String domain;
+
 //	String time; // 时间
-//	String x; // 纬度
-//	String y; // 经度
-//	String states; // 状态
-//	String speed; // 速度
-//	String direction; // 方向
+	float x; // 纬度
+	float y; // 经度
+	boolean status; // 状态 0: 空车, 1: 载人
+	float speed; // 速度
+	byte direction; // 方向 0, 1, 2, 3, 4, 5, 6, 7
 
 	
-	public SingleData(String id, String message, String domain) {
-		this.id = id;
-		this.message = message;
+	public SingleData(String carName, long time, String domain, float x, float y, boolean status,
+			float speed, byte direction) {
+		this.carName = carName;
+		this.time = time;
 		this.domain = domain;
+		this.x = x;
+		this.y = y;
+		this.status = status;
+		this.speed = speed;
+		this.direction = direction;
 	}
 }

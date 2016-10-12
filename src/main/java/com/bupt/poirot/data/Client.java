@@ -27,6 +27,8 @@ public class Client {
 	public static void main(String[] args) {
 		System.out.println("begin accept");
 		Client client = new Client();
+		
+		
 		client.accept();
 	}
 }

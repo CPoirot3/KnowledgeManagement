@@ -26,12 +26,19 @@ public class DataHandler extends AbstractHandler {
 	
 		response.setContentType("text/json;charset=utf-8");
 		response.setStatus(HttpServletResponse.SC_OK);
-		baseRequest.setHandled(true);
+//		baseRequest.setHandled(true);
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.put("name", "poirot");
 		jsonObject.put("age", 30);
+		
+		jsonObject = getDataFromDatabase(request);
+		
 		System.out.println(jsonObject.toString());
 		response.getWriter().println(jsonObject.toString());
+	}
+
+	private JsonObject getDataFromDatabase(HttpServletRequest request) {
+		
 	}
 
 //	public static void main(String[] args) throws Exception {
