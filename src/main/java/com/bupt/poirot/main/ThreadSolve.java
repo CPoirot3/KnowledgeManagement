@@ -25,7 +25,6 @@ public class ThreadSolve implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
 		sendData(file);
 	}
 	
@@ -40,6 +39,7 @@ public class ThreadSolve implements Runnable {
 		}
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gbk"))) {
 			PrintStream ps = new PrintStream(socket.getOutputStream());
+			
 //			int count = 0;
             String line = null;
            

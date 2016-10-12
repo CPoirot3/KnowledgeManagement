@@ -28,6 +28,8 @@ dependencies {
 	compile group: 'org.apache.jena', name: 'jena-tdb', version: '3.1.0'
 	compile group: 'org.apache.jena', name: 'jena-iri', version: '3.1.0'
 	
+	compile group: 'm
+	
 	// https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
 	compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.12.v20160915'
 	

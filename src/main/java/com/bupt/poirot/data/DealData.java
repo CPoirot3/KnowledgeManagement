@@ -1,26 +1,35 @@
 package com.bupt.poirot.data;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
+import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-import org.bson.Document;
 
 import com.bupt.poirot.data.modelLibrary.Domain;
 import com.bupt.poirot.mongodb.SaveToMongo;
+
 
 public class DealData {
 	public static double MAXX = Double.MIN_VALUE;
@@ -52,11 +61,6 @@ public class DealData {
 		String states = strs[4]; // 状态
 		String speed = strs[5]; // 速度
 		String direction = strs[6]; // 方向
-//		System.out.println(time + " " + x + " " + y);
-//		for (String string : strs) {
-//			System.out.print(string + " ");
-//		}
-//		System.out.println();
 
 		String carURI = "http://bupt/wangfu/" + carName;
 		// create an empty Model
@@ -81,14 +85,14 @@ public class DealData {
 		System.out.println(width + "  " + height);
 		System.out.println(MINX + " " + MINY);
 		System.out.println(MAXX + " " + MAXY);
-		Collections.sort(totalDataByTime, new Comparator<SingleData>() {
-
-			@Override
-			public int compare(SingleData o1, SingleData o2) {
-				// TODO Auto-generated method stub
-				return (int)(o1.time - o2.time);
-			}
-		});
+//		Collections.sort(totalDataByTime, new Comparator<SingleData>() {
+//
+//			@Override
+//			public int compare(SingleData o1, SingleData o2) {
+//				// TODO Auto-generated method stub
+//				return (int)(o1.time - o2.time);
+//			}
+//		});
 		for (SingleData singleData : totalDataByTime) {
 			float x = singleData.x;
 			float y = singleData.y;
@@ -101,18 +105,11 @@ public class DealData {
 				n--;
 			}
 			count[m * sectionsNumber + n]++;
-//			try {
-//				count[m * sectionsNumber + n]++;
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				System.out.println(x + " " + y + "  " + (m * sectionsNumber + n));
-//			}
 		}
 		
 		for (int i = 0; i < count.length; i++) {
 			System.out.print(count[i] + " ");
 		}
-//		for ()
 	}
 
 //	public void dealSingleData(String line) {
@@ -134,11 +131,12 @@ public class DealData {
 		if (message == null || message.length() == 0) {
 			return;
 		}
+//		System.out.println(message);
 		String[] strs = message.split(",");
 		if (strs.length < 7) {
 			return;
 		}
-//		System.out.println(message);
+		
 		String carName = strs[0]; // 车名
 		String time = strs[1]; // 时间
 		boolean states = strs[4].equals("1") ? true : false; // 状态
@@ -181,8 +179,13 @@ public class DealData {
 //			queue.addLast(singleData);
 //			carToInfoMap.put(carName, queue);
 //		}
+		
+		
 		totalDataByTime.addLast(singleData);
 		
+		if (totalDataByTime.size() > 10000) {
+			writeToMysql();
+		}
 		// get Document
 //		HashMap<String, Object> map = new HashMap<>();
 //		map.put("CarName", carName);
@@ -196,11 +199,155 @@ public class DealData {
 //		saveToMongo.save(document);
 	}
 
-	public void dealFile(File file) {
+	private void writeToMysql() {
+		// TODO Auto-generated method stub
+		try {
+			Connection connection = DriverManager.getConnection(dbConnectString);
+
+			Statement stmt = (Statement) connection.createStatement();
+			
+			String createTable = "CREATE TABLE IF NOT EXISTS showCount"
+					+ "(showName varchar(200) NOT NULL,"
+					+ "id varchar(200) NOT NULL,"
+					+ "score int NOT NULL,"
+					+ "time TIMESTAMP NOT NULL,"
+					+ "type varchar(30),"
+					+ "PRIMARY KEY(id, time)"
+					+ ") DEFAULT CHARSET=utf8";
+
+	        if(stmt.executeUpdate(createTable)==0)  {
+    			System.out.println("create table success!");
+    		}
+
+		    String query = "insert into showCount (name, time, x, y, status, speed, direction)"
+		        + " values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=VALUES(name) , time=VALUES(time)";
+			PreparedStatement ps = (PreparedStatement) connection.prepareStatement(query,  
+	                ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+
+			Timestamp timestamp = new Timestamp(endTime);
+	        for (SingleData singleData : totalDataByTime) {
+	        	
+	        	ps.setString(1, singleData.carName);
+	        	ps.setLong(2, singleData.time);
+				ps.setFloat(3, singleData.x);
+				ps.setFloat(4, singleData.y);
+				ps.setBoolean(5, singleData.status);
+				ps.setFloat(6, singleData.speed);
+				ps.setInt(7, singleData.direction);
+	        	ps.executeUpdate();
+	        }
+	        connection.close();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	public List<BufferedReader> list = new ArrayList<>(); 
+	
+	
+	public String readIthLine(int i, File file) {
+		String line = null;
+		int count = 0;
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gbk"))) {
+			boolean mark = true;
+			while (count < i) {
+				count++;
+				reader.readLine();
+//				if (reader.readLine() == null) {
+//					System.out.println("tes");
+//					mark = false;
+//					break;
+//				}
+			}
+			if (mark) {
+				return reader.readLine();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return line;
+	}
+	
+	public void dealFile(File[] files) {
+		
+		for (int i = 1; i <= 100; i++) {
+			for (File file : files) {
+				String line = readIthLine(i, file);
+				System.out.println(line);
+			}
+		}
+	}
+	
+	
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		DealData dealData = new DealData();
+		// test file
+		File file = new File("/Users/hui.chen/data/track_exp/");
+		dealData.dealFile(file.listFiles());
+		dealData.deduce(10);
+			
+//		dealData.deduce(10);
+//		System.out.println(MAXX);
+//		System.out.println(MINX);
+//		System.out.println(MAXY);
+//		System.out.println(MINY);
+		
+	}
+
+	public void writeToSingleFile() {
+		boolean found = true;
+		File output = new File("data.txt");
+		BufferedWriter bufferedWriter = null;
+		try {
+			bufferedWriter = new BufferedWriter(new FileWriter(output));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return;
+		}
+		System.out.println("test " + list.size());
+		while (found) {
+			found = false;
+			for (BufferedReader reader : list) {
+				try {
+					String line = reader.readLine();
+					System.out.println(line);
+					if (line != null) {
+						bufferedWriter.write(line);
+						found = true;
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+//					e.printStackTrace();
+				}
+			}
+			try {
+				bufferedWriter.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		}
+		try {
+			bufferedWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void dealDirectory(File file) {
 		if (file.isDirectory()) {
 			for (File f : file.listFiles()) {
-				dealFile(f);
+				dealDirectory(f);
 			}
+			return;
 		}
 		if (!file.getName().startsWith("粤")) {
 			return;
@@ -211,30 +358,11 @@ public class DealData {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gbk"))) {
 			String line = reader.readLine();
 			while ((line = reader.readLine()) != null) {
-//				dealSingleData(line);
 				deal(line);
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		DealData dealData = new DealData();
-		// test file
-		File file = new File("/Users/hui.chen/Documents/track_exp");
-		dealData.dealFile(file);
-		dealData.deduce(10);
-		System.out.println(MAXX);
-		System.out.println(MINX);
-		System.out.println(MAXY);
-		System.out.println(MINY);
-		
-		
-	}
-
+	}	
 }
+
