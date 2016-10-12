@@ -7,13 +7,17 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class SaveToMongo {
-
-	public static void main(String[] args) {
-		MongoClient client = new MongoClient("localhost");
-		MongoDatabase database = client.getDatabase("gd");
-		MongoCollection<Document> collection = database.getCollection("alarm");
-
-		client.close();
+	MongoClient client;
+	MongoDatabase database;
+	MongoCollection<Document> collection;
+	
+	public SaveToMongo () {
+		this.client = new MongoClient("localhost");
+		this.database = client.getDatabase("gd");
+		this.collection = database.getCollection("alarm");
 	}
-
+	
+	public void save(Document document) {
+		collection.insertOne(document);
+	}
 }

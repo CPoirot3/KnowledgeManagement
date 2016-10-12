@@ -12,24 +12,32 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-/**
- * @author Poirot
- *
- */
 public class SocketSendData {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		System.out.println(System.getProperty("os.name"));
+		
+		
 		try (
 				ServerSocket serverSocket = new ServerSocket(30000);
 				){
 //			BufferedWriter bufferedWriter = new BufferedWriter(s.getInputStream());
 			while (true) {
 				Socket s = serverSocket.accept();
-                File file = new File("D:\\shenzhen\\track_exp");
+				String os = System.getProperty("os.name");
+				System.out.println(os);
+				String datafile = "";
+				
+				if (os.contains("Mac")) {
+					datafile = Config.getValue("mac");
+				} else {
+					datafile = Config.getValue("win");
+				}
+				System.out.println(datafile);
+                File file = new File(datafile);
                 System.out.println(file.listFiles().length);
 				new Thread(new ThreadSolve(s, file)).start();
 			}
