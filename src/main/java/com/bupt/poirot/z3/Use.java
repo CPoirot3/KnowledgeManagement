@@ -16,7 +16,15 @@ public class Use {
 	public BoolExpr target;	
 	private Parser parser;
 
-	public Use(String targetString, HashMap<String, String> cfg, Context ctx, Solver solver) {
+	public Use(String targetString) {
+		HashMap<String, String> cfg = new HashMap<>();
+		cfg.put("proof", "true");
+		Context ctx = new Context(cfg);
+		Solver solver = ctx.mkSolver();
+		Params p = ctx.mkParams();
+		p.add("mbqi", false);
+		solver.setParameters(p);
+		
 		this.parser = new Parser(cfg, ctx, solver);
 		this.target = parser.parseString(targetString);
 		System.out.println(target);
@@ -38,19 +46,13 @@ public class Use {
 	
 	public static void main(String[] args) {
 		
-		HashMap<String, String> cfg = new HashMap<>();
-		cfg.put("proof", "true");
-		Context ctx = new Context(cfg);
-		Solver solver = ctx.mkSolver();
-		Params p = ctx.mkParams();
-		p.add("mbqi", false);
-		solver.setParameters(p);
 		
-		Use use = new Use("a>100", cfg, ctx, solver);
-		use.dealData("a>=11");
-		use.dealData("a>=21");
-		use.dealData("a>=33");
-		use.dealData("a>=34");
-		use.dealData("a>=193");
+		
+//		Use use = new Use("a>100");
+//		use.dealData("a>=11");
+//		use.dealData("a>=21");
+//		use.dealData("a>=33");
+//		use.dealData("a>=34");
+//		use.dealData("a>=193");
 	}
 }

@@ -21,6 +21,7 @@ public class GetDataFromMongoDB {
 	
 	public JsonObject get(Request request) {
 		JsonObject jsonObject = new JsonObject();
+		return jsonObject;
 		
 	}
 }
