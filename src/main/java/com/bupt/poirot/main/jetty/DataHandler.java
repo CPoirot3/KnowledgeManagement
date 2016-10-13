@@ -38,8 +38,8 @@ public class DataHandler extends AbstractHandler {
 		if (jsonObject == null) {
 			System.out.println("no results");
 		}
-		System.out.println(client.getOne() == null);
-		System.out.println(jsonObject.toString());
+//		System.out.println(client.getOne() == null);
+//		System.out.println(jsonObject.toString());
 		response.getWriter().println(jsonObject.toString());
 		response.flushBuffer();
 	}
@@ -63,7 +63,7 @@ public class DataHandler extends AbstractHandler {
 			mem = new HashMap<>();
 		}
 		map.put("sections", defaultValue);
-		System.out.println("defaultvalue : " + defaultValue);
+//		System.out.println("defaultvalue : " + defaultValue);
 		if (client == null || !defaultValue.equals(mem.get("sections"))) {
 			mem.put("sections", defaultValue);
 			client = new Client(map);
