@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
@@ -78,6 +79,7 @@ public class DealData {
 	}
 
 	public void deduce(int sectionsNumber) {
+		
 		int[] count = new int[sectionsNumber * sectionsNumber];
 		double width = (MAXX - MINX) / sectionsNumber;
 		double height = (MAXY - MINY) / sectionsNumber;
@@ -85,6 +87,7 @@ public class DealData {
 		System.out.println(width + "  " + height);
 		System.out.println(MINX + " " + MINY);
 		System.out.println(MAXX + " " + MAXY);
+		
 //		Collections.sort(totalDataByTime, new Comparator<SingleData>() {
 //
 //			@Override
@@ -111,21 +114,6 @@ public class DealData {
 			System.out.print(count[i] + " ");
 		}
 	}
-
-//	public void dealSingleData(String line) {
-//		String[] strs = line.split(",");
-//		if (strs.length < 4)
-//			return;
-//		double y = Double.parseDouble(strs[2]);
-//		double x = Double.parseDouble(strs[3]);
-//		if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
-//			return;
-//		}
-//		MAXX = Math.max(x, MAXX);
-//		MINX = Math.min(x, MINX);
-//		MAXY = Math.max(y, MAXY);
-//		MINY = Math.min(y, MINY);
-//	}
 	
 	public void deal(String message) {
 		if (message == null || message.length() == 0) {
@@ -184,7 +172,7 @@ public class DealData {
 		totalDataByTime.addLast(singleData);
 		
 		if (totalDataByTime.size() > 10000) {
-			writeToMysql();
+//			writeToMysql();
 		}
 		// get Document
 //		HashMap<String, Object> map = new HashMap<>();
@@ -199,52 +187,50 @@ public class DealData {
 //		saveToMongo.save(document);
 	}
 
-	private void writeToMysql() {
-		// TODO Auto-generated method stub
-		try {
-			Connection connection = DriverManager.getConnection(dbConnectString);
-
-			Statement stmt = (Statement) connection.createStatement();
-			
-			String createTable = "CREATE TABLE IF NOT EXISTS showCount"
-					+ "(showName varchar(200) NOT NULL,"
-					+ "id varchar(200) NOT NULL,"
-					+ "score int NOT NULL,"
-					+ "time TIMESTAMP NOT NULL,"
-					+ "type varchar(30),"
-					+ "PRIMARY KEY(id, time)"
-					+ ") DEFAULT CHARSET=utf8";
-
-	        if(stmt.executeUpdate(createTable)==0)  {
-    			System.out.println("create table success!");
-    		}
-
-		    String query = "insert into showCount (name, time, x, y, status, speed, direction)"
-		        + " values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=VALUES(name) , time=VALUES(time)";
-			PreparedStatement ps = (PreparedStatement) connection.prepareStatement(query,  
-	                ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-
-			Timestamp timestamp = new Timestamp(endTime);
-	        for (SingleData singleData : totalDataByTime) {
-	        	
-	        	ps.setString(1, singleData.carName);
-	        	ps.setLong(2, singleData.time);
-				ps.setFloat(3, singleData.x);
-				ps.setFloat(4, singleData.y);
-				ps.setBoolean(5, singleData.status);
-				ps.setFloat(6, singleData.speed);
-				ps.setInt(7, singleData.direction);
-	        	ps.executeUpdate();
-	        }
-	        connection.close();
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-	}
-
-	public List<BufferedReader> list = new ArrayList<>(); 
-	
+//	private void writeToMysql() {
+//		// TODO Auto-generated method stub
+//		try {
+//			Connection connection = DriverManager.getConnection(dbConnectString);
+//
+//			Statement stmt = (Statement) connection.createStatement();
+//			
+//			String createTable = "CREATE TABLE IF NOT EXISTS showCount"
+//					+ "(showName varchar(200) NOT NULL,"
+//					+ "id varchar(200) NOT NULL,"
+//					+ "score int NOT NULL,"
+//					+ "time TIMESTAMP NOT NULL,"
+//					+ "type varchar(30),"
+//					+ "PRIMARY KEY(id, time)"
+//					+ ") DEFAULT CHARSET=utf8";
+//
+//	        if(stmt.executeUpdate(createTable)==0)  {
+//    			System.out.println("create table success!");
+//    		}
+//
+//		    String query = "insert into showCount (name, time, x, y, status, speed, direction)"
+//		        + " values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=VALUES(name) , time=VALUES(time)";
+//			PreparedStatement ps = (PreparedStatement) connection.prepareStatement(query,  
+//	                ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+//
+//			Timestamp timestamp = new Timestamp(endTime);
+//	        for (SingleData singleData : totalDataByTime) {
+//	        	
+//	        	ps.setString(1, singleData.carName);
+//	        	ps.setLong(2, singleData.time);
+//				ps.setFloat(3, singleData.x);
+//				ps.setFloat(4, singleData.y);
+//				ps.setBoolean(5, singleData.status);
+//				ps.setFloat(6, singleData.speed);
+//				ps.setInt(7, singleData.direction);
+//	        	ps.executeUpdate();
+//	        }
+//	        connection.close();
+//		} catch (SQLException e) {
+//
+//			e.printStackTrace();
+//		}
+//	}
+ 
 	
 	public String readIthLine(int i, File file) {
 		String line = null;
@@ -271,12 +257,30 @@ public class DealData {
 	}
 	
 	public void dealFile(File[] files) {
-		
-		for (int i = 1; i <= 100; i++) {
+		File output = new File("./output.txt");
+//		BufferedWriter bufferedWriter = null;
+		PrintStream ps = null;
+		try {
+			ps = new PrintStream(output);
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+//		try {
+//			bufferedWriter = new BufferedWriter(new FileWriter(output));
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		
+		for (int i = 1; i <= 20000; i++) {
 			for (File file : files) {
 				String line = readIthLine(i, file);
-				System.out.println(line);
+				if (line != null) {
+					ps.println(line);
+				}
 			}
+			ps.flush();
 		}
 	}
 	
@@ -290,7 +294,7 @@ public class DealData {
 		// test file
 		File file = new File("/Users/hui.chen/data/track_exp/");
 		dealData.dealFile(file.listFiles());
-		dealData.deduce(10);
+//		dealData.deduce(10);
 			
 //		dealData.deduce(10);
 //		System.out.println(MAXX);
@@ -300,48 +304,6 @@ public class DealData {
 		
 	}
 
-	public void writeToSingleFile() {
-		boolean found = true;
-		File output = new File("data.txt");
-		BufferedWriter bufferedWriter = null;
-		try {
-			bufferedWriter = new BufferedWriter(new FileWriter(output));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return;
-		}
-		System.out.println("test " + list.size());
-		while (found) {
-			found = false;
-			for (BufferedReader reader : list) {
-				try {
-					String line = reader.readLine();
-					System.out.println(line);
-					if (line != null) {
-						bufferedWriter.write(line);
-						found = true;
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-//					e.printStackTrace();
-				}
-			}
-			try {
-				bufferedWriter.flush();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		}
-		try {
-			bufferedWriter.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	public void dealDirectory(File file) {
 		if (file.isDirectory()) {
 			for (File f : file.listFiles()) {
