@@ -28,13 +28,13 @@ public class DealData {
 
 	HashMap<String, LinkedList<SingleData>> carToInfoMap;
 //	LinkedList<SingleData> totalDataByTime;
-	LinkedList<SingleData> dataSortByTime = new LinkedList<>();
+	LinkedList<SingleData> dataSortByTime;
 	SaveToMongo saveToMongo;
 	DateFormat formater;
 	ProveResult proveResult;
-	int countLines;
 	int sectionNumber;
 	public LinkedList<JsonObject> results;
+	private boolean find;
 	
 	public DealData(int sectionNumber) {
 		this.sectionNumber = sectionNumber;
@@ -42,57 +42,10 @@ public class DealData {
 		dataSortByTime = new LinkedList<>();
 		saveToMongo = new SaveToMongo();
 		formater = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
-		countLines = 0;
 		results = new LinkedList<>();
+		find = false;
 	}
 	
-	
-
-	static {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException();
-		}
-	}
-	private void writeAllDataToMysql() {
-		// TODO Auto-generated method stub
-		try {
-			String dbConnectString = "jdbc:mysql://localhost/hotShows?user=root&password=Poirot373&useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false";
-			Connection connection = DriverManager.getConnection(dbConnectString);
-
-			Statement stmt = (Statement) connection.createStatement();
-
-			String createTable = "CREATE TABLE IF NOT EXISTS showCount" + "(showName varchar(200) NOT NULL,"
-					+ "id varchar(200) NOT NULL," + "score int NOT NULL," + "time TIMESTAMP NOT NULL,"
-					+ "type varchar(30)," + "PRIMARY KEY(id, time)" + ") DEFAULT CHARSET=utf8";
-
-			if (stmt.executeUpdate(createTable) == 0) {
-				System.out.println("create table success!");
-			}
-
-			String query = "insert into showCount (name, time, x, y, status, speed, direction)"
-					+ " values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=VALUES(name) , time=VALUES(time)";
-			PreparedStatement ps = (PreparedStatement) connection.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
-					ResultSet.CONCUR_READ_ONLY);
-
-			for (SingleData singleData : dataSortByTime) {
-
-				ps.setString(1, singleData.carName);
-				ps.setLong(2, singleData.time);
-				ps.setFloat(3, singleData.x);
-				ps.setFloat(4, singleData.y);
-				ps.setBoolean(5, singleData.status);
-				ps.setFloat(6, singleData.speed);
-				ps.setInt(7, singleData.direction);
-				ps.executeUpdate();
-			}
-			connection.close();
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-	}
 
 	public void deal(String message) {
 		if (message == null || message.length() == 0) {
@@ -113,56 +66,34 @@ public class DealData {
 			speed = Float.parseFloat(strs[5]); // 速度
 			direction = Byte.parseByte(strs[6]); // 方向
 		} catch (Exception e) {
-			// e.printStackTrace();
 			return;
 		}
 		if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
 			return;
 		}
-		// System.out.println(x + " " + y);
-		MAXX = Math.max(x, MAXX);
-		MINX = Math.min(x, MINX);
-		MAXY = Math.max(y, MAXY);
-		MINY = Math.min(y, MINY);
+		if (!find) {
+			MAXX = Math.max(x, MAXX);
+			MINX = Math.min(x, MINX);
+			MAXY = Math.max(y, MAXY);
+			MINY = Math.min(y, MINY);
+		}
 		long t = 0;
 		try {
 			t = formater.parse(time).getTime();
 		} catch (ParseException e1) {
-			e1.printStackTrace();
 			return;
 		}
-		
 		SingleData singleData = new SingleData(carName, t, Domain.getDomain(message), x, y, states, speed, direction);
-
-//		if (carToInfoMap.containsKey(carName)) {
-//			carToInfoMap.get(carName).addLast(singleData);
-//		} else {
-//			LinkedList<SingleData> queue = new LinkedList<>();
-//			queue.addLast(singleData);
-//			carToInfoMap.put(carName, queue);
-//		}
-
 		dataSortByTime.addLast(singleData);
-		countLines++;
-		if (countLines > 10000) {
-			System.out.println("deduce" + dataSortByTime.size());
-			countLines = 0;
-			deduce();
-		}
 	}
 	
 	public void deduce() {
-		System.out.println(sectionNumber * sectionNumber);
 		int[] count = new int[sectionNumber * sectionNumber];
 		double width = (MAXX - MINX) / sectionNumber;
-		double height = (MAXY - MINY) / sectionNumber;
-		System.out.println("count length" + count.length);
-		System.out.println("total size : " + dataSortByTime.size());
-//		System.out.println(width + "  " + height);
-//		System.out.println(MINX + " " + MINY);
-//		System.out.println(MAXX + " " + MAXY);
-		
-		for (SingleData singleData : dataSortByTime) {
+		double height = (MAXY - MINY) / sectionNumber; 
+
+		for (int i = 0; i < dataSortByTime.size(); i++) {
+			SingleData singleData = dataSortByTime.removeFirst();
 			float x = singleData.x;
 			float y = singleData.y;
 			int m = (int)((x - MINX) / width);
@@ -173,16 +104,28 @@ public class DealData {
 			if (y == MAXY) {
 				m--;
 			}
-			
-//			System.out.println(m * sectionNumber + n);
 			int s  = m * sectionNumber + n;
-			if (s < 0 || s >= count.length) return;
+			if (s < 0 || s >= count.length) continue;
 			count[m * sectionNumber + n]++;
-			
-		}
+		} 
 		
+		int index = 0;
 		for (int i = 0; i < count.length; i++) {
 			System.out.print(count[i] + " ");
+			index = count[i] > count[index] ? i : index;
+		}
+		System.out.println();
+		
+		if (!find) {
+			System.out.println("find crowded section");
+			System.out.println("max Index :  " + index);
+			MINX += (index / sectionNumber) * width;
+			MINY += (index % sectionNumber) * height;
+			MAXX = MINX + width;
+			MAXY = MINY + height;
+			System.out.println(MINX + " " + MINY);
+			System.out.println(MAXX + " " + MAXY);		
+			find = true;
 		}
 		
 		JsonObject jsonObject = new JsonObject();
@@ -191,6 +134,7 @@ public class DealData {
 			document.append(String.valueOf(i), String.valueOf(count[i]));
 			jsonObject.put(String.valueOf(i), String.valueOf(count[i]));
 		}
+		
 		results.add(jsonObject);
 		saveToMongo.save(document);
 	}

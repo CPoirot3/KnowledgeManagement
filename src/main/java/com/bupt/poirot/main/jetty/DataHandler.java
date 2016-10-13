@@ -43,8 +43,6 @@ public class DataHandler extends AbstractHandler {
 		return jsonObject;
 	}
 	
-	
-	
 	private void begin(Map<String, String[]> paramsMap) {
 		if (client == null) {
 			client = new Client(paramsMap);
