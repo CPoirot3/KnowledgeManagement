@@ -36,8 +36,13 @@ public class DealData {
 	public LinkedList<JsonObject> results;
 	private boolean find;
 	
-	public DealData(int sectionNumber) {
-		this.sectionNumber = sectionNumber;
+	public DealData(String sectionNumber) {
+		try {
+			this.sectionNumber = Integer.parseInt(sectionNumber);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		carToInfoMap = new HashMap<>();
 		dataSortByTime = new LinkedList<>();
 		saveToMongo = new SaveToMongo();
@@ -111,10 +116,10 @@ public class DealData {
 		
 		int index = 0;
 		for (int i = 0; i < count.length; i++) {
-			System.out.print(count[i] + " ");
+//			System.out.print(count[i] + " ");
 			index = count[i] > count[index] ? i : index;
 		}
-		System.out.println();
+//		System.out.println();
 		
 		if (!find) {
 			System.out.println("find crowded section");
@@ -135,7 +140,7 @@ public class DealData {
 			jsonObject.put(String.valueOf(i), String.valueOf(count[i]));
 		}
 		
-		results.add(jsonObject);
+		results.addLast(jsonObject);
 		saveToMongo.save(document);
 	}
 	

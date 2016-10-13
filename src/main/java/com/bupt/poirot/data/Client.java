@@ -17,16 +17,18 @@ import com.bupt.poirot.main.Config;
 public class Client {
 	
 	DealData dealData;
-	Map<String, String[]> paramsMap;
+	Map<String, String> paramsMap;
 	LinkedList<String> linkedList; 
 	
 	
-	public Client(Map<String, String[]> paramsMap) {
+	public Client(Map<String, String> paramsMap) {
+		System.out.println("new client");
 		this.paramsMap = paramsMap;
-		int sections = Integer.parseInt(paramsMap.get("sections")[0]);
-		System.out.println("sections " + sections);
+		String sections = paramsMap.get("sections");
+		System.out.println(sections);
 		this.dealData = new DealData(sections);
 		this.linkedList = new LinkedList<>();
+		accept();
 	}
 
 	
@@ -42,11 +44,11 @@ public class Client {
 			while ((line = reader.readLine()) != null) {
                 linkedList.addLast(line);
                 count++;
-                if (count > 10000000) {
+                if (count > 100000) {
                 	return;
                 }
-                if (linkedList.size() >= 100000) {
-                	System.out.println("count " + count);
+                if (linkedList.size() >= 10000) {
+//                	System.out.println("count " + count);
                 	deduceWithOneSection();
                 	linkedList.clear();
                 	
@@ -59,8 +61,8 @@ public class Client {
 	}
 
 	private void deduceWithOneSection() {
-		System.out.println("list size : " + linkedList.size());
-		System.out.println("before deal  dataSortByTime size : " + dealData.dataSortByTime.size());
+//		System.out.println("list size : " + linkedList.size());
+//		System.out.println("before deal  dataSortByTime size : " + dealData.dataSortByTime.size());
 		for (String message : linkedList) {
 			dealData.deal(message);
 		}
@@ -69,13 +71,13 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("begin accept");
+//		System.out.println("begin accept");
 		
-		HashMap<String, String[]> map = new HashMap<>();
-		String[] values = {"10"};
-		map.put("sections", values);
-		Client client = new Client(map);
-		client.accept();
+//		HashMap<String, String> map = new HashMap<>();
+//		String values = "10";
+//		map.put("sections", values);
+//		new Client(map);
+		
 	}
 	
 	public void acceptSocket() {
