@@ -19,7 +19,7 @@ public class DataHandler extends AbstractHandler {
 	
 	public static Client client;
 	
-	public HashMap<String, String> mem; 
+	public HashMap<String, String> mem;
 	
 	public DataHandler() {
 		this.mem = new HashMap<>();
@@ -27,8 +27,10 @@ public class DataHandler extends AbstractHandler {
 	
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		 
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		Map<String, String[]> params = request.getParameterMap();
-
+			
 		System.out.println(params.containsKey("district") + " :" + params.get("district")[0]);
 		begin(params.get("district")[0]);
 		response.setContentType("text/json;charset=utf-8");

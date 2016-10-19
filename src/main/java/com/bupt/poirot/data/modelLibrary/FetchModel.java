@@ -88,9 +88,9 @@ public class FetchModel {
 	
 	public static void main(String[] args) {
 		FetchModel fetchModel = new FetchModel();
-		String url = "http://localhost:3030/section1";
-		String query = "";
-		
+		String url = "http://localhost:3030/section1?query=";
+		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
+		System.out.println(url + query);
 		String model = fetchModel.fetch(url, query);
 		System.out.println(model);
 		
