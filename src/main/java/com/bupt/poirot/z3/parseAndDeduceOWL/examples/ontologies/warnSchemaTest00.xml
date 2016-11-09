@@ -17,32 +17,40 @@
              <owl:intersectionOf rdf:parseType="Collection">
                 <owl:Restriction>
                    <owl:onProperty rdf:resource="&eg;hasEvent"/>
-                   <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+                   <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">10000</owl:minCardinality>
                 </owl:Restriction>
               </owl:intersectionOf>
            </rdf:Description>
        </rdfs:subClassOf>
+       <!-- <rdfs:subClassOf>
+           <rdf:Description>
+              <owl:intersectionOf rdf:parseType="Collection">
+                 <owl:Restriction>
+                    <owl:onProperty rdf:resource="&eg;hasEvent"/>
+                    <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">9999</owl:maxCardinality>
+                 </owl:Restriction>
+               </owl:intersectionOf>
+            </rdf:Description>
+        </rdfs:subClassOf> -->
   </owl:Class>
-
-  <owl:Class rdf:about="&eg;Car" />
   <owl:Class rdf:about="&eg;Event">
       <rdfs:subClassOf>
-          <rdf:Description>
-             <owl:intersectionOf rdf:parseType="Collection">
-                <owl:Restriction>
-                   <owl:onProperty rdf:resource="&eg;carNumber"/>
-                   <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1000</owl:minCardinality>
-                </owl:Restriction>
-              </owl:intersectionOf>
-           </rdf:Description>
-       </rdfs:subClassOf>
+          <owl:Class rdf:about="&eg;A"/>
+      </rdfs:subClassOf>
+      <owl:disjointWith>
+          <owl:Class rdf:about="&eg;B"/>
+      </owl:disjointWith>
   </owl:Class>
-
-  <owl:ObjectProperty rdf:about="&eg;carNumber">
-      <rdfs:range rdf:resource="&eg;Car"/>
-      <rdfs:domain rdf:domain="&eg;Event"/>
-  </owl:ObjectProperty>/
-
+  <owl:Class rdf:about="&eg;A">
+      <rdfs:subClassOf>
+          <owl:Class rdf:about="&eg;B"/>
+      </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="&eg;B">
+      <rdfs:subClassOf>
+          <owl:Class rdf:about="&eg;Event"/>
+      </rdfs:subClassOf>
+  </owl:Class>
   <owl:ObjectProperty rdf:about="&eg;hasEvent">
       <rdfs:range rdf:resource="&eg;Event" />
       <rdfs:domain rdf:resource="&eg;Alarm" />

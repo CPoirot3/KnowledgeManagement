@@ -32,7 +32,8 @@ public class Explanations {
 		// Here the ontology is stored in a file locally in the ontologies
 		// subfolder
 		// of the examples folder.
-		File inputOntologyFile = new File("examples/ontologies/pizza.owl");
+		File inputOntologyFile = new File("D:/GraduateDesign/KnowledgeManagement/src/main/java/"
+				+ "com/bupt/poirot/z3/parseAndDeduceOWL/examples/ontologies/warnSchemaTest0.xml");
 		// We use the OWL API to load the ontology.
 		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(inputOntologyFile);
 
@@ -41,8 +42,8 @@ public class Explanations {
 		// unsatisfiable icecream class has some instance.
 		// First, create an instance of the OWLClass object for the
 		// unsatisfiable icecream class.
-		IRI icecreamIRI = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream");
-		OWLClass icecream = dataFactory.getOWLClass(icecreamIRI);
+		IRI eventIRI = IRI.create("http://bupt.edu.cn:eg/Event");
+		OWLClass event = dataFactory.getOWLClass(eventIRI);
 		// Now we can start and create the reasoner. Since explanation is not
 		// natively supported by
 		// HermiT and is realised in the OWL API, we need to instantiate HermiT
@@ -58,16 +59,17 @@ public class Explanations {
 		// OWLReasoner.
 		OWLReasoner reasoner = factory.createReasoner(ontology, configuration);
 		// Let us confirm that icecream is indeed unsatisfiable:
-		System.out.println("Is icecream satisfiable? " + reasoner.isSatisfiable(icecream));
+		System.out.println("Is event satisfiable? " + reasoner.isSatisfiable(event));
 		System.out.println("Computing explanations...");
 		// Now we instantiate the explanation classes
 		BlackBoxExplanation exp = new BlackBoxExplanation(ontology, factory, reasoner);
 		HSTExplanationGenerator multExplanator = new HSTExplanationGenerator(exp);
 		// Now we can get explanations for the unsatisfiability.
-		Set<Set<OWLAxiom>> explanations = multExplanator.getExplanations(icecream);
+		Set<Set<OWLAxiom>> explanations = multExplanator.getExplanations(event);
 		// Let us print them. Each explanation is one possible set of axioms
 		// that cause the
 		// unsatisfiability.
+		System.out.println(explanations.size());
 		for (Set<OWLAxiom> explanation : explanations) {
 			System.out.println("------------------");
 			System.out.println("Axioms causing the unsatisfiability: ");
@@ -86,8 +88,8 @@ public class Explanations {
 		// Let's start by adding a dummy individual to the unsatisfiable
 		// Icecream class.
 		// This will cause an inconsistency.
-		OWLAxiom ax = dataFactory.getOWLClassAssertionAxiom(icecream, dataFactory
-				.getOWLNamedIndividual(IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#dummyIndividual")));
+		OWLAxiom ax = dataFactory.getOWLClassAssertionAxiom(event, dataFactory
+				.getOWLNamedIndividual(IRI.create("http://bupt.edu.cn:eg/carNumber")));
 		manager.addAxiom(ontology, ax);
 		// Let us confirm that the ontology is inconsistent
 		reasoner = factory.createReasoner(ontology, configuration);
