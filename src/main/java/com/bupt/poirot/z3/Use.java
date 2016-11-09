@@ -48,11 +48,11 @@ public class Use {
 		
 		
 		
-//		Use use = new Use("a>100");
-//		use.dealData("a>=11");
-//		use.dealData("a>=21");
-//		use.dealData("a>=33");
-//		use.dealData("a>=34");
-//		use.dealData("a>=193");
+		Use use = new Use("a>100");
+		use.dealData("a>=11");
+		use.dealData("a>=21");
+		use.dealData("a>=33");
+		use.dealData("a>=34");
+		use.dealData("a>=193");
 	}
 }
