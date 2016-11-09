@@ -162,7 +162,7 @@ public class JavaExampleOfCH {
 			/* do something with the context */
 
 			/* be kind to dispose manually and not wait for the GC. */
-			ctx.dispose();
+			ctx.close();
 		}
 	}
 

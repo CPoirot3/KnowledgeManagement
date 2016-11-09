@@ -4,3 +4,5 @@
 bin
 *.class
 *.txt
+.gradle/
+*.log

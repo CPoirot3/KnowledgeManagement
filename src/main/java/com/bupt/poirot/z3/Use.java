@@ -9,6 +9,7 @@ import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
+import com.microsoft.z3.Version;
 import com.microsoft.z3.Z3Exception;
 
 public class Use {
@@ -46,8 +47,8 @@ public class Use {
 	
 	public static void main(String[] args) {
 		
-		
-		
+		System.out.println(Version.getString());
+//		System.out.println(System.getProperty("java.library.path"));
 		Use use = new Use("a>100");
 		use.dealData("a>=11");
 		use.dealData("a>=21");

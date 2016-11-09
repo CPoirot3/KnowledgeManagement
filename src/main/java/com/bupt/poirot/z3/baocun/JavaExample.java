@@ -3,7 +3,8 @@ package com.bupt.poirot.z3.baocun;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList; 
-import com.microsoft.z3.*; 
+import com.microsoft.z3.*;
+import com.microsoft.z3.enumerations.Z3_sort_kind; 
 
 public class JavaExample {
 	@SuppressWarnings("serial")
@@ -14,27 +15,22 @@ public class JavaExample {
 	};
 
 	// / Create axiom: function f is injective in the i-th argument.
-
-	// / <remarks>
 	// / The following axiom is produced:
 	// / <code>
 	// / forall (x_0, ..., x_n) finv(f(x_0, ..., x_i, ..., x_{n-1})) = x_i
 	// / </code>
-	// / Where, <code>finv</code>is a fresh function declaration.
-
 	public BoolExpr injAxiom(Context ctx, FuncDecl f, int i) throws Z3Exception {
 		Sort[] domain = f.getDomain();
 		int sz = f.getDomainSize();
-
+		
 		if (i >= sz) {
 			System.out.println("failed to create inj axiom");
 			return null;
 		}
-
 		/* declare the i-th inverse of f: finv */
 		Sort finv_domain = f.getRange();
 		Sort finv_range = domain[i];
-		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range);
+		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range); // 逆函数
 
 		/* allocate temporary arrays */
 		Expr[] xs = new Expr[sz];
@@ -127,11 +123,7 @@ public class JavaExample {
 	}
 
 	// / Assert the axiom: function f is commutative.
-
-	// / <remarks>
-	// / This example uses the SMT-LIB parser to simplify the axiom
-	// construction.
-	// / </remarks>
+	// / This example uses the SMT-LIB parser to simplify the axiom construction.
 	private BoolExpr commAxiom(Context ctx, FuncDecl f) throws Exception {
 		Sort t = f.getRange();
 		Sort[] dom = f.getDomain();
@@ -149,7 +141,7 @@ public class JavaExample {
 		return ctx.getSMTLIBFormulas()[0];
 	}
 
-	// / "Hello world" example: create a Z3 logical context, and delete it.
+	// "Hello world" example: create a Z3 logical context, and delete it.
 
 	public void simpleExample() throws Z3Exception {
 		System.out.println("SimpleExample");
@@ -160,7 +152,7 @@ public class JavaExample {
 			/* do something with the context */
 
 			/* be kind to dispose manually and not wait for the GC. */
-			ctx.dispose();
+			ctx.close();
 		}
 	}
 
@@ -214,38 +206,7 @@ public class JavaExample {
 
 		return res;
 	}
-
-	// void prove(Context ctx, BoolExpr f, boolean useMBQI) throws Z3Exception,
-	// TestFailedException
-	// {
-	// BoolExpr[] assumptions = new BoolExpr[0];
-	// prove(ctx, f, useMBQI, assumptions);
-	// }
-
-	// void prove(Context ctx, BoolExpr f, boolean useMBQI, BoolExpr...
-	// assumptions)
-	// throws Z3Exception, TestFailedException {
-	// System.out.println("Proving: " + f);
-	// Solver s = ctx.mkSolver();
-	// Params p = ctx.mkParams();
-	// p.add("mbqi", useMBQI);
-	// s.setParameters(p);
-	// for (BoolExpr a : assumptions)
-	// s.add(a);
-	// s.add(ctx.mkNot(f));
-	// Status q = s.check();
-	//
-	// switch (q) {
-	// case UNKNOWN:
-	// System.out.println("Unknown because: " + s.getReasonUnknown());
-	// break;
-	// case SATISFIABLE:
-	// throw new TestFailedException();
-	// case UNSATISFIABLE:
-	// System.out.println("OK, proof: " + s.getProof());
-	// break;
-	// }
-	// }
+ 
 
 	void disprove(Context ctx, BoolExpr f, boolean useMBQI) throws Z3Exception, TestFailedException {
 		BoolExpr[] a = {};
@@ -2007,97 +1968,6 @@ public class JavaExample {
 		// System.out.println(ctx.mkEq(s1, t1));
 	}
 
-	// public void parseOwl() throws ParserConfigurationException, SAXException,
-	// IOException {
-	//
-	// File file = new File("heatExchangeStation.owl");
-	// DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	// DocumentBuilder builder = factory.newDocumentBuilder();
-	//
-	// Document doc = builder.parse(file);
-	//
-	// Element root = doc.getDocumentElement();
-	//
-	// // System.out.println(root.getNodeName());
-	// // System.out.println(root.getTagName());
-	//
-	// NodeList children = root.getChildNodes();
-	// // System.out.println(children.getLength());
-	//
-	// for (int i = 0; i < children.getLength(); i++) {
-	// Node child = children.item(i);
-	// if (child instanceof Element) {
-	// String elementName = ((Element) child).getTagName();
-	//
-	// if (elementName.contains("NamedIndividual")) {
-	// String attribute = ((Element) child).getAttribute("rdf:about");
-	// attribute = attribute.substring(0, attribute.length() - 1);
-	// float low = 0, high = 1000, value = 0;
-	// if (attribute.endsWith("Sensor")) {
-	// // System.out.println(elementName + " :");
-	// NodeList list = ((Element) child).getChildNodes();
-	// for (int j = 0; j < list.getLength(); j++) {
-	// Node childNode = list.item(j);
-	// if (childNode instanceof Element) {
-	// Element element = (Element) childNode;
-	//
-	// if (element.getTagName().endsWith("temperatureLow")) {
-	// // System.out.println(element.getTextContent());
-	// low = Float.parseFloat(element.getTextContent());
-	//
-	// }
-	//
-	// if (element.getTagName().endsWith("temperatureHigh")) {
-	// // System.out.println(element.getTextContent());
-	// high = Float.parseFloat(element.getTextContent());
-	//
-	// }
-	// if (element.getTagName().endsWith("temperature")) {
-	// // System.out.println(element.getTextContent());
-	// value = Float.parseFloat(element.getTextContent());
-	// System.out.println(guoLuTemperatureTest(low, high, value));
-	// }
-	//
-	// }
-	// }
-	// }
-	//
-	// }
-	// // System.out.println(((Element) child).getTextContent());
-	// }
-	//
-	// }
-	//
-	// }
-	//
-	// public String guoLuTemperatureTest(float low, float high, float value) {
-	//
-	// System.out.println(low + " " + high + " " + value);
-	// Context ctx = new Context();
-	// // System.out.println("FiniteDomainExample");
-	// FiniteDomainSort temperature = ctx.mkFiniteDomainSort("T", (long) high);
-	// // FiniteDomainSort pressure = ctx.mkFiniteDomainSort("P", 10000);
-	//
-	// try {
-	// Expr t1 = ctx.mkNumeral(String.valueOf(value), temperature);
-	//
-	// } catch (Exception e) {
-	// // System.out.println("alarm : temperature exceed");
-	// return "alarm : temperature exceed";
-	// }
-	//
-	// // try {
-	// // Expr p1 = ctx.mkNumeral(10001, pressure);
-	// // } catch (Exception e) {
-	// // // TODO: handle exception
-	// // System.out.println("alarm : pressure exceed");
-	// // return "alarm : pressure exceed";
-	// // }
-	//
-	// return "Normal";
-	//
-	// }
-
 	void prove(Context ctx, BoolExpr f, boolean useMBQI) throws Z3Exception, TestFailedException {
 		BoolExpr[] assumptions = new BoolExpr[0];
 		prove(ctx, f, useMBQI, assumptions);
@@ -2127,57 +1997,7 @@ public class JavaExample {
 		}
 	}
 
-	public void parseOwl2(Context ctx) throws Z3Exception, TestFailedException {
-		// /* declare function f */
-		// Sort I = ctx.mkBoolSort();
-		// FuncDecl fTemperature = ctx.mkFuncDecl("fTemperature", new Sort[] {
-		// I}, I);
-		//
-		// /* create x, y, v, w, fxy, fwv */
-		// Expr x = ctx.mkIntConst("x");
-		// Expr y = ctx.mkIntConst("y");
-		// Expr v = ctx.mkIntConst("v");
-		// Expr w = ctx.mkIntConst("w");
-		// Expr fx = ctx.mkApp(fTemperature, x);
-		//
-
-		/* create uninterpreted type. */
-		Sort U = ctx.mkUninterpretedSort(ctx.mkSymbol("U"));
-
-		/* declare function g */
-		FuncDecl g = ctx.mkFuncDecl("g", U, U);
-
-		/* create x and y */
-		Expr x = ctx.mkConst("x", U);
-		Expr y = ctx.mkConst("y", U);
-		/* create g(x), g(y) */
-		Expr gx = g.apply(x);
-		Expr gy = g.apply(y);
-
-		/* assert x = y */
-		BoolExpr eq = ctx.mkEq(x, y);
-
-		/* prove g(x) = g(y) */
-		BoolExpr f = ctx.mkEq(gx, gy);
-		System.out.println("prove: x = y implies g(x) = g(y)");
-		prove(ctx, ctx.mkImplies(eq, f), false);
-
-		BoolExpr temperatureSensor = ctx.mkBoolConst("temperatureSensor");
-		BoolExpr resoure = ctx.mkBoolConst("resoure");
-		BoolExpr concept = ctx.mkBoolConst("concept");
-
-		BoolExpr temperatureSensorImplyResoure = ctx.mkImplies(temperatureSensor, resoure);
-		BoolExpr resoureImplyConcept = ctx.mkImplies(resoure, concept);
-
-		BoolExpr postulate = ctx.mkAnd(temperatureSensorImplyResoure, resoureImplyConcept);
-
-		BoolExpr temperatureSensorImplyConcept = ctx.mkImplies(temperatureSensor, concept);
-
-		System.out.println();
-		prove(ctx, ctx.mkImplies(postulate, temperatureSensorImplyConcept), false);
-
-	}
-
+	
 	public void proveExampleByPoirot(Context ctx) throws Z3Exception, TestFailedException {
 
 		/* create uninterpreted type. */
@@ -2201,6 +2021,8 @@ public class JavaExample {
 		System.out.println("prove: x = y implies g(x) = g(y)");
 		prove(ctx, ctx.mkImplies(eq, f), false);
 
+		
+		
 		BoolExpr a = ctx.mkBoolConst("a");
 		BoolExpr b = ctx.mkBoolConst("b");
 		BoolExpr c = ctx.mkBoolConst("c");
@@ -2228,25 +2050,20 @@ public class JavaExample {
 
 	public static void main(String[] args) {
 		JavaExample p = new JavaExample();
-//		p.smt2FileTest("C:\\Users\\Poirot\\workspace\\KnowledgeManagement\\output.smt2");
-		p.smt2FileTest("output.smt2");
 		try {
 			Log.open("test.log");
 
-			// System.out.print("Z3 Major Version: ");
-			// System.out.println(Version.getMajor());
-			// System.out.println(Version.getString());
-			// System.out.print("Z3 Full Version: ");
-			// System.out.println(Version.getString());
-
-			// System.out.println(Z3_sort_kind.Z3_BOOL_SORT.toInt());
-			// System.out.println(p.guoLuTest());
-			// p.simpleExample();
+			 System.out.print("Z3 Version: ");
+			 System.out.println(Version.getString());
+			 
+			 System.out.println(Z3_sort_kind.Z3_ARRAY_SORT.toInt());
+			 
+			 p.simpleExample();
 
 			{ // These examples need model generation turned on.
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("model", "true");
-//				Context ctx = new Context(cfg);
+				Context ctx = new Context(cfg);
 
 				// p.basicTests(ctx);
 
@@ -2261,7 +2078,7 @@ public class JavaExample {
 				// p.logicExample(ctx);
 				// p.parOrExample(ctx);
 
-				// p.findModelExample1(ctx);
+				 p.findModelExample1(ctx);
 				// p.findModelExample2(ctx);
 				// p.pushPopExample1(ctx);
 				// p.arrayExample1(ctx);
@@ -2298,8 +2115,7 @@ public class JavaExample {
 				// p.unsatCoreAndProofExample(ctx); //don't got
 			}
 
-			{ // These examples need proof generation turned on and auto-config
-				// set to false.
+			{ // These examples need proof generation turned on and auto-config set to false.
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("proof", "true");
 				cfg.put("auto-config", "false");
@@ -2307,7 +2123,6 @@ public class JavaExample {
 				// p.quantifierExample3(ctx);
 				// p.quantifierExample4(ctx);
 			}
-
 			Log.close();
 			if (Log.isOpen())
 				System.out.println("Log is still open!");
