@@ -13,150 +13,216 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/139535a69a4239db087de9bab0bee568bf8e0b70/slf4j-api-1.7.21.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/139535a69a4239db087de9bab0bee568bf8e0b70/slf4j-api-1.7.21.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/f285ac123f201fb4b028bac556928d7cf527ef48/slf4j-api-1.7.21-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/f285ac123f201fb4b028bac556928d7cf527ef48/slf4j-api-1.7.21-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-arq/3.1.0/9f306f67f35a15d5c0ec486fef8e1e2ece34d0ee/jena-arq-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/org.semanticweb.hermit/1.3.8.500/7d87e83e7d9681108b8daeeb97821c325c361090/org.semanticweb.hermit-1.3.8.500.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-arq/3.1.0/4575d0a1f64ebf3d99492dde16821d708c0144c8/jena-arq-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/org.semanticweb.hermit/1.3.8.500/da2ed85582a75006b30f46bf341594f3cee934ee/org.semanticweb.hermit-1.3.8.500-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-core/3.1.0/9762d7180fc8bb6bf8a15b86bc41bd49f4147136/jena-core-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-arq/3.1.0/9f306f67f35a15d5c0ec486fef8e1e2ece34d0ee/jena-arq-3.1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-core/3.1.0/35f067e8e1ef9975dfa0508d61f07e280485c6ad/jena-core-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-arq/3.1.0/4575d0a1f64ebf3d99492dde16821d708c0144c8/jena-arq-3.1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-tdb/3.1.0/ee0d6be78e09cf04e757542eb32d37f3b30715b3/jena-tdb-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-core/3.1.0/9762d7180fc8bb6bf8a15b86bc41bd49f4147136/jena-core-3.1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-tdb/3.1.0/b1049025e4a8a1dd36407e3d125744e18cce81ac/jena-tdb-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-core/3.1.0/35f067e8e1ef9975dfa0508d61f07e280485c6ad/jena-core-3.1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-iri/3.1.0/13d22953f9ede17bee10eda82c4d6d2060c8a8c6/jena-iri-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-tdb/3.1.0/ee0d6be78e09cf04e757542eb32d37f3b30715b3/jena-tdb-3.1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-iri/3.1.0/ea91d109db4470897c73cbb242b20d79d81091d8/jena-iri-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-tdb/3.1.0/b1049025e4a8a1dd36407e3d125744e18cce81ac/jena-tdb-3.1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/6.0.4/20efb52fc39f60debcbc96a688f8c4e70654ef6b/mysql-connector-java-6.0.4.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-iri/3.1.0/13d22953f9ede17bee10eda82c4d6d2060c8a8c6/jena-iri-3.1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/6.0.4/841754d1e3483c177ab5fdb12cb5d4b7b64b43d6/mysql-connector-java-6.0.4-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-iri/3.1.0/ea91d109db4470897c73cbb242b20d79d81091d8/jena-iri-3.1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.3.12.v20160915/9a5d53daefeeb91afb45a4d42c28526dfc36bfaf/jetty-server-9.3.12.v20160915.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/6.0.4/20efb52fc39f60debcbc96a688f8c4e70654ef6b/mysql-connector-java-6.0.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.3.12.v20160915/9007251b236b8151794cf97d8ce276f8d136f9ba/jetty-server-9.3.12.v20160915-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/6.0.4/841754d1e3483c177ab5fdb12cb5d4b7b64b43d6/mysql-connector-java-6.0.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/3.3.0/7d6c104620558aa9c1d5c9f06fccfefe34de5604/mongo-java-driver-3.3.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.3.12.v20160915/9a5d53daefeeb91afb45a4d42c28526dfc36bfaf/jetty-server-9.3.12.v20160915.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/3.3.0/4ebe2ddf24fdb88a53b44dd23ee51157eb5af9cb/mongo-java-driver-3.3.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.3.12.v20160915/9007251b236b8151794cf97d8ce276f8d136f9ba/jetty-server-9.3.12.v20160915-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.2/733db77aa8d9b2d68015189df76ab06304406e50/httpclient-4.5.2.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlets/9.3.12.v20160915/d11c4c07ad56026ff499afb0ed93ab250002faa6/jetty-servlets-9.3.12.v20160915.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.2/b9f9e3e5255b6ddc3bf21be05428c7a60d00e042/httpclient-4.5.2-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlets/9.3.12.v20160915/9126b3c9e978130918eabac1472855889ac1eb5b/jetty-servlets-9.3.12.v20160915-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/3.3.0/7d6c104620558aa9c1d5c9f06fccfefe34de5604/mongo-java-driver-3.3.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/3.3.0/4ebe2ddf24fdb88a53b44dd23ee51157eb5af9cb/mongo-java-driver-3.3.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-shaded-guava/3.1.0/6e2400a81e3d6d50a894daa07db0501fc900c659/jena-shaded-guava-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.2/733db77aa8d9b2d68015189df76ab06304406e50/httpclient-4.5.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-shaded-guava/3.1.0/3c9f53fa5a541c3b309ac349e7b665667301a945/jena-shaded-guava-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.2/b9f9e3e5255b6ddc3bf21be05428c7a60d00e042/httpclient-4.5.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.github.jsonld-java/jsonld-java/0.7.0/8e5b63444ddaf911358dc66966617454f3590353/jsonld-java-0.7.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.github.jsonld-java/jsonld-java/0.7.0/e0f33a8c417ade2a68883504109196fcdb35a6cd/jsonld-java-0.7.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-cache/4.2.6/21dc2e715f7177fb218579bd5fc8aba135efa29a/httpclient-cache-4.2.6.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-distribution/5.0.0/f6c8f386c77d7fd6e01c32bebb4bafbb13c29134/owlapi-distribution-5.0.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-cache/4.2.6/da5ad3fb07ff8d4f737afca13de675b32d14581c/httpclient-cache-4.2.6-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-distribution/5.0.0/9ae75ca53ed68c5b380f613bcb883f45b0b241f0/owlapi-distribution-5.0.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.thrift/libthrift/0.9.2/9b067e2e2c5291e9f0d8b3561b1654286e6d81ee/libthrift-0.9.2.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-api/1.2.14/5b11407fb3c02556e7c86a0922f8f8105afb3e4d/axiom-api-1.2.14.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-api/1.2.14/ccd6ed5247071b1be93e3571371000fc5e5f6f7/axiom-api-1.2.14-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-c14n/1.2.14/3924027b646da0cd736d839ab74c4cb7f77bbf9c/axiom-c14n-1.2.14.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-c14n/1.2.14/580b2fc29ec41c6dc04c1913e0d88d07ae8f5ab2/axiom-c14n-1.2.14-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-impl/1.2.14/c4769c96ceee2893a1a95164e6a9b4d669917c8c/axiom-impl-1.2.14.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-impl/1.2.14/c24d810131f6991e623af1227245bad56007d96f/axiom-impl-1.2.14-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-dom/1.2.14/e56bb2b1e532967818cfcb0c3d17922380db24c2/axiom-dom-1.2.14.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.ws.commons.axiom/axiom-dom/1.2.14/ec7e5d7014b524f517e52ee6ffe53fc2a8e2cdd8/axiom-dom-1.2.14-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/dk.brics.automaton/automaton/1.11-8/6ebfa65eb431ff4b715a23be7a750cbc4cc96d0f/automaton-1.11-8.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/dk.brics.automaton/automaton/1.11-8/6bc89a2a9c9c5524aa275b572c0fd3699ff7a5be/automaton-1.11-8-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-shaded-guava/3.1.0/6e2400a81e3d6d50a894daa07db0501fc900c659/jena-shaded-guava-3.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-shaded-guava/3.1.0/3c9f53fa5a541c3b309ac349e7b665667301a945/jena-shaded-guava-3.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.thrift/libthrift/0.9.2/9b067e2e2c5291e9f0d8b3561b1654286e6d81ee/libthrift-0.9.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -165,231 +231,823 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.20/722d5b58cb054a835605fe4d12ae163513f48d2e/jcl-over-slf4j-1.7.20.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.20/722d5b58cb054a835605fe4d12ae163513f48d2e/jcl-over-slf4j-1.7.20.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.20/17ebed6480ab5650d7d1d912875528e2cfa45b9/jcl-over-slf4j-1.7.20-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.20/17ebed6480ab5650d7d1d912875528e2cfa45b9/jcl-over-slf4j-1.7.20-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.0/8a0796ad6541a144eb1c00b93e06fbac03a9f313/commons-csv-1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.0/8a0796ad6541a144eb1c00b93e06fbac03a9f313/commons-csv-1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.0/8f6d4b9b4c9b04b1e91cc4b05f4a7064978c81c9/commons-csv-1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.0/8f6d4b9b4c9b04b1e91cc4b05f4a7064978c81c9/commons-csv-1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.3.2/90a3822c38ec8c996e84c16a3477ef632cbc87a3/commons-lang3-3.3.2.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.3.2/90a3822c38ec8c996e84c16a3477ef632cbc87a3/commons-lang3-3.3.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.3.2/d2a489573c0ed2c4942b3660decad5d65087b406/commons-lang3-3.3.2-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.3.2/d2a489573c0ed2c4942b3660decad5d65087b406/commons-lang3-3.3.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/xerces/xercesImpl/2.11.0/9bb329db1cfc4e22462c9d6b43a8432f5850e92c/xercesImpl-2.11.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/xerces/xercesImpl/2.11.0/9bb329db1cfc4e22462c9d6b43a8432f5850e92c/xercesImpl-2.11.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/xerces/xercesImpl/2.11.0/af86e59459a503adec5e9b47426dd9fa2ac5f1f6/xercesImpl-2.11.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/xerces/xercesImpl/2.11.0/af86e59459a503adec5e9b47426dd9fa2ac5f1f6/xercesImpl-2.11.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.3/a48653b6bcd06b5e61ed63739ca601701fcb6a6c/commons-cli-1.3.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.3/a48653b6bcd06b5e61ed63739ca601701fcb6a6c/commons-cli-1.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.3/3ed41a7767cda9dc3f33bf64b08ccf201cf23fb2/commons-cli-1.3-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.3/3ed41a7767cda9dc3f33bf64b08ccf201cf23fb2/commons-cli-1.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-base/3.1.0/b8eb06db8462d570c8d7896aaf29b3b76e1dafa2/jena-base-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-base/3.1.0/b8eb06db8462d570c8d7896aaf29b3b76e1dafa2/jena-base-3.1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-base/3.1.0/4dc169ebabed01958f0088c1d07dca884d1e9a2e/jena-base-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.jena/jena-base/3.1.0/4dc169ebabed01958f0088c1d07dca884d1e9a2e/jena-base-3.1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/3cd63d075497751784b2fa84be59432f4905bf7c/javax.servlet-api-3.1.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/3cd63d075497751784b2fa84be59432f4905bf7c/javax.servlet-api-3.1.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/ab3976d4574c48d22dc1abf6a9e8bd0fdf928223/javax.servlet-api-3.1.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/ab3976d4574c48d22dc1abf6a9e8bd0fdf928223/javax.servlet-api-3.1.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.3.12.v20160915/9d6aa5c475e0f655f77598d35cf740c39813f58e/jetty-http-9.3.12.v20160915.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.3.12.v20160915/9d6aa5c475e0f655f77598d35cf740c39813f58e/jetty-http-9.3.12.v20160915.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.3.12.v20160915/a8ddac8630b476ebe0eb0dbf841dd77d7ba6e210/jetty-http-9.3.12.v20160915-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.3.12.v20160915/a8ddac8630b476ebe0eb0dbf841dd77d7ba6e210/jetty-http-9.3.12.v20160915-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.3.12.v20160915/daa2678ef0e6913193f6349d793f49ee381046ea/jetty-io-9.3.12.v20160915.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.3.12.v20160915/daa2678ef0e6913193f6349d793f49ee381046ea/jetty-io-9.3.12.v20160915.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.3.12.v20160915/41b21f7487f971e0e41a12caa179f15245c1a701/jetty-io-9.3.12.v20160915-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.3.12.v20160915/41b21f7487f971e0e41a12caa179f15245c1a701/jetty-io-9.3.12.v20160915-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.3.3/7d8c5d79cc99995e21e6f955857312d8409f02a1/jackson-core-2.3.3.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-continuation/9.3.12.v20160915/eabd9b4fc07733845e5aac34a54956cb4e96e4fd/jetty-continuation-9.3.12.v20160915.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.3.3/7d582e8c2d3f7015f5c22b218d6a232a86f157ef/jackson-core-2.3.3-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-continuation/9.3.12.v20160915/5d59ad9ae94d5bd136a0a5d899a72b459ad84671/jetty-continuation-9.3.12.v20160915-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.3.3/63b77400b5f1cf83a81823562c48d3120ef5518e/jackson-databind-2.3.3.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.3.12.v20160915/df4015dfd1a971f66d1788bf48c92288c1d54787/jetty-util-9.3.12.v20160915.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.3.3/24d14caf77d96de6e2265c75137fad96b1990331/jackson-databind-2.3.3-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.3.12.v20160915/511c608b1472470d66d55eaf6480d1b8fb593f27/jetty-util-9.3.12.v20160915-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.6.3/142ce64dcd709a4b5f6e7d71305a31d3893d077/jackson-core-2.6.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/f2d8698c46d1167ff24b06a840a87d91a02db891/commons-io-2.4-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.6.3/725bd4a1edfbf519b03ea21967f7fc5270140d3e/jackson-core-2.6.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/1.4.01/3789d9fada2d3d458c4ba2de349d48780f381ee3/xml-apis-1.4.01.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.6.3/5c4fcae53dd82e2c549b8322d78c6ff47c94c8a8/jackson-databind-2.6.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/1.4.01/5502da0c4c0a7916a604356ef19394ccfa30cd4b/xml-apis-1.4.01-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.6.3/e50e2cdcbbfd50346a192b18df3a05cbb0119176/jackson-databind-2.6.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.github.andrewoma.dexx/collection/0.6/9364d0beacd4dbb3168a274b1dc4fef1a4023616/collection-0.6.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.6.3/435efa54afd2853995546802280e8cd2d2770d00/jackson-annotations-2.6.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.github.andrewoma.dexx/collection/0.6/93cde6dd68a136a29069d58c1d678699482851da/collection-0.6-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.6.3/e92ea2d514bf1133e8c5b6ec9dfd548f7534ca62/jackson-annotations-2.6.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.3.12.v20160915/df4015dfd1a971f66d1788bf48c92288c1d54787/jetty-util-9.3.12.v20160915.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-compatibility/5.0.0/f18d05f90d67b511db4bf3e13ef9b531fd235dfa/owlapi-compatibility-5.0.0.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.3.12.v20160915/511c608b1472470d66d55eaf6480d1b8fb593f27/jetty-util-9.3.12.v20160915-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-compatibility/5.0.0/1795ce898d10a348aefcc12a6ce61e257e527726/owlapi-compatibility-5.0.0-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.3.0/f5e853a20b60758922453d56f9ae1e64af5cb3da/jackson-annotations-2.3.0.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-rdf-api/0.1.0-incubating/67cd2cbe62d5d263495373a697d5dcd5389c7d59/commons-rdf-api-0.1.0-incubating.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.3.0/cc964b08f8d37e3d8465de923b9e6321107a5429/jackson-annotations-2.3.0-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-rdf-api/0.1.0-incubating/7f402db269f3cef5070e3d9e55413497a7170bcb/commons-rdf-api-0.1.0-incubating-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.4/b31526a230871fbe285fbcbe2813f9c0839ae9b0/httpcore-4.4.4.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.tukaani/xz/1.5/9c64274b7dbb65288237216e3fae7877fd3f2bee/xz-1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.4/c5c19e3e6af6b452def290cde12a3ee4c35c893c/httpcore-4.4.4-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.tukaani/xz/1.5/66cf970ae7a73d9c3eb7d0ad3e901c43591139c3/xz-1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-model/4.0.2/d6d76223c32dd551100d28786d4594177f4347a9/sesame-model-4.0.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-model/4.0.2/de52d375749fa9995a493d2632795925e80ab82d/sesame-model-4.0.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.9/9ce04e34240f674bc72680f8b843b1457383161a/commons-codec-1.9.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-api/4.0.2/70b22e63a48f9bdaeb6fbfddf5bdaaeb191b01dc/sesame-rio-api-4.0.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.9/3f15fff45d57656685abfee9e8302bf14580044c/commons-codec-1.9-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-api/4.0.2/2d27b47ee3cb349437bd4204f890812e56f6cd9b/sesame-rio-api-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-languages/4.0.2/e54ed9ab41c59ec1e34d3e682779c20034266c2e/sesame-rio-languages-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-languages/4.0.2/a50a050b1dda6b83383dde3936b6761a72a034a3/sesame-rio-languages-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-datatypes/4.0.2/891272194775445e3e0ae9c440d1b3da24e2563e/sesame-rio-datatypes-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-datatypes/4.0.2/5fdef3cc455412afa45c35efc3d6c3427b88b63f/sesame-rio-datatypes-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-binary/4.0.2/7b8ef8accd19068ac93b0bcf20ccc03bfaf3f3c6/sesame-rio-binary-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-binary/4.0.2/13a6edd4ce48b63e8a830c2d360052c4563b6065/sesame-rio-binary-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-n3/4.0.2/b33928dee81696c8bcc1181a23f5bd168ba538b4/sesame-rio-n3-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-n3/4.0.2/e1fce1c6b997cdcf2c96e8347d3e646b8917f4d8/sesame-rio-n3-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-nquads/4.0.2/993845a1d533accd567bd27c22b34b7d8cb6db9b/sesame-rio-nquads-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-nquads/4.0.2/fceb41b7bead3f31f0b4f0232022515e82541d/sesame-rio-nquads-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-ntriples/4.0.2/255a355512b80abc5f929acea4425eaf7b2d456/sesame-rio-ntriples-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-ntriples/4.0.2/9198f6bc3a92e6a8696eb8c0c16b77cdb2b85b42/sesame-rio-ntriples-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-rdfjson/4.0.2/af158ac45b8160f5070d37bbc53e8e145e5293e7/sesame-rio-rdfjson-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-rdfjson/4.0.2/456a0cb2563e69595a74f02ac4fd2ce904b37180/sesame-rio-rdfjson-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-rdfxml/4.0.2/185168810d0a058b775929170c39e0116ffdfd7a/sesame-rio-rdfxml-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-rdfxml/4.0.2/73a9ade59bd0e294f459e13811c95d8c45c08a53/sesame-rio-rdfxml-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-trix/4.0.2/8f5556c3ec274332d9d5fd2d80ad3cf7657eec3f/sesame-rio-trix-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-trix/4.0.2/8c6a658fb07e2ea57db163e9cebc792015e36e8f/sesame-rio-trix-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-turtle/4.0.2/e4e8940155c848245a86c26b31d5313559f0ab17/sesame-rio-turtle-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-turtle/4.0.2/d835135379f8175f7abd75985974889b02e186a8/sesame-rio-turtle-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-trig/4.0.2/6b6d7e3098e19a911c05ec55bb602061dcc044e8/sesame-rio-trig-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-trig/4.0.2/f4a5da9815e632c307999833a5b30afbb1b01b1b/sesame-rio-trig-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-sesame/0.6.1/1cb9145d1ca1b2a4c8ef6f40b77c6bba43088ca1/semargl-sesame-0.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-sesame/0.6.1/dfc57e60411ede9e7303323142b321b24f771822/semargl-sesame-0.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sf.trove4j/trove4j/3.0.3/42ccaf4761f0dfdfa805c9e340d99a755907e2dd/trove4j-3.0.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sf.trove4j/trove4j/3.0.3/109c5be93362e6e651e417c51d1863477a22969c/trove4j-3.0.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/2.1.0/eb9c4e7d852c1736dbfba6fa1e7c4aab854c52ba/caffeine-2.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/2.1.0/5b191154974137045698ea1177298897b81e2230/caffeine-2.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/19.0/6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9/guava-19.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/19.0/91a4d115400e904f22b03a78deb355e9ea803cd4/guava-19.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.inject/guice/4.0/f990a43d3725781b6db7cd0acf0a8b62dfd1649/guice-4.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.inject/guice/4.0/961359f8352b791c6443a207c847e25d6d3ca7cd/guice-4.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.inject.extensions/guice-assistedinject/4.0/8fa6431da1a2187817e3e52e967535899e2e46ca/guice-assistedinject-4.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.inject.extensions/guice-assistedinject/4.0/579c00df760815a369a396e7877cb6c3441b4328/guice-assistedinject-4.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.inject.extensions/guice-multibindings/4.0/f4509545b4470bbcc865aa500ad6fef2e97d28bf/guice-multibindings-4.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.inject.extensions/guice-multibindings/4.0/57571f3b14dfa91b1d286b4eebb74d7d8911ff27/guice-multibindings-4.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/2.0.1/516c03b21d50a644d538de0f0369c620989cd8f0/jsr305-2.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/f2d8698c46d1167ff24b06a840a87d91a02db891/commons-io-2.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-activation_1.1_spec/1.1/f15af1b53fba7f23ce5e9de4fb57a88585aa9eee/geronimo-activation_1.1_spec-1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-activation_1.1_spec/1.1/64ab5ccd9d6b0efffafe3bea6134edfdb062b842/geronimo-activation_1.1_spec-1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-javamail_1.4_spec/1.7.1/43ad4090b1a07a11c82ac40c01fc4e2fbad20013/geronimo-javamail_1.4_spec-1.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-javamail_1.4_spec/1.7.1/8c671a08f1a98697e26419b69451430e153193c0/geronimo-javamail_1.4_spec-1.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/jaxen/jaxen/1.1.4/8c06a96cf9150ded75c28b7087ed821a93270c41/jaxen-1.1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/jaxen/jaxen/1.1.4/1d4014377e8ac4a8f5631d2607e4a633ca1f32b5/jaxen-1.1.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/1.0.1/1c171093a8b43aa550c6050ac441abe713ebb4f2/geronimo-stax-api_1.0_spec-1.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/1.0.1/a4e4ef57ac140ab12a570e5c5b91571ddaaf9dcd/geronimo-stax-api_1.0_spec-1.0.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.james/apache-mime4j-core/0.7.2/a81264fe0265ebe8fd1d8128aad06dc320de6eef/apache-mime4j-core-0.7.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.james/apache-mime4j-core/0.7.2/df2e64024dbe47fa357cbf4f0e15daa28dd7c14b/apache-mime4j-core-0.7.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.codehaus.woodstox/woodstox-core-asl/4.1.4/79b82e7dfd5c24b228ea56456d6adce225259ec4/woodstox-core-asl-4.1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.codehaus.woodstox/woodstox-core-asl/4.1.4/a363593119d1ba7020996a8469d8dc548eb57982/woodstox-core-asl-4.1.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/1.4.01/3789d9fada2d3d458c4ba2de349d48780f381ee3/xml-apis-1.4.01.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/1.4.01/5502da0c4c0a7916a604356ef19394ccfa30cd4b/xml-apis-1.4.01-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.github.andrewoma.dexx/collection/0.6/9364d0beacd4dbb3168a274b1dc4fef1a4023616/collection-0.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.github.andrewoma.dexx/collection/0.6/93cde6dd68a136a29069d58c1d678699482851da/collection-0.6-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-apibinding/5.0.0/b2cf6da8a6e39957c1f5c137afcfa9064cb3d526/owlapi-apibinding-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-apibinding/5.0.0/33957db064e1caf66d4596d51567e2988e734b6c/owlapi-apibinding-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-util/4.0.2/4ff4e918e07dc4caa46ee82aa8322cefb7bde37e/sesame-util-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-util/4.0.2/6fc37ebd19230ac546743305eced60f6d0267b74/sesame-util-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-core/0.6.1/8f9fcd16386db91dc8d300ce8c6e960223a213ba/semargl-core-0.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-core/0.6.1/5c16deb1ea3ccec7c2584b7020408cff99ac4ece/semargl-core-0.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-rdfa/0.6.1/2b6a595dec121c9d454bec94b41327bbb058d42e/semargl-rdfa-0.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-rdfa/0.6.1/f86ff0bbf243a6cf3249328d43c1e539aaab8cc8/semargl-rdfa-0.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/a00123f261762a7c5e0ec916a2c7c8298d29c400/javax.inject-1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/aopalliance/aopalliance/1.0/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/aopalliance/aopalliance/1.0/4a4b6d692e17846a9f3da036438a7ac491d3c814/aopalliance-1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.codehaus.woodstox/stax2-api/3.1.1/466eab062e9d1a3ce2c4631b6d09b5e5c0cbd1b/stax2-api-3.1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.codehaus.woodstox/stax2-api/3.1.1/cb342dff0332b73ca4db2ebc395e7f8aaf1964ad/stax2-api-3.1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-api/5.0.0/99b09e0d02f1c8d84aa8e046facc0651ddc8f708/owlapi-api-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-api/5.0.0/44028f4b00ca87764805ac047ef985122f7345ff/owlapi-api-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-impl/5.0.0/25f8ede90d64a5e528dccd6e9f951771a66277f4/owlapi-impl-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-impl/5.0.0/56b3790e881e328d17b4cbc7d69e003f44870dac/owlapi-impl-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-parsers/5.0.0/e6dbae7ef985702641acb44579b0501da4cb9d2d/owlapi-parsers-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-parsers/5.0.0/bf5762bfae1baa91546fec98e982808f4f0f98f4/owlapi-parsers-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-oboformat/5.0.0/eec8b918c4d284fa56061bd64e4200a50fff0541/owlapi-oboformat-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-oboformat/5.0.0/cc122f5fb803330093b60403256f8f4399616370/owlapi-oboformat-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-tools/5.0.0/9c33c8509bac5d0e6eaff6a9b424d76c783bff1f/owlapi-tools-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-tools/5.0.0/5b45a17d340268a4b73de8553defcc4c44efaf5c/owlapi-tools-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-fixers/5.0.0/7dc66e9d85081045c36f91de1c2af12d2ccb8373/owlapi-fixers-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-fixers/5.0.0/84980fd30ee5967a621320a310a0cc736d73069e/owlapi-fixers-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-rio/5.0.0/6fae7a02d2cd464d78589c33d37dc572f3937dec/owlapi-rio-5.0.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/net.sourceforge.owlapi/owlapi-rio/5.0.0/b14067237386647315f89f8d86b18357d759f4a3/owlapi-rio-5.0.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-rdf/0.6.1/6f55af1afc480189d9b3547fe1514fa66641eed3/semargl-rdf-0.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.semarglproject/semargl-rdf/0.6.1/699a80f93be581e614226c73c87bd38298ba990c/semargl-rdf-0.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-jsonld/4.0.2/325dce15c671e7743cf16e0cf9d9bc9edd19f31c/sesame-rio-jsonld-4.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.openrdf.sesame/sesame-rio-jsonld/4.0.2/9dc8a11375a2ba787bb6479ed7a3d3f7bc026e0b/sesame-rio-jsonld-4.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.4/b31526a230871fbe285fbcbe2813f9c0839ae9b0/httpcore-4.4.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.4/c5c19e3e6af6b452def290cde12a3ee4c35c893c/httpcore-4.4.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.9/9ce04e34240f674bc72680f8b843b1457383161a/commons-codec-1.9.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.9/3f15fff45d57656685abfee9e8302bf14580044c/commons-codec-1.9-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.github.jsonld-java/jsonld-java/0.8.0/4cafdc849c583a1098ffc87c116777645d6d0866/jsonld-java-0.8.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/com.github.jsonld-java/jsonld-java/0.8.0/3ecfe2a12e7806fe2cda76c77be9615ab6c2ff39/jsonld-java-0.8.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-osgi/4.5.1/220a68ff36e5b0fa71b5dc0b1dc1d4ad2dcf524/httpclient-osgi-4.5.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-osgi/4.5.1/7acffbd966a23b36246ec1a35aa1d97bd490f35c/httpclient-osgi-4.5.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-osgi/4.4.4/d5c14055e569afca96f4603d6f9d467bc72ccba8/httpcore-osgi-4.4.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-osgi/4.4.4/6ce44a7a971bdaebd86d28fc97145c2717981942/httpcore-osgi-4.4.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.5.1/96823b9421ebb9f490dec837d9f96134e864e3a7/httpmime-4.5.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.5.1/2aab83661676c842d50995fe934550e3e23b3c6/httpmime-4.5.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/fluent-hc/4.5.1/2a4bafd995d1403c26d874bf52f76e7f74af8b9a/fluent-hc-4.5.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/fluent-hc/4.5.1/95db41125f63510ffc659cfeefea1d39572ee1f6/fluent-hc-4.5.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-nio/4.4.4/16badfc2d99db264c486ba8c57ae577301a58bd9/httpcore-nio-4.4.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore-nio/4.4.4/816d16779b3058b1454908757fbc9ec8d233d7ba/httpcore-nio-4.4.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-cache/4.5.1/6247317086cb12d2a5fe3296afeccb1d3e00525c/httpclient-cache-4.5.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-cache/4.5.1/36881b54648072f5dc8f36081cc3d51ad4862f65/httpclient-cache-4.5.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///home/poirot3/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
+          <root url="jar://C:/Users/Poirot/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
