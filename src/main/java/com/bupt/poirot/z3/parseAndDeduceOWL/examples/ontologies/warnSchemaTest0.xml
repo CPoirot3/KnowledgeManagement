@@ -16,35 +16,20 @@
           <rdf:Description>
              <owl:intersectionOf rdf:parseType="Collection">
                 <owl:Restriction>
-                   <owl:onProperty rdf:resource="&eg;hasEvent"/>
-                   <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+                   <owl:onProperty rdf:resource="&eg;hasDanger"/>
+                   <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">10000</owl:minCardinality>
                 </owl:Restriction>
               </owl:intersectionOf>
            </rdf:Description>
        </rdfs:subClassOf>
   </owl:Class>
 
-  <owl:Class rdf:about="&eg;Car" />
-  <owl:Class rdf:about="&eg;Event">
-      <rdfs:subClassOf>
-          <rdf:Description>
-             <owl:intersectionOf rdf:parseType="Collection">
-                <owl:Restriction>
-                   <owl:onProperty rdf:resource="&eg;carNumber"/>
-                   <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1000</owl:minCardinality>
-                </owl:Restriction>
-              </owl:intersectionOf>
-           </rdf:Description>
-       </rdfs:subClassOf>
+  <owl:Class rdf:about="&eg;Car"/>
+  <owl:Class rdf:about="&eg;Danger">
   </owl:Class>
 
-  <owl:ObjectProperty rdf:about="&eg;carNumber">
-      <rdfs:range rdf:resource="&eg;Car"/>
-      <rdfs:domain rdf:domain="&eg;Event"/>
-  </owl:ObjectProperty>/
-
-  <owl:ObjectProperty rdf:about="&eg;hasEvent">
-      <rdfs:range rdf:resource="&eg;Event" />
+  <owl:ObjectProperty rdf:about="&eg;hasDanger">
+      <rdfs:range rdf:resource="&eg;Danger" />
       <rdfs:domain rdf:resource="&eg;Alarm" />
   </owl:ObjectProperty>
 
