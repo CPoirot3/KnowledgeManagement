@@ -5,6 +5,6 @@ package com.bupt.poirot.main;
  */
 public class SendingData {
     public static void main(String[] args) {
-
+    	
     }
 }

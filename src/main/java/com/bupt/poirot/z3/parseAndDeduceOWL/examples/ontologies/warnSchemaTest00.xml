@@ -22,7 +22,7 @@
               </owl:intersectionOf>
            </rdf:Description>
        </rdfs:subClassOf>
-       <!-- <rdfs:subClassOf>
+       <rdfs:subClassOf>
            <rdf:Description>
               <owl:intersectionOf rdf:parseType="Collection">
                  <owl:Restriction>
@@ -31,26 +31,14 @@
                  </owl:Restriction>
                </owl:intersectionOf>
             </rdf:Description>
-        </rdfs:subClassOf> -->
+        </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:about="&eg;Event">
       <rdfs:subClassOf>
           <owl:Class rdf:about="&eg;A"/>
       </rdfs:subClassOf>
-      <owl:disjointWith>
-          <owl:Class rdf:about="&eg;B"/>
-      </owl:disjointWith>
   </owl:Class>
-  <owl:Class rdf:about="&eg;A">
-      <rdfs:subClassOf>
-          <owl:Class rdf:about="&eg;B"/>
-      </rdfs:subClassOf>
-  </owl:Class>
-  <owl:Class rdf:about="&eg;B">
-      <rdfs:subClassOf>
-          <owl:Class rdf:about="&eg;Event"/>
-      </rdfs:subClassOf>
-  </owl:Class>
+
   <owl:ObjectProperty rdf:about="&eg;hasEvent">
       <rdfs:range rdf:resource="&eg;Event" />
       <rdfs:domain rdf:resource="&eg;Alarm" />
