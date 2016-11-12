@@ -2,6 +2,7 @@ package com.bupt.poirot.z3.parseAndDeduceOWL;
 
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.Expr;
 import com.microsoft.z3.Solver;
 import org.semanticweb.HermiT.model.DLClause;
 
@@ -18,6 +19,10 @@ public class Tansformation {
         for (DLClause dlClause : dlClauseSet) {
 
         }
+    }
+
+    public Expr parSingleDLCLause(Context context, DLClause dlClause) {
+        Expr expr =
     }
 
 }
