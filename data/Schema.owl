@@ -12,10 +12,31 @@
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     <Declaration>
+        <ObjectProperty IRI="#hasRoad"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasEndPoint"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasLatitude"/>
+    </Declaration>
+    <Declaration>
         <Class IRI="#Road"/>
     </Declaration>
     <Declaration>
-        <Class IRI="#Event"/>
+        <ObjectProperty IRI="#hasCar"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasLongitude"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vehicle"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasBeginPoint"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Car"/>
     </Declaration>
     <Declaration>
         <Class IRI="#Conjestion"/>
@@ -23,6 +44,52 @@
     <Declaration>
         <Class IRI="#Point"/>
     </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#Conjestion"/>
+        <ObjectMinCardinality cardinality="100">
+            <ObjectProperty IRI="#hasCar"/>
+            <Class IRI="#Car"/>
+        </ObjectMinCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Conjestion"/>
+        <ObjectMinCardinality cardinality="1">
+            <ObjectProperty IRI="#hasRoad"/>
+            <Class IRI="#Road"/>
+        </ObjectMinCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Point"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#hasLatitude"/>
+            <Datatype abbreviatedIRI="xsd:float"/>
+        </DataExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Point"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#hasLongitude"/>
+            <Datatype abbreviatedIRI="xsd:float"/>
+        </DataExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Road"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#hasBeginPoint"/>
+            <Class IRI="#Point"/>
+        </ObjectExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Road"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#hasEndPoint"/>
+            <Class IRI="#Point"/>
+        </ObjectExactCardinality>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="#Car"/>
+        <Class IRI="#Vehicle"/>
+    </SubClassOf>
 </Ontology>
 
 

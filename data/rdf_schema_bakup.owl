@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#"
+     xml:base="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasBeginPoint -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasBeginPoint"/>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasCar -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasCar"/>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasEndPoint -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasEndPoint"/>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasRoad -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasRoad"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasLatitude -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasLatitude"/>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasLongitude -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasLongitude"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Car -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Car">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Vehicle"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Conjestion -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Conjestion">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasCar"/>
+                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">100</owl:minQualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Car"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasRoad"/>
+                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Road"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Point -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Point">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasLatitude"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasLongitude"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Road -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Road">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasBeginPoint"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Point"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#hasEndPoint"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Point"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Vehicle -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology#Vehicle"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi -->
+
