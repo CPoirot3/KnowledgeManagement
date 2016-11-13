@@ -1,4 +1,4 @@
-package com.bupt.poirot.z3.baocun;
+package com.bupt.poirot.z3.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,11 +14,11 @@ import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 import com.microsoft.z3.Z3Exception;
 
-public class Test {
+public class SatisfiableWithString {
 	private static HashMap<String, String> cfg ;	
 	private static Context ctx ;
 	private static Solver solver;
-	public Test() {
+	public SatisfiableWithString() {
 		// TODO Auto-generated constructor stub
 		 cfg = new HashMap<String, String>();	
 		 ctx = new Context(cfg);

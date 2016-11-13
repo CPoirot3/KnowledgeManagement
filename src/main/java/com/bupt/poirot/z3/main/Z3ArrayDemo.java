@@ -1,9 +1,9 @@
-package com.bupt.poirot.z3.baocun;
+package com.bupt.poirot.z3.main;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.microsoft.z3.*;
 
-public class TestZ3ByCH {
+public class Z3ArrayDemo {
 
 	@SuppressWarnings("serial")
 	class TestFailedException extends Exception
@@ -237,7 +237,7 @@ public class TestZ3ByCH {
 		Integer[] t1 = (Integer[])t.toArray(new Integer[size]);
 		test(t1);
 		
-		TestZ3ByCH p = new TestZ3ByCH();
+		Z3ArrayDemo p = new Z3ArrayDemo();
 		try {
 
 			Log.open("test.log");

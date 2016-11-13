@@ -1,12 +1,11 @@
-package com.bupt.poirot.z3.baocun;
- 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList; 
-import com.microsoft.z3.*;
-import com.microsoft.z3.enumerations.Z3_sort_kind; 
+package com.bupt.poirot.z3.main;
 
-public class JavaExample {
+import java.util.*;
+
+import com.microsoft.z3.*;
+import com.microsoft.z3.Pattern;
+
+public class Main {
 	@SuppressWarnings("serial")
 	class TestFailedException extends Exception {
 		public TestFailedException() {
@@ -15,22 +14,27 @@ public class JavaExample {
 	};
 
 	// / Create axiom: function f is injective in the i-th argument.
+
+	// / <remarks>
 	// / The following axiom is produced:
 	// / <code>
 	// / forall (x_0, ..., x_n) finv(f(x_0, ..., x_i, ..., x_{n-1})) = x_i
 	// / </code>
+	// / Where, <code>finv</code>is a fresh function declaration.
+
 	public BoolExpr injAxiom(Context ctx, FuncDecl f, int i) throws Z3Exception {
 		Sort[] domain = f.getDomain();
 		int sz = f.getDomainSize();
-		
+
 		if (i >= sz) {
 			System.out.println("failed to create inj axiom");
 			return null;
 		}
+
 		/* declare the i-th inverse of f: finv */
 		Sort finv_domain = f.getRange();
 		Sort finv_range = domain[i];
-		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range); // 逆函数
+		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range);
 
 		/* allocate temporary arrays */
 		Expr[] xs = new Expr[sz];
@@ -123,10 +127,14 @@ public class JavaExample {
 	}
 
 	// / Assert the axiom: function f is commutative.
-	// / This example uses the SMT-LIB parser to simplify the axiom construction.
+
+	// / <remarks>
+	// / This example uses the SMT-LIB parser to simplify the axiom
+	// construction.
+	// / </remarks>
 	private BoolExpr commAxiom(Context ctx, FuncDecl f) throws Exception {
-		Sort t = f.getRange();
-		Sort[] dom = f.getDomain();
+		Sort t = f.getRange(); // 定义域
+		Sort[] dom = f.getDomain(); // 值域
 
 		if (dom.length != 2 || !t.equals(dom[0]) || !t.equals(dom[1])) {
 			System.out.println(Integer.toString(dom.length) + " " + dom[0].toString() + " " + dom[1].toString() + " "
@@ -139,21 +147,6 @@ public class JavaExample {
 		ctx.parseSMTLIBString(bench, new Symbol[] { t.getName() }, new Sort[] { t }, new Symbol[] { f.getName() },
 				new FuncDecl[] { f });
 		return ctx.getSMTLIBFormulas()[0];
-	}
-
-	// "Hello world" example: create a Z3 logical context, and delete it.
-
-	public void simpleExample() throws Z3Exception {
-		System.out.println("SimpleExample");
-		Log.append("SimpleExample");
-
-		{
-			Context ctx = new Context();
-			/* do something with the context */
-
-			/* be kind to dispose manually and not wait for the GC. */
-			ctx.close();
-		}
 	}
 
 	Model check(Context ctx, BoolExpr f, Status sat) throws Z3Exception, TestFailedException {
@@ -206,7 +199,35 @@ public class JavaExample {
 
 		return res;
 	}
- 
+
+	void prove(Context ctx, BoolExpr f, boolean useMBQI) throws Z3Exception, TestFailedException {
+		BoolExpr[] assumptions = new BoolExpr[0];
+		prove(ctx, f, useMBQI, assumptions);
+	}
+
+	void prove(Context ctx, BoolExpr f, boolean useMBQI, BoolExpr... assumptions)
+			throws Z3Exception, TestFailedException {
+		System.out.println("Proving: " + f);
+		Solver s = ctx.mkSolver();
+		Params p = ctx.mkParams();
+		p.add("mbqi", useMBQI);
+		s.setParameters(p);
+		for (BoolExpr a : assumptions)
+			s.add(a);
+		s.add(ctx.mkNot(f));
+		Status q = s.check();
+
+		switch (q) {
+		case UNKNOWN:
+			System.out.println("Unknown because: " + s.getReasonUnknown());
+			break;
+		case SATISFIABLE:
+			throw new TestFailedException();
+		case UNSATISFIABLE:
+			System.out.println("OK, proof: " + s.getProof());
+			break;
+		}
+	}
 
 	void disprove(Context ctx, BoolExpr f, boolean useMBQI) throws Z3Exception, TestFailedException {
 		BoolExpr[] a = {};
@@ -217,9 +238,12 @@ public class JavaExample {
 			throws Z3Exception, TestFailedException {
 		System.out.println("Disproving: " + f);
 		Solver s = ctx.mkSolver();
+
 		Params p = ctx.mkParams();
 		p.add("mbqi", useMBQI);
+
 		s.setParameters(p);
+
 		for (BoolExpr a : assumptions)
 			s.add(a);
 		s.add(ctx.mkNot(f));
@@ -243,7 +267,7 @@ public class JavaExample {
 		ArithExpr xr = (ArithExpr) ctx.mkConst(ctx.mkSymbol("x"), ctx.mkRealSort());
 		ArithExpr yr = (ArithExpr) ctx.mkConst(ctx.mkSymbol("y"), ctx.mkRealSort());
 		Goal g4 = ctx.mkGoal(true, false, false);
-		g4.add(ctx.mkGt(xr, ctx.mkReal(10, 1)));
+		g4.add(ctx.mkGt(xr, ctx.mkReal(10)));// (10, 1)));
 		g4.add(ctx.mkEq(yr, ctx.mkAdd(xr, ctx.mkReal(1, 1))));
 		g4.add(ctx.mkGt(yr, ctx.mkReal(1, 1)));
 
@@ -275,8 +299,9 @@ public class JavaExample {
 		Goal g = ctx.mkGoal(true, false, false);
 		ArraySort asort = ctx.mkArraySort(ctx.getIntSort(), ctx.mkBitVecSort(32));
 		ArrayExpr aex = (ArrayExpr) ctx.mkConst(ctx.mkSymbol("MyArray"), asort);
-		Expr sel = ctx.mkSelect(aex, ctx.mkInt(0)); // MyArray[0] 选取数组第一个元素
-		g.add(ctx.mkEq(sel, ctx.mkBV(42, 32))); // MyArray[0] == 42
+
+		Expr sel = ctx.mkSelect(aex, ctx.mkInt(0));// aex[0]
+		g.add(ctx.mkEq(sel, ctx.mkBV(42, 32)));
 
 		Symbol xs = ctx.mkSymbol("x");
 		IntExpr xc = (IntExpr) ctx.mkConst(xs, ctx.getIntSort());
@@ -284,28 +309,32 @@ public class JavaExample {
 		Symbol fname = ctx.mkSymbol("f");
 		Sort[] domain = { ctx.getIntSort() };
 		FuncDecl fd = ctx.mkFuncDecl(fname, domain, ctx.getIntSort());
-		Expr[] fargs = { ctx.mkConst(xs, ctx.getIntSort()) };
-		IntExpr fapp = (IntExpr) ctx.mkApp(fd, fargs); // f(x)
 
-		g.add(ctx.mkEq(ctx.mkAdd(xc, fapp), ctx.mkInt(123))); // f(x) + x == 123
+		Expr[] fargs = { ctx.mkConst(xs, ctx.getIntSort()) };// x
+		IntExpr fapp = (IntExpr) ctx.mkApp(fd, fargs);// 以x为参数
+
+		g.add(ctx.mkEq(ctx.mkAdd(xc, fapp), ctx.mkInt(123)));// (= (+ x (f x))
+																// 123)
 
 		Solver s = ctx.mkSolver();
+		System.out.println(g.getFormulas().length);
 		for (BoolExpr a : g.getFormulas())
 			s.add(a);
 		System.out.println("Solver: " + s);
 
 		Status q = s.check();
 		System.out.println("Status: " + q);
+		System.out.println();
 
 		if (q != Status.SATISFIABLE)
 			throw new TestFailedException();
 
 		System.out.println("Model = " + s.getModel());
+		System.out.println();
 
 		System.out.println("Interpretation of MyArray:\n" + s.getModel().getFuncInterp(aex.getFuncDecl()));
 		System.out.println("Interpretation of x:\n" + s.getModel().getConstInterp(xc));
 		System.out.println("Interpretation of f:\n" + s.getModel().getFuncInterp(fd));
-		System.out.println("Interpretation of MyArray as Term:\n" + s.getModel().getFuncInterp(aex.getFuncDecl()));
 	}
 
 	// / Prove <tt>store(a1, i1, v1) = store(a2, i2, v2) implies (i1 = i3 or i2
@@ -322,6 +351,7 @@ public class JavaExample {
 
 		ArrayExpr a1 = (ArrayExpr) ctx.mkConst("a1", array_type);
 		ArrayExpr a2 = ctx.mkArrayConst("a2", int_type, int_type);
+
 		Expr i1 = ctx.mkConst("i1", int_type);
 		Expr i2 = ctx.mkConst("i2", int_type);
 		Expr i3 = ctx.mkConst("i3", int_type);
@@ -350,8 +380,14 @@ public class JavaExample {
 		BoolExpr thm = ctx.mkImplies(antecedent, consequent);
 		System.out.println(
 				"prove: store(a1, i1, v1) = store(a2, i2, v2) implies (i1 = i3 or i2 = i3 or select(a1, i3) = select(a2, i3))");
+		System.out.println("thm:");
 		System.out.println(thm);
-		prove(ctx, thm, false);
+		Solver s = ctx.mkSolver();
+		s.add(thm);
+		if (s.check() == Status.SATISFIABLE) {
+			System.out.println(s.check());
+			System.out.println(s.getModel());
+		}
 	}
 
 	// / Show that <code>distinct(a_0, ... , a_n)</code> is
@@ -362,10 +398,10 @@ public class JavaExample {
 	// construct.</remarks>
 	public void arrayExample3(Context ctx) throws Z3Exception, TestFailedException {
 		System.out.println("ArrayExample3");
-		Log.append("ArrayExample2");
+		Log.append("ArrayExample3");
 
 		for (int n = 2; n <= 5; n++) {
-			System.out.println("n = " + Integer.toString(n));
+			System.out.println("n = " + n);
 
 			Sort bool_type = ctx.mkBoolSort();
 			Sort array_type = ctx.mkArraySort(bool_type, bool_type);
@@ -379,14 +415,12 @@ public class JavaExample {
 			/* assert distinct(a[0], ..., a[n]) */
 			BoolExpr d = ctx.mkDistinct(a);
 			System.out.println(d);
-
+			System.out.println("the model is:  ");
 			/* context is satisfiable if n < 5 */
 			Model model = check(ctx, d, n < 5 ? Status.SATISFIABLE : Status.UNSATISFIABLE);
-			if (n < 5) {
-				for (int i = 0; i < n; i++) {
-					System.out.println(a[i].toString() + " = " + model.evaluate(a[i], false));
-				}
-			}
+			System.out.println(model);
+
+			System.out.println();
 		}
 	}
 
@@ -396,41 +430,42 @@ public class JavaExample {
 		System.out.println("SudokuExample");
 		Log.append("SudokuExample");
 
-		// 16x16 matrix of integer variables
-		IntExpr[][] X = new IntExpr[16][];
-		for (int i = 0; i < 16; i++) {
-			X[i] = new IntExpr[16];
-			for (int j = 0; j < 16; j++)
+		// 9x9 matrix of integer variables
+		IntExpr[][] X = new IntExpr[9][];
+		for (int i = 0; i < 9; i++) {
+			X[i] = new IntExpr[9];
+			for (int j = 0; j < 9; j++)
+
 				X[i][j] = (IntExpr) ctx.mkConst(ctx.mkSymbol("x_" + (i + 1) + "_" + (j + 1)), ctx.getIntSort());
 		}
 
-		// each cell contains a value in {1, ..., 16}
-		BoolExpr[][] cells_c = new BoolExpr[16][];
-		for (int i = 0; i < 16; i++) {
-			cells_c[i] = new BoolExpr[16];
-			for (int j = 0; j < 16; j++)
-				cells_c[i][j] = ctx.mkAnd(ctx.mkLe(ctx.mkInt(1), X[i][j]), ctx.mkLe(X[i][j], ctx.mkInt(16)));
+		// each cell contains a value in {1, ..., 9}
+		BoolExpr[][] cells_c = new BoolExpr[9][];
+		for (int i = 0; i < 9; i++) {
+			cells_c[i] = new BoolExpr[9];
+			for (int j = 0; j < 9; j++)
+				cells_c[i][j] = ctx.mkAnd(ctx.mkLe(ctx.mkInt(1), X[i][j]), ctx.mkLe(X[i][j], ctx.mkInt(9)));
 		}
 
 		// each row contains a digit at most once
-		BoolExpr[] rows_c = new BoolExpr[16];
-		for (int i = 0; i < 16; i++)
+		BoolExpr[] rows_c = new BoolExpr[9];
+		for (int i = 0; i < 9; i++)
 			rows_c[i] = ctx.mkDistinct(X[i]);
 
 		// each column contains a digit at most once
-		BoolExpr[] cols_c = new BoolExpr[16];
-		for (int j = 0; j < 16; j++)
+		BoolExpr[] cols_c = new BoolExpr[9];
+		for (int j = 0; j < 9; j++)
 			cols_c[j] = ctx.mkDistinct(X[j]);
 
 		// each 3x3 square contains a digit at most once
-		BoolExpr[][] sq_c = new BoolExpr[4][];
-		for (int i0 = 0; i0 < 4; i0++) {
-			sq_c[i0] = new BoolExpr[4];
-			for (int j0 = 0; j0 < 4; j0++) {
-				IntExpr[] square = new IntExpr[16];
-				for (int i = 0; i < 4; i++)
-					for (int j = 0; j < 4; j++)
-						square[4 * i + j] = X[4 * i0 + i][4 * j0 + j];
+		BoolExpr[][] sq_c = new BoolExpr[3][];
+		for (int i0 = 0; i0 < 3; i0++) {
+			sq_c[i0] = new BoolExpr[3];
+			for (int j0 = 0; j0 < 3; j0++) {
+				IntExpr[] square = new IntExpr[9];
+				for (int i = 0; i < 3; i++)
+					for (int j = 0; j < 3; j++)
+						square[3 * i + j] = X[3 * i0 + i][3 * j0 + j];
 				sq_c[i0][j0] = ctx.mkDistinct(square);
 			}
 		}
@@ -444,40 +479,14 @@ public class JavaExample {
 			sudoku_c = ctx.mkAnd(ctx.mkAnd(t), sudoku_c);
 
 		// sudoku instance, we use '0' for empty cells
-		int[][] instance = { { 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0 } };/*
-								 * { { 0, 0, 0, 0, 16, 4, 0, 3, 0, 0, 0, 0, 0,
-								 * 0, 0, 0}, { 0, 0, 0, 5, 1, 0, 0, 0, 7, 0, 0,
-								 * 0, 0, 0, 0, 0 }, { 0, 8, 16, 0, 0, 0, 0, 4,
-								 * 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0,
-								 * 2, 0, 8, 0, 0, 0, 0, 0, 0, 0 }, { 0, 6, 0, 2,
-								 * 0, 1, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0 }, { 1, 0,
-								 * 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {
-								 * 0, 7, 0, 0, 0, 0, 5, 2, 0, 0, 0, 0, 0, 0, 0,
-								 * 0 }, { 16, 0, 0, 0, 6, 5, 0, 0, 0, 0, 0, 0,
-								 * 0, 0, 0, 0 }, { 0, 4, 0, 16, 7, 0, 0, 0, 0,
-								 * 0, 0, 0, 0, 0, 0, 0 }, {0, 0, 0, 0, 0, 0, 0,
-								 * 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0,
-								 * 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0,
-								 * 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0,
-								 * 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-								 * {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-								 * 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-								 * 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-								 * 0, 0, 0, 0, 0}};
-								 */
+		int[][] instance = { { 0, 0, 0, 0, 9, 4, 0, 3, 0 }, { 0, 0, 0, 5, 1, 0, 0, 0, 7 },
+				{ 0, 8, 9, 0, 0, 0, 0, 4, 0 }, { 0, 0, 0, 0, 0, 0, 2, 0, 8 }, { 0, 6, 0, 2, 0, 1, 0, 5, 0 },
+				{ 1, 0, 2, 0, 0, 0, 0, 0, 0 }, { 0, 7, 0, 0, 0, 0, 5, 2, 0 }, { 9, 0, 0, 0, 6, 5, 0, 0, 0 },
+				{ 0, 4, 0, 9, 7, 0, 0, 0, 0 } };
 
 		BoolExpr instance_c = ctx.mkTrue();
-		for (int i = 0; i < 16; i++)
-			for (int j = 0; j < 16; j++)
+		for (int i = 0; i < 9; i++)
+			for (int j = 0; j < 9; j++)
 				instance_c = ctx.mkAnd(instance_c,
 						(BoolExpr) ctx.mkITE(ctx.mkEq(ctx.mkInt(instance[i][j]), ctx.mkInt(0)), ctx.mkTrue(),
 								ctx.mkEq(X[i][j], ctx.mkInt(instance[i][j]))));
@@ -488,24 +497,23 @@ public class JavaExample {
 
 		if (s.check() == Status.SATISFIABLE) {
 			Model m = s.getModel();
-			Expr[][] R = new Expr[16][16];
-			for (int i = 0; i < 16; i++)
-				for (int j = 0; j < 16; j++)
+			Expr[][] R = new Expr[9][9];
+			for (int i = 0; i < 9; i++)
+				for (int j = 0; j < 9; j++)
 					R[i][j] = m.evaluate(X[i][j], false);
 			System.out.println("Sudoku solution:");
-			for (int i = 0; i < 16; i++) {
-				for (int j = 0; j < 16; j++)
-					System.out.print(R[i][j] + " ");
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++)
+					System.out.print(" " + R[i][j]);
 				System.out.println();
 			}
 		} else {
 			System.out.println("Failed to solve sudoku");
-			// throw new TestFailedException();
+			throw new TestFailedException();
 		}
 	}
 
 	// / A basic example of how to use quantifiers.
-
 	void quantifierExample1(Context ctx) throws Z3Exception {
 		System.out.println("QuantifierExample");
 		Log.append("QuantifierExample");
@@ -518,34 +526,95 @@ public class JavaExample {
 		for (int j = 0; j < 3; j++) {
 			types[j] = ctx.getIntSort();
 			names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
-
 			xs[j] = (IntExpr) ctx.mkConst(names[j], types[j]);
 			vars[j] = (IntExpr) ctx.mkBound(2 - j, types[j]); // <-- vars
 																// reversed!
 		}
-
+//		System.out.println();
+//		for (IntExpr intExpr : vars) {
+//			System.out.println(intExpr);
+//		}
 		Expr body_vars = ctx.mkAnd(ctx.mkEq(ctx.mkAdd(vars[0], ctx.mkInt(1)), ctx.mkInt(2)),
 				ctx.mkEq(ctx.mkAdd(vars[1], ctx.mkInt(2)), ctx.mkAdd(vars[2], ctx.mkInt(3))));
 
+		// xs[0] + 1 == 2 && xs[1] + 2 == xs[2] + 3
 		Expr body_const = ctx.mkAnd(ctx.mkEq(ctx.mkAdd(xs[0], ctx.mkInt(1)), ctx.mkInt(2)),
 				ctx.mkEq(ctx.mkAdd(xs[1], ctx.mkInt(2)), ctx.mkAdd(xs[2], ctx.mkInt(3))));
 
 		Expr x = ctx.mkForall(types, names, body_vars, 1, null, null, ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
 		System.out.println("Quantifier X: " + x.toString());
-
+		
+//		Solver solver = ctx.mkSimpleSolver();
+//		solver.add((BoolExpr) x);
+//		System.out.println(solver.check());
+//		if (solver.check() == Status.SATISFIABLE) {
+//			System.out.println(solver.getModel());
+//		}
+//		solver.reset();
 		Expr y = ctx.mkForall(xs, body_const, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
-		System.out.println("Quantifier Y: " + y.toString());
 
-		System.out.println(x.getSort().getName());
-		System.out.println(x.getASTKind());
+//		solver.add((BoolExpr) y);
+//		System.out.println(solver.check());
+		System.out.println("Quantifier Y: " + y.toString());
 	}
 
+	// / A basic example of how to use quantifiers.
+		void quantifierExampleByHui(Context ctx) throws Z3Exception {
+			System.out.println("QuantifierExampleByHui");
+			Log.append("QuantifierExampleByHui");
+			
+			
+			Sort[] types = new Sort[2];
+			Symbol[] names = new Symbol[2];
+			IntExpr[] vars = new IntExpr[2];
+			IntExpr[] xs = new IntExpr[2];
+			
+			
+			for (int j = 0; j < 2; j++) {
+				types[j] = ctx.getIntSort();
+				names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
+				vars[j] = (IntExpr) ctx.mkBound(1, types[j]); // <-- vars
+																	// reversed!
+				
+				xs[j] = (IntExpr) ctx.mkConst(names[j], types[j]);
+			}
+			System.out.println();
+			for (IntExpr intExpr : vars) {
+				System.out.println(intExpr);
+			}
+//			Expr body = ctx.mkAnd(ctx.mkGe(ctx.mkMul(vars[0], vars[1]), ctx.mkInt(0)),
+//					ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(0)));
+			Expr body = ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(10));
+			
+			Expr x = ctx.mkForall(types, names, body, 1, null, null, ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
+			System.out.println("Quantifier X: " + x.toString());
+			
+			Solver solver = ctx.mkSimpleSolver();
+			solver.add((BoolExpr) x);
+			System.out.println(solver.check());
+			if (solver.check() == Status.SATISFIABLE) {
+				System.out.println(solver.getModel());
+			}
+			solver.reset();
+			
+			System.out.println();
+			body = ctx.mkGe(ctx.mkMul(xs[0], xs[0]), ctx.mkInt(0));
+			Expr y = ctx.mkForall(xs, body, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
+			System.out.println(y);
+			solver.add((BoolExpr) y);
+			System.out.println(solver.check());
+			if (solver.check() == Status.SATISFIABLE) {
+				System.out.println(solver.getModel());
+			}
+			solver.reset();
+		}
+	
 	void quantifierExample2(Context ctx) throws Z3Exception {
 
 		System.out.println("QuantifierExample2");
 		Log.append("QuantifierExample2");
 
-		Expr q1, q2;
+		Quantifier q1, q2;
 		FuncDecl f = ctx.mkFuncDecl("f", ctx.getIntSort(), ctx.getIntSort());
 		FuncDecl g = ctx.mkFuncDecl("g", ctx.getIntSort(), ctx.getIntSort());
 
@@ -565,6 +634,14 @@ public class JavaExample {
 			q1 = ctx.mkForall(bound, body, 1, null, no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
 
 			System.out.println(q1);
+//			Model model = check(ctx, (BoolExpr) q1, Status.SATISFIABLE); 
+			Solver solver = ctx.mkSolver();
+			solver.add((BoolExpr) q1);
+			if (solver.check() == Status.SATISFIABLE) {
+				System.out.println(solver.getModel());
+			}
+			System.out.println(q1.isUniversal());
+			System.out.println();
 		}
 
 		// Quantifier with de-Brujin indices.
@@ -584,6 +661,7 @@ public class JavaExample {
 			q2 = ctx.mkForall(sorts, names, body, 1, null, // pats,
 					no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
 			System.out.println(q2);
+			System.out.println(q2.isUniversal());
 		}
 
 		System.out.println(q1.equals(q2));
@@ -672,6 +750,7 @@ public class JavaExample {
 	// / Some basic tests.
 
 	void basicTests(Context ctx) throws Z3Exception, TestFailedException {
+		System.out.println();
 		System.out.println("BasicTests");
 
 		Symbol fname = ctx.mkSymbol("f");
@@ -681,7 +760,7 @@ public class JavaExample {
 		Sort bs = ctx.mkBoolSort();
 
 		Sort[] domain = { bs, bs };
-		FuncDecl f = ctx.mkFuncDecl(fname, domain, bs);
+		FuncDecl f = ctx.mkFuncDecl(fname, domain, bs);// ���庯�����ĸ����캯��
 		Expr fapp = ctx.mkApp(f, ctx.mkConst(x, bs), ctx.mkConst(y, bs));
 
 		Expr[] fargs2 = { ctx.mkFreshConst("cp", bs) };
@@ -694,7 +773,9 @@ public class JavaExample {
 		Goal g = ctx.mkGoal(true, false, false);
 		g.add(trivial_eq);
 		g.add(nontrivial_eq);
-		System.out.println("Goal: " + g);
+		System.out.println("Goal: " + g);//
+
+		System.out.println("CH");// test
 
 		Solver solver = ctx.mkSolver();
 
@@ -780,7 +861,7 @@ public class JavaExample {
 	// / Some basic expression casting tests.
 
 	void castingTest(Context ctx) throws Z3Exception, TestFailedException {
-		System.out.println("CastingTest");
+		System.out.println("CastingTest");// ֻ����һ�����
 
 		Sort[] domain = { ctx.getBoolSort(), ctx.getBoolSort() };
 		FuncDecl f = ctx.mkFuncDecl("f", domain, ctx.getBoolSort());
@@ -790,6 +871,7 @@ public class JavaExample {
 		try {
 			@SuppressWarnings("unused")
 			FuncDecl downcast = (FuncDecl) f; // OK
+
 		} catch (ClassCastException e) {
 			throw new TestFailedException();
 		}
@@ -797,7 +879,9 @@ public class JavaExample {
 		try {
 			@SuppressWarnings("unused")
 			Expr uc = (Expr) upcast;
+			System.out.println("CH");
 			throw new TestFailedException(); // should not be reachable!
+
 		} catch (ClassCastException e) {
 		}
 
@@ -840,7 +924,7 @@ public class JavaExample {
 		if (bvs.getSize() != 32)
 			throw new TestFailedException();
 
-		Expr q = ctx.mkAdd(ctx.mkInt(1), ctx.mkInt(2));
+		Expr q = ctx.mkAdd(ctx.mkInt(1), ctx.mkInt(2));// q = 1+2 = ArithExpr(3)
 		Expr q2 = q.getArgs()[1];
 		Sort qs = q2.getSort();
 		if (qs.getClass() != IntSort.class)
@@ -916,9 +1000,7 @@ public class JavaExample {
 
 	void smt2FileTest(String filename) throws Z3Exception {
 		Date before = new Date();
-
-		System.out.println("SMT2 File test");
-		System.out.println("test");
+		System.out.println("SMT2 File test ");
 		System.gc();
 
 		{
@@ -926,14 +1008,9 @@ public class JavaExample {
 			cfg.put("model", "true");
 			Context ctx = new Context(cfg);
 			Expr a = ctx.parseSMTLIB2File(filename, null, null, null, null);
-			
-			System.out.println();
-			System.out.println("the expression : ");
-			System.out.println(a);
-			System.out.println();
-			
-			
+
 			long t_diff = ((new Date()).getTime() - before.getTime()) / 1000;
+
 			System.out.println("SMT2 file read time: " + t_diff + " sec");
 
 			// Iterate over the formula.
@@ -945,25 +1022,12 @@ public class JavaExample {
 				AST cur = (AST) q.removeFirst();
 				cnt++;
 
-				if (cur.getClass() == Expr.class) { 
-					if (!(cur.isVar())) {
-						for (Expr c : ((Expr) cur).getArgs()) {
+				if (cur.getClass() == Expr.class)
+					if (!(cur.isVar()))
+						for (Expr c : ((Expr) cur).getArgs())
 							q.add(c);
-//							System.out.println(c);
-						}
-					}  
-				}	
-							
 			}
 			System.out.println(cnt + " ASTs");
-			
-			Solver s = ctx.mkSolver();
-			s.add((BoolExpr)a);
-			if (s.check() == Status.SATISFIABLE) {
-				System.out.println("sat");
-			}else {
-				System.out.println("unsat");
-			}
 		}
 
 		long t_diff = ((new Date()).getTime() - before.getTime()) / 1000;
@@ -971,28 +1035,36 @@ public class JavaExample {
 	}
 
 	// / Shows how to use Solver(logic)
-
 	// / <param name="ctx"></param>
 	void logicExample(Context ctx) throws Z3Exception, TestFailedException {
 		System.out.println("LogicTest");
 		Log.append("LogicTest");
 
 		BitVecSort bvs = ctx.mkBitVecSort(32);
+		BitVecExpr tmp1 = ctx.mkBVConst("tmp1", 32);
+		BitVecExpr tmp2 = ctx.mkBVConst("tmp2", 32);
 		Expr x = ctx.mkConst("x", bvs);
 		Expr y = ctx.mkConst("y", bvs);
 		BoolExpr eq = ctx.mkEq(x, y);
+		BoolExpr eq2 = ctx.mkBVSLT(tmp1, tmp2);
+		System.out.println(eq.toString());
 
 		// Use a solver for QF_BV
 		Solver s = ctx.mkSolver("QF_BV");
 		s.add(eq);
+		s.add(eq2);
 		Status res = s.check();
 		System.out.println("solver result: " + res);
+
+		Model m = s.getModel();
+		System.out.println(m.toString());
 
 		// Or perhaps a tactic for QF_BV
 		Goal g = ctx.mkGoal(true, false, false);
 		g.add(eq);
 
 		Tactic t = ctx.mkTactic("qfbv");
+
 		ApplyResult ar = t.apply(g);
 		System.out.println("tactic result: " + ar);
 
@@ -1038,9 +1110,13 @@ public class JavaExample {
 		BoolExpr x = ctx.mkBoolConst("x");
 		BoolExpr y = ctx.mkBoolConst("y");
 		BoolExpr x_xor_y = ctx.mkXor(x, y);
-
-		Model model = check(ctx, x_xor_y, Status.SATISFIABLE);
+		Solver s = ctx.mkSolver();
+		s.add(x_xor_y);
+		s.check();
+		Model model = s.getModel();
+		// Model model = check(ctx, x_xor_y, Status.SATISFIABLE);
 		System.out.println("x = " + model.evaluate(x, false) + ", y = " + model.evaluate(y, false));
+
 	}
 
 	// / Find a model for <tt>x < y + 1, x > 2</tt>.
@@ -1063,7 +1139,8 @@ public class JavaExample {
 		BoolExpr q = ctx.mkAnd(c1, c2);
 
 		System.out.println("model for: x < y + 1, x > 2");
-		Model model = check(ctx, q, Status.SATISFIABLE);
+		Model model = check(ctx, q, Status.SATISFIABLE);// check,return the
+														// model
 		System.out.println("x = " + model.evaluate(x, false) + ", y =" + model.evaluate(y, false));
 
 		/* assert not(x = y) */
@@ -1079,6 +1156,7 @@ public class JavaExample {
 
 	// / Prove <tt>x = y implies g(x) = g(y)</tt>, and
 	// / disprove <tt>x = y implies g(g(x)) = g(y)</tt>.
+
 	// / <remarks>This function demonstrates how to create uninterpreted
 	// / types and functions.</remarks>
 	public void proveExample1(Context ctx) throws Z3Exception, TestFailedException {
@@ -1182,7 +1260,7 @@ public class JavaExample {
 		Log.append("PushPopExample1");
 
 		/* create a big number */
-		IntSort int_type = ctx.getIntSort();
+		IntSort int_type = ctx.mkIntSort();
 		IntExpr big_number = ctx.mkInt("1000000000000000000000000000000000000000000000000000000");
 
 		/* create number 3 */
@@ -1207,6 +1285,10 @@ public class JavaExample {
 		System.out.println("assert: x <= 3");
 		solver.add(c2);
 
+		BoolExpr c4 = ctx.mkLe(x, big_number);
+		System.out.println("assert: x >= big_number");
+		solver.add(c4);
+
 		/* context is inconsistent at this point */
 		if (solver.check() != Status.UNSATISFIABLE)
 			throw new TestFailedException();
@@ -1221,7 +1303,8 @@ public class JavaExample {
 		/* the context is consistent again. */
 		if (solver.check() != Status.SATISFIABLE)
 			throw new TestFailedException();
-
+		Model m = solver.getModel();
+		System.out.println(m.toString());
 		/* new constraints can be asserted... */
 
 		/* create y */
@@ -1235,6 +1318,8 @@ public class JavaExample {
 		/* the context is still consistent. */
 		if (solver.check() != Status.SATISFIABLE)
 			throw new TestFailedException();
+		m = solver.getModel();
+		System.out.println(m.toString());
 	}
 
 	// / Tuples.
@@ -1283,11 +1368,23 @@ public class JavaExample {
 		BitVecExpr x = (BitVecExpr) ctx.mkConst("x", bv_type);
 		BitVecNum zero = (BitVecNum) ctx.mkNumeral("0", bv_type);
 		BitVecNum ten = ctx.mkBV(10, 32);
+
 		BitVecExpr x_minus_ten = ctx.mkBVSub(x, ten);
+
 		/* bvsle is signed less than or equal to */
-		BoolExpr c1 = ctx.mkBVSLE(x, ten);
-		BoolExpr c2 = ctx.mkBVSLE(x_minus_ten, zero);
-		BoolExpr thm = ctx.mkIff(c1, c2);
+		BoolExpr c1 = ctx.mkBVSLT(x, ten);// x <= 10
+		BoolExpr c2 = ctx.mkBVSGE(x_minus_ten, zero);// x-100 >= 0
+		Solver s = ctx.mkSolver();
+		s.add(c1);
+		s.add(c2);
+		if (s.check() == Status.SATISFIABLE) {
+			System.out.println(s.check());
+			Model m = s.getModel();
+			System.out.println(m);
+			System.out.println();
+		}
+
+		BoolExpr thm = ctx.mkIff(c1, c2); //
 		System.out.println("disprove: x - 10 <= 0 IFF x <= 10 for (32-bit) machine integers");
 		disprove(ctx, thm, false);
 	}
@@ -1312,7 +1409,12 @@ public class JavaExample {
 
 		/* find a model (i.e., values for x an y that satisfy the constraint */
 		Model m = check(ctx, ctr, Status.SATISFIABLE);
+
 		System.out.println(m);
+		int a = 0x2c330437;
+		int b = 0x656fe436;
+		if ((a * b) == ((a ^ b) - 103))
+			System.out.println("right");
 	}
 
 	// / Demonstrates how to use the SMTLIB parser.
@@ -1325,9 +1427,9 @@ public class JavaExample {
 				null, null, null);
 		for (BoolExpr f : ctx.getSMTLIBFormulas())
 			System.out.println("formula " + f);
- 
+
 		Model m = check(ctx, ctx.mkAnd(ctx.getSMTLIBFormulas()), Status.SATISFIABLE);
-		System.out.println(m.toString());
+		System.out.println(m);
 	}
 
 	// / Demonstrates how to initialize the parser symbol table.
@@ -1343,8 +1445,11 @@ public class JavaExample {
 
 		ctx.parseSMTLIBString("(benchmark tst :formula (> a b))", null, null, declNames, decls);
 		BoolExpr f = ctx.getSMTLIBFormulas()[0];
-		System.out.println("formula: " + f);
-		check(ctx, f, Status.SATISFIABLE);
+
+		System.out.println("formula: " + f + " " + ctx.getSMTLIBFormulas().length);
+
+		Model m = check(ctx, f, Status.SATISFIABLE);
+		System.out.println(m);
 	}
 
 	// / Demonstrates how to initialize the parser symbol table.
@@ -1380,12 +1485,22 @@ public class JavaExample {
 		for (FuncDecl decl : ctx.getSMTLIBDecls()) {
 			System.out.println("Declaration: " + decl);
 		}
+		Solver s = ctx.mkSolver();
 		for (BoolExpr f : ctx.getSMTLIBAssumptions()) {
+			s.add(f);
 			System.out.println("Assumption: " + f);
 		}
+
 		for (BoolExpr f : ctx.getSMTLIBFormulas()) {
+			s.add(f);
 			System.out.println("Formula: " + f);
 		}
+		if (s.check() == Status.SATISFIABLE) {
+			System.out.println(s.getModel());
+		} else {
+			System.out.println("No model");
+		}
+
 	}
 
 	// / Demonstrates how to handle parser errors using Z3 error handling
@@ -1410,7 +1525,7 @@ public class JavaExample {
 
 	// / Create an ite-Expr (if-then-else Exprs).
 
-	public void iteExample(Context ctx) throws Z3Exception {
+	public void iteExample(Context ctx) throws Z3Exception, TestFailedException {
 		System.out.println("ITEExample");
 		Log.append("ITEExample");
 
@@ -1419,12 +1534,21 @@ public class JavaExample {
 		Expr zero = ctx.mkInt(0);
 		Expr ite = ctx.mkITE(f, one, zero);
 
-		for (Expr expr : ite.getArgs()) {
-			System.out.println(expr);
-		}
-		// System.out.println(ite.getArgs()[2]);
 		System.out.println("Expr: " + ite);
 
+		// by CH
+
+		Solver s2 = ctx.mkSolver();
+		// s2.setParameters(Params.);
+		BoolExpr boolExpr = ctx.mkEq(ite, ctx.mkInt(0));
+		s2.add(boolExpr);
+		if (s2.check() == Status.SATISFIABLE) {
+			System.out.println(s2.getModel());
+			// System.out.println(s2.getProof());
+			System.out.println("yes");
+		} else {
+			System.out.println("no");
+		}
 	}
 
 	// / Create an enumeration data type.
@@ -1463,10 +1587,6 @@ public class JavaExample {
 
 		/* If something is fruity, then it is an apple, banana, or orange */
 
-		System.out.println();
-
-		System.out.println("If something is fruity, then it is an apple, banana, or orange :");
-		System.out.println();
 		prove(ctx, ctx.mkOr(ctx.mkEq(fruity, apple), ctx.mkEq(fruity, banana), ctx.mkEq(fruity, orange)), false);
 	}
 
@@ -1475,6 +1595,7 @@ public class JavaExample {
 	public void listExample(Context ctx) throws Z3Exception, TestFailedException {
 		System.out.println("ListExample");
 		Log.append("ListExample");
+
 		Sort int_ty;
 		ListSort int_list;
 		Expr nil, l1, l2, x, y, u, v;
@@ -1482,17 +1603,11 @@ public class JavaExample {
 
 		int_ty = ctx.mkIntSort();
 
-		int_list = ctx.mkListSort(ctx.mkSymbol("int_list"), int_ty);// ListSort
-																	// with
-																	// intSort
+		int_list = ctx.mkListSort(ctx.mkSymbol("int_list"), int_ty);
 
 		nil = ctx.mkConst(int_list.getNilDecl());
 		l1 = ctx.mkApp(int_list.getConsDecl(), ctx.mkInt(1), nil);
 		l2 = ctx.mkApp(int_list.getConsDecl(), ctx.mkInt(2), nil);
-
-		System.out.println("the two Expr are :");
-		System.out.println(l1);
-		System.out.println(l2);
 
 		/* nil != cons(1, nil) */
 		prove(ctx, ctx.mkNot(ctx.mkEq(nil, l1)), false);
@@ -1717,8 +1832,6 @@ public class JavaExample {
 		IntExpr y = ctx.mkIntConst("y");
 		IntExpr two = ctx.mkInt(2);
 
-//		IntExpr three = ctx.mkInt(3);
-
 		Solver solver = ctx.mkSolver();
 
 		/* assert x < y */
@@ -1735,25 +1848,13 @@ public class JavaExample {
 			System.out.println("\nevaluating x+y");
 			Expr v = model.evaluate(ctx.mkAdd(x, y), false);
 			if (v != null) {
-				System.out.println("result = " + (v));
+				System.out.println("result = " + v);
 			} else {
 				System.out.println("Failed to evaluate: x+y");
 			}
-
 		} else {
 			System.out.println("BUG, the constraints are satisfiable.");
 		}
-
-		// Expr v2 = (solver.getModel()).evaluate(ctx.mkAdd(two, three), false);
-		// System.out.println(model.evaluate(ctx.mkAdd(two, three),
-		// false).equals(v2));
-		// if (v2 != null)
-		// {
-		// System.out.println("result = " + (v2));
-		// } else
-		// {
-		// System.out.println("Failed to evaluate: x+y");
-		// }
 	}
 
 	// / Demonstrate how to use #Eval on tuples.
@@ -1775,24 +1876,16 @@ public class JavaExample {
 		);
 		FuncDecl first = tuple.getFieldDecls()[0]; // declarations are for
 													// projections
-
-		FuncDecl second = tuple.getFieldDecls()[1]; // 生成的函数用来获取元组tuple的第二个参数
-
+		FuncDecl second = tuple.getFieldDecls()[1];
 		Expr tup1 = ctx.mkConst("t1", tuple);
-		// System.out.println(tup1.getSort().getName());
 		Expr tup2 = ctx.mkConst("t2", tuple);
-		// System.out.println(tup2.getSort().getName());
 
 		Solver solver = ctx.mkSolver();
 
 		/* assert tup1 != tup2 */
 		solver.add(ctx.mkNot(ctx.mkEq(tup1, tup2)));
 		/* assert first tup1 = first tup2 */
-		solver.add(ctx.mkEq(ctx.mkApp(first, tup1), ctx.mkApp(second, tup2))); // assert：
-																				// 元组一的第一个参数等于元组二的第二个参数
-
-		solver.add(ctx.mkEq(ctx.mkAdd((ArithExpr) ctx.mkApp(first, tup1), (ArithExpr) ctx.mkApp(second, tup1)),
-				ctx.mkAdd((ArithExpr) ctx.mkApp(first, tup2), (ArithExpr) ctx.mkApp(second, tup2))));
+		solver.add(ctx.mkEq(ctx.mkApp(first, tup1), ctx.mkApp(first, tup2)));
 
 		/* find model for the constraints above */
 		Model model = null;
@@ -1801,7 +1894,7 @@ public class JavaExample {
 			System.out.println(model);
 			System.out.println("evaluating tup1 " + (model.evaluate(tup1, false)));
 			System.out.println("evaluating tup2 " + (model.evaluate(tup2, false)));
-			System.out.println("evaluating second(tup2) " + (model.evaluate(ctx.mkApp(first, tup2), false)));
+			System.out.println("evaluating second(tup2) " + (model.evaluate(ctx.mkApp(second, tup2), false)));
 		} else {
 			System.out.println("BUG, the constraints are satisfiable.");
 		}
@@ -1824,12 +1917,9 @@ public class JavaExample {
 		int last_upper = 0;
 		while (some_work) {
 			solver.push();
-			System.out.println("Push:");
+
 			boolean check_is_sat = true;
-
 			while (check_is_sat && some_work) {
-				System.out.println(solver.getAssertions().length);
-
 				// Assert all feasible bounds.
 				for (int i = 0; i < num_Exprs; ++i) {
 					solver.add(ctx.mkBVULE(to_minimize[i], ctx.mkBV(upper[i], 32)));
@@ -1842,9 +1932,8 @@ public class JavaExample {
 					}
 					break;
 				}
-				System.out.println();
-				System.out.println("Model : " + solver.getModel());
-				System.out.println();
+				System.out.println(solver.getModel());
+
 				// narrow the bounds based on the current model.
 				for (int i = 0; i < num_Exprs; ++i) {
 					Expr v = solver.getModel().evaluate(to_minimize[i], false);
@@ -1868,13 +1957,7 @@ public class JavaExample {
 					}
 				}
 			}
-			System.out.println(solver.getAssertions().length);
-			BoolExpr[] exprs = solver.getAssertions();
-			for (int i = 0; i < exprs.length; i++) {
-				System.out.println(exprs[i]);
-			}
 			solver.pop();
-			System.out.println("Pop:");
 		}
 	}
 
@@ -1956,7 +2039,7 @@ public class JavaExample {
 		FiniteDomainSort s = ctx.mkFiniteDomainSort("S", 10);
 		FiniteDomainSort t = ctx.mkFiniteDomainSort("T", 10);
 		Expr s1 = ctx.mkNumeral(1, s);
-		Expr t1 = ctx.mkNumeral(9, t);
+		Expr t1 = ctx.mkNumeral(1, t);
 		System.out.println(s);
 		System.out.println(t);
 		System.out.println(s1);
@@ -1967,121 +2050,43 @@ public class JavaExample {
 		// System.out.println(ctx.mkEq(s1, t1));
 	}
 
-	void prove(Context ctx, BoolExpr f, boolean useMBQI) throws Z3Exception, TestFailedException {
-		BoolExpr[] assumptions = new BoolExpr[0];
-		prove(ctx, f, useMBQI, assumptions);
-	}
-
-	void prove(Context ctx, BoolExpr f, boolean useMBQI, BoolExpr... assumptions)
-			throws Z3Exception, TestFailedException {
-		System.out.println("Proving: " + f);
-		Solver s = ctx.mkSolver();
-		Params p = ctx.mkParams();
-		p.add("mbqi", useMBQI);
-		s.setParameters(p);
-		for (BoolExpr a : assumptions)
-			s.add(a);
-		s.add(ctx.mkNot(f));
-		Status q = s.check();
-
-		switch (q) {
-		case UNKNOWN:
-			System.out.println("Unknown because: " + s.getReasonUnknown());
-			break;
-		case SATISFIABLE:
-			throw new TestFailedException();
-		case UNSATISFIABLE:
-			System.out.println("OK, proof: " + s.getProof());
-			break;
-		}
-	}
-
-	
-	public void proveExampleByPoirot(Context ctx) throws Z3Exception, TestFailedException {
-
-		/* create uninterpreted type. */
-		Sort U = ctx.mkUninterpretedSort(ctx.mkSymbol("U"));
-
-		/* declare function g */
-		FuncDecl g = ctx.mkFuncDecl("g", U, U);
-
-		/* create x and y */
-		Expr x = ctx.mkConst("x", U);
-		Expr y = ctx.mkConst("y", U);
-		/* create g(x), g(y) */
-		Expr gx = g.apply(x);
-		Expr gy = g.apply(y);
-
-		/* assert x = y */
-		BoolExpr eq = ctx.mkEq(x, y);
-
-		/* prove g(x) = g(y) */
-		BoolExpr f = ctx.mkEq(gx, gy);
-		System.out.println("prove: x = y implies g(x) = g(y)");
-		prove(ctx, ctx.mkImplies(eq, f), false);
-
-		
-		
-		BoolExpr a = ctx.mkBoolConst("a");
-		BoolExpr b = ctx.mkBoolConst("b");
-		BoolExpr c = ctx.mkBoolConst("c");
-
-		BoolExpr aImplyb = ctx.mkImplies(a, b);
-		BoolExpr bImplyc = ctx.mkImplies(b, c);
-
-		BoolExpr postulate = ctx.mkAnd(aImplyb, bImplyc);
-
-		BoolExpr aImplyc = ctx.mkImplies(a, c);
-		prove(ctx, ctx.mkImplies(postulate, aImplyc), false);
-
-		/* create g(g(x)) */
-		Expr ggx = g.apply(gx);
-
-		/* disprove g(g(x)) = g(y) */
-		f = ctx.mkEq(ggx, gy);
-		System.out.println("disprove: x = y implies g(g(x)) = g(y)");
-		disprove(ctx, ctx.mkImplies(eq, f), false);
-
-		/* Print the model using the custom model printer */
-		Model m = check(ctx, ctx.mkNot(f), Status.SATISFIABLE);
-		System.out.println(m);
-	}
-
 	public static void main(String[] args) {
-		JavaExample p = new JavaExample();
+		Main p = new Main();
 		try {
-			Log.open("test.log");
 
-			 System.out.print("Z3 Version: ");
-			 System.out.println(Version.getString());
-			 
-			 System.out.println(Z3_sort_kind.Z3_ARRAY_SORT.toInt());
-			 
-			 p.simpleExample();
+			Log.open("test.log");
+			System.out.println(Version.getString());
 
 			{ // These examples need model generation turned on.
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("model", "true");
 				Context ctx = new Context(cfg);
+				p.quantifierExampleByHui(ctx);
 
 				// p.basicTests(ctx);
-
 				// p.castingTest(ctx);
-				// System.out.println(test("x", "y", 10, 100, 103));
 
-				// System.out.println(getSatifiable("x<=10^y>=10^x>=y"));
-//				p.sudokuExample(ctx);
-				// p.quantifierExample1(ctx);
-				// p.quantifierExample2(ctx);
+				// p.sudokuExample(ctx);
+//				p.quantifierExample1(ctx);
 
-				// p.logicExample(ctx);
+//				System.out.println();
+//				System.out.println();
+//				System.out.println();
+				p.quantifierExample2(ctx);
+				
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				p.logicExample(ctx);
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				
 				// p.parOrExample(ctx);
-
-				 p.findModelExample1(ctx);
+				// p.findModelExample1(ctx);
 				// p.findModelExample2(ctx);
 				// p.pushPopExample1(ctx);
 				// p.arrayExample1(ctx);
-				// System.out.println();
 				// p.arrayExample3(ctx);
 				// p.bitvectorExample1(ctx);
 				// p.bitvectorExample2(ctx);
@@ -2092,35 +2097,37 @@ public class JavaExample {
 				// p.iteExample(ctx);
 				// p.evalExample1(ctx);
 				// p.evalExample2(ctx);
-				// p.findSmallModelExample(ctx); //don't got
-				// p.simplifierExample(ctx); //got
+				// p.findSmallModelExample(ctx);
+				// p.simplifierExample(ctx);
 				// p.finiteDomainExample(ctx);
 			}
-			//
+
 			{ // These examples need proof generation turned on.
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("proof", "true");
-//				Context ctx = new Context(cfg);
-				// p.proveExample1(ctx);
-//				p.parseOwl2(ctx);
-				// p.proveExample2(ctx);
+				Context ctx = new Context(cfg);
+				p.proveExample1(ctx);
+				p.proveExample2(ctx);
 				// p.arrayExample2(ctx);
 				// p.tupleExample(ctx);
 				// p.parserExample3(ctx);
 				// p.enumExample(ctx);
 				// p.listExample(ctx);
-				// p.treeExample(ctx); //don't got
-				// p.forestExample(ctx); //don't got
-				// p.unsatCoreAndProofExample(ctx); //don't got
+				// p.treeExample(ctx);
+				// p.forestExample(ctx);
+				p.unsatCoreAndProofExample(ctx);
 			}
 
-			{ // These examples need proof generation turned on and auto-config set to false.
+			{ // These examples need proof generation turned on and
+				// auto-config
+				// set to false.
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("proof", "true");
 				cfg.put("auto-config", "false");
-//				Context ctx = new Context(cfg);
-				// p.quantifierExample3(ctx);
-				// p.quantifierExample4(ctx);
+				Context ctx = new Context(cfg);
+
+				p.quantifierExample3(ctx);
+				p.quantifierExample4(ctx);
 			}
 			Log.close();
 			if (Log.isOpen())
