@@ -574,7 +574,7 @@ public class JavaExampleOfCH {
 			for (int j = 0; j < 2; j++) {
 				types[j] = ctx.getIntSort();
 				names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
-				vars[j] = (IntExpr) ctx.mkBound(0, types[j]); // <-- vars
+				vars[j] = (IntExpr) ctx.mkBound(1, types[j]); // <-- vars
 																	// reversed!
 				
 				xs[j] = (IntExpr) ctx.mkConst(names[j], types[j]);
@@ -585,7 +585,7 @@ public class JavaExampleOfCH {
 			}
 //			Expr body = ctx.mkAnd(ctx.mkGe(ctx.mkMul(vars[0], vars[1]), ctx.mkInt(0)),
 //					ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(0)));
-			Expr body = ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(0));
+			Expr body = ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(10));
 			
 			Expr x = ctx.mkForall(types, names, body, 1, null, null, ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
 			System.out.println("Quantifier X: " + x.toString());
