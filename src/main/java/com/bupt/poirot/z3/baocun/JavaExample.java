@@ -1079,7 +1079,6 @@ public class JavaExample {
 
 	// / Prove <tt>x = y implies g(x) = g(y)</tt>, and
 	// / disprove <tt>x = y implies g(g(x)) = g(y)</tt>.
-
 	// / <remarks>This function demonstrates how to create uninterpreted
 	// / types and functions.</remarks>
 	public void proveExample1(Context ctx) throws Z3Exception, TestFailedException {

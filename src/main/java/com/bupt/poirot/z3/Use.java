@@ -46,9 +46,11 @@ public class Use {
 	}
 	
 	public static void main(String[] args) {
-		
+//		System.out.println(System.getProperty("DYLD_LIBRARY_PATH"));
+//		System.out.println(System.getProperty("LD_LIBRARY_PATH"));
+		System.out.println(System.getProperty("java.library.path"));
 		System.out.println(Version.getString());
-//		System.out.println(System.getProperty("java.library.path"));
+		
 		Use use = new Use("a>100");
 		use.dealData("a>=11");
 		use.dealData("a>=21");

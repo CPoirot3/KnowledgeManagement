@@ -2,9 +2,9 @@ package com.bupt.poirot.z3.baocun;
 
 import java.util.*;
 import java.util.regex.*;
-import java.util.regex.Pattern;
 
 import com.microsoft.z3.*;
+import com.microsoft.z3.Pattern;
 
 public class JavaExampleOfCH {
 	@SuppressWarnings("serial")
@@ -23,53 +23,53 @@ public class JavaExampleOfCH {
 	// / </code>
 	// / Where, <code>finv</code>is a fresh function declaration.
 
-//	public BoolExpr injAxiom(Context ctx, FuncDecl f, int i) throws Z3Exception {
-//		Sort[] domain = f.getDomain();
-//		int sz = f.getDomainSize();
-//
-//		if (i >= sz) {
-//			System.out.println("failed to create inj axiom");
-//			return null;
-//		}
-//
-//		/* declare the i-th inverse of f: finv */
-//		Sort finv_domain = f.getRange();
-//		Sort finv_range = domain[i];
-//		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range);
-//
-//		/* allocate temporary arrays */
-//		Expr[] xs = new Expr[sz];
-//		Symbol[] names = new Symbol[sz];
-//		Sort[] types = new Sort[sz];
-//
-//		/* fill types, names and xs */
-//
-//		for (int j = 0; j < sz; j++) {
-//			types[j] = domain[j];
-//			names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
-//			xs[j] = ctx.mkBound(j, types[j]);
-//		}
-//		Expr x_i = xs[i];
-//
-//		/* create f(x_0, ..., x_i, ..., x_{n-1}) */
-//		Expr fxs = f.apply(xs);
-//
-//		/* create f_inv(f(x_0, ..., x_i, ..., x_{n-1})) */
-//		Expr finv_fxs = finv.apply(fxs);
-//
-//		/* create finv(f(x_0, ..., x_i, ..., x_{n-1})) = x_i */
-//		Expr eq = ctx.mkEq(finv_fxs, x_i);
-//
-//		/* use f(x_0, ..., x_i, ..., x_{n-1}) as the pattern for the quantifier */
-//		Pattern p = ctx.mkPattern(fxs);
-//
-//		/* create & assert quantifier */
-//		BoolExpr q = ctx.mkForall(types, /* types of quantified variables */
-//				names, /* names of quantified variables */
-//				eq, 1, new Pattern[] { p } /* patterns */, null, null, null);
-//
-//		return q;
-//	}
+	public BoolExpr injAxiom(Context ctx, FuncDecl f, int i) throws Z3Exception {
+		Sort[] domain = f.getDomain();
+		int sz = f.getDomainSize();
+
+		if (i >= sz) {
+			System.out.println("failed to create inj axiom");
+			return null;
+		}
+
+		/* declare the i-th inverse of f: finv */
+		Sort finv_domain = f.getRange();
+		Sort finv_range = domain[i];
+		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range);
+
+		/* allocate temporary arrays */
+		Expr[] xs = new Expr[sz];
+		Symbol[] names = new Symbol[sz];
+		Sort[] types = new Sort[sz];
+
+		/* fill types, names and xs */
+
+		for (int j = 0; j < sz; j++) {
+			types[j] = domain[j];
+			names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
+			xs[j] = ctx.mkBound(j, types[j]);
+		}
+		Expr x_i = xs[i];
+
+		/* create f(x_0, ..., x_i, ..., x_{n-1}) */
+		Expr fxs = f.apply(xs);
+
+		/* create f_inv(f(x_0, ..., x_i, ..., x_{n-1})) */
+		Expr finv_fxs = finv.apply(fxs);
+
+		/* create finv(f(x_0, ..., x_i, ..., x_{n-1})) = x_i */
+		Expr eq = ctx.mkEq(finv_fxs, x_i);
+
+		/* use f(x_0, ..., x_i, ..., x_{n-1}) as the pattern for the quantifier */
+		Pattern p = ctx.mkPattern(fxs);
+
+		/* create & assert quantifier */
+		BoolExpr q = ctx.mkForall(types, /* types of quantified variables */
+				names, /* names of quantified variables */
+				eq, 1, new Pattern[] { p } /* patterns */, null, null, null);
+
+		return q;
+	}
 
 	// / Create axiom: function f is injective in the i-th argument.
 
@@ -80,49 +80,49 @@ public class JavaExampleOfCH {
 	// / </code>
 	// / Where, <code>finv</code>is a fresh function declaration.
 
-//	public BoolExpr injAxiomAbs(Context ctx, FuncDecl f, int i)
-//			throws Z3Exception {
-//		Sort[] domain = f.getDomain();
-//		int sz = f.getDomainSize();
-//
-//		if (i >= sz) {
-//			System.out.println("failed to create inj axiom");
-//			return null;
-//		}
-//
-//		/* declare the i-th inverse of f: finv */
-//		Sort finv_domain = f.getRange();
-//		Sort finv_range = domain[i];
-//		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range);
-//
-//		/* allocate temporary arrays */
-//		Expr[] xs = new Expr[sz];
-//
-//		/* fill types, names and xs */
-//		for (int j = 0; j < sz; j++) {
-//			xs[j] = ctx.mkConst("x_" + Integer.toString(j), domain[j]);
-//		}
-//		Expr x_i = xs[i];
-//
-//		/* create f(x_0, ..., x_i, ..., x_{n-1}) */
-//		Expr fxs = f.apply(xs);
-//
-//		/* create f_inv(f(x_0, ..., x_i, ..., x_{n-1})) */
-//		Expr finv_fxs = finv.apply(fxs);
-//
-//		/* create finv(f(x_0, ..., x_i, ..., x_{n-1})) = x_i */
-//		Expr eq = ctx.mkEq(finv_fxs, x_i);
-//
-//		/* use f(x_0, ..., x_i, ..., x_{n-1}) as the pattern for the quantifier */
-//		Pattern p = ctx.mkPattern(fxs);
-//
-//		/* create & assert quantifier */
-//		BoolExpr q = ctx.mkForall(xs, /* types of quantified variables */
-//				eq, /* names of quantified variables */
-//				1, new Pattern[] { p } /* patterns */, null, null, null);
-//
-//		return q;
-//	}
+	public BoolExpr injAxiomAbs(Context ctx, FuncDecl f, int i)
+			throws Z3Exception {
+		Sort[] domain = f.getDomain();
+		int sz = f.getDomainSize();
+
+		if (i >= sz) {
+			System.out.println("failed to create inj axiom");
+			return null;
+		}
+
+		/* declare the i-th inverse of f: finv */
+		Sort finv_domain = f.getRange();
+		Sort finv_range = domain[i];
+		FuncDecl finv = ctx.mkFuncDecl("f_fresh", finv_domain, finv_range);
+
+		/* allocate temporary arrays */
+		Expr[] xs = new Expr[sz];
+
+		/* fill types, names and xs */
+		for (int j = 0; j < sz; j++) {
+			xs[j] = ctx.mkConst("x_" + Integer.toString(j), domain[j]);
+		}
+		Expr x_i = xs[i];
+
+		/* create f(x_0, ..., x_i, ..., x_{n-1}) */
+		Expr fxs = f.apply(xs);
+
+		/* create f_inv(f(x_0, ..., x_i, ..., x_{n-1})) */
+		Expr finv_fxs = finv.apply(fxs);
+
+		/* create finv(f(x_0, ..., x_i, ..., x_{n-1})) = x_i */
+		Expr eq = ctx.mkEq(finv_fxs, x_i);
+
+		/* use f(x_0, ..., x_i, ..., x_{n-1}) as the pattern for the quantifier */
+		Pattern p = ctx.mkPattern(fxs);
+
+		/* create & assert quantifier */
+		BoolExpr q = ctx.mkForall(xs, /* types of quantified variables */
+				eq, /* names of quantified variables */
+				1, new Pattern[] { p } /* patterns */, null, null, null);
+
+		return q;
+	}
 
 	// / Assert the axiom: function f is commutative.
 
@@ -559,7 +559,6 @@ public class JavaExampleOfCH {
 	}
 
 	// / A basic example of how to use quantifiers.
-
 	void quantifierExample1(Context ctx) throws Z3Exception {
 		System.out.println("QuantifierExample");
 		Log.append("QuantifierExample");
@@ -579,155 +578,163 @@ public class JavaExampleOfCH {
 
 		Expr body_vars = ctx.mkAnd(
 				ctx.mkEq(ctx.mkAdd(vars[0], ctx.mkInt(1)), ctx.mkInt(2)),
-				ctx.mkEq(ctx.mkAdd(vars[1], ctx.mkInt(2)),
-						ctx.mkAdd(vars[2], ctx.mkInt(3))));
+				ctx.mkEq(ctx.mkAdd(vars[1], ctx.mkInt(2)), ctx.mkAdd(vars[2], ctx.mkInt(3)))
+				);
 
+		// xs[0] + 1 == 2 && xs[1] + 2 == xs[2] + 3
 		Expr body_const = ctx.mkAnd(
 				ctx.mkEq(ctx.mkAdd(xs[0], ctx.mkInt(1)), ctx.mkInt(2)),
-				ctx.mkEq(ctx.mkAdd(xs[1], ctx.mkInt(2)),
-						ctx.mkAdd(xs[2], ctx.mkInt(3))));
+				ctx.mkEq(ctx.mkAdd(xs[1], ctx.mkInt(2)), ctx.mkAdd(xs[2], ctx.mkInt(3)))
+				);
 
 		Expr x = ctx.mkForall(types, names, body_vars, 1, null, null,
 				ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
 		System.out.println("Quantifier X: " + x.toString());
 
+		Solver solver = ctx.mkSimpleSolver();
+		solver.add((BoolExpr)x);
+		System.out.println(solver.check());
+		solver.reset();
 		Expr y = ctx.mkForall(xs, body_const, 1, null, null,
 				ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
+		
+		solver.add((BoolExpr) y);
+		System.out.println(solver.check());
 		System.out.println("Quantifier Y: " + y.toString());
 	}
 
-//	void quantifierExample2(Context ctx) throws Z3Exception {
-//
-//		System.out.println("QuantifierExample2");
-//		Log.append("QuantifierExample2");
-//
-//		Expr q1, q2;
-//		FuncDecl f = ctx.mkFuncDecl("f", ctx.getIntSort(), ctx.getIntSort());
-//		FuncDecl g = ctx.mkFuncDecl("g", ctx.getIntSort(), ctx.getIntSort());
-//
-//		// Quantifier with Exprs as the bound variables.
-//		{
-//			Expr x = ctx.mkConst("x", ctx.getIntSort());
-//			Expr y = ctx.mkConst("y", ctx.getIntSort());
-//			Expr f_x = ctx.mkApp(f, x);
-//			Expr f_y = ctx.mkApp(f, y);
-//			Expr g_y = ctx.mkApp(g, y);
-//			@SuppressWarnings("unused")
-//			Pattern[] pats = new Pattern[] { ctx.mkPattern(f_x, g_y) };
-//			Expr[] no_pats = new Expr[] { f_y };
-//			Expr[] bound = new Expr[] { x, y };
-//			Expr body = ctx.mkAnd(ctx.mkEq(f_x, f_y), ctx.mkEq(f_y, g_y));
-//
-//			q1 = ctx.mkForall(bound, body, 1, null, no_pats, ctx.mkSymbol("q"),
-//					ctx.mkSymbol("sk"));
-//
-//			System.out.println(q1);
-//		}
-//
-//		// Quantifier with de-Brujin indices.
-//		{
-//			Expr x = ctx.mkBound(1, ctx.getIntSort());
-//			Expr y = ctx.mkBound(0, ctx.getIntSort());
-//			Expr f_x = ctx.mkApp(f, x);
-//			Expr f_y = ctx.mkApp(f, y);
-//			Expr g_y = ctx.mkApp(g, y);
-//			@SuppressWarnings("unused")
-//			Pattern[] pats = new Pattern[] { ctx.mkPattern(f_x, g_y) };
-//			Expr[] no_pats = new Expr[] { f_y };
-//			Symbol[] names = new Symbol[] { ctx.mkSymbol("x"),
-//					ctx.mkSymbol("y") };
-//			Sort[] sorts = new Sort[] { ctx.getIntSort(), ctx.getIntSort() };
-//			Expr body = ctx.mkAnd(ctx.mkEq(f_x, f_y), ctx.mkEq(f_y, g_y));
-//
-//			q2 = ctx.mkForall(sorts, names, body, 1, null, // pats,
-//					no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
-//			System.out.println(q2);
-//		}
-//
-//		System.out.println(q1.equals(q2));
-//	}
+	void quantifierExample2(Context ctx) throws Z3Exception {
+
+		System.out.println("QuantifierExample2");
+		Log.append("QuantifierExample2");
+
+		Expr q1, q2;
+		FuncDecl f = ctx.mkFuncDecl("f", ctx.getIntSort(), ctx.getIntSort());
+		FuncDecl g = ctx.mkFuncDecl("g", ctx.getIntSort(), ctx.getIntSort());
+
+		// Quantifier with Exprs as the bound variables.
+		{
+			Expr x = ctx.mkConst("x", ctx.getIntSort());
+			Expr y = ctx.mkConst("y", ctx.getIntSort());
+			Expr f_x = ctx.mkApp(f, x);
+			Expr f_y = ctx.mkApp(f, y);
+			Expr g_y = ctx.mkApp(g, y);
+			@SuppressWarnings("unused")
+			Pattern[] pats = new Pattern[] { ctx.mkPattern(f_x, g_y) };
+			Expr[] no_pats = new Expr[] { f_y };
+			Expr[] bound = new Expr[] { x, y };
+			Expr body = ctx.mkAnd(ctx.mkEq(f_x, f_y), ctx.mkEq(f_y, g_y));
+
+			q1 = ctx.mkForall(bound, body, 1, null, no_pats, ctx.mkSymbol("q"),
+					ctx.mkSymbol("sk"));
+
+			System.out.println(q1);
+		}
+
+		// Quantifier with de-Brujin indices.
+		{
+			Expr x = ctx.mkBound(1, ctx.getIntSort());
+			Expr y = ctx.mkBound(0, ctx.getIntSort());
+			Expr f_x = ctx.mkApp(f, x);
+			Expr f_y = ctx.mkApp(f, y);
+			Expr g_y = ctx.mkApp(g, y);
+			@SuppressWarnings("unused")
+			Pattern[] pats = new Pattern[] { ctx.mkPattern(f_x, g_y) };
+			Expr[] no_pats = new Expr[] { f_y };
+			Symbol[] names = new Symbol[] { ctx.mkSymbol("x"),
+					ctx.mkSymbol("y") };
+			Sort[] sorts = new Sort[] { ctx.getIntSort(), ctx.getIntSort() };
+			Expr body = ctx.mkAnd(ctx.mkEq(f_x, f_y), ctx.mkEq(f_y, g_y));
+
+			q2 = ctx.mkForall(sorts, names, body, 1, null, // pats,
+					no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
+			System.out.println(q2);
+		}
+
+		System.out.println(q1.equals(q2));
+	}
 
 	// / Prove that <tt>f(x, y) = f(w, v) implies y = v</tt> when
 	// / <code>f</code> is injective in the second argument. <seealso
 	// cref="inj_axiom"/>
 
-//	public void quantifierExample3(Context ctx) throws Z3Exception,
-//			TestFailedException {
-//		System.out.println("QuantifierExample3");
-//		Log.append("QuantifierExample3");
-//
-//		/*
-//		 * If quantified formulas are asserted in a logical context, then the
-//		 * model produced by Z3 should be viewed as a potential model.
-//		 */
-//
-//		/* declare function f */
-//		Sort I = ctx.getIntSort();
-//		FuncDecl f = ctx.mkFuncDecl("f", new Sort[] { I, I }, I);
-//
-//		/* f is injective in the second argument. */
-//		BoolExpr inj = injAxiom(ctx, f, 1);
-//
-//		/* create x, y, v, w, fxy, fwv */
-//		Expr x = ctx.mkIntConst("x");
-//		Expr y = ctx.mkIntConst("y");
-//		Expr v = ctx.mkIntConst("v");
-//		Expr w = ctx.mkIntConst("w");
-//		Expr fxy = ctx.mkApp(f, x, y);
-//		Expr fwv = ctx.mkApp(f, w, v);
-//
-//		/* f(x, y) = f(w, v) */
-//		BoolExpr p1 = ctx.mkEq(fxy, fwv);
-//
-//		/* prove f(x, y) = f(w, v) implies y = v */
-//		BoolExpr p2 = ctx.mkEq(y, v);
-//		prove(ctx, p2, false, inj, p1);
-//
-//		/* disprove f(x, y) = f(w, v) implies x = w */
-//		BoolExpr p3 = ctx.mkEq(x, w);
-//		disprove(ctx, p3, false, inj, p1);
-//	}
+	public void quantifierExample3(Context ctx) throws Z3Exception,
+			TestFailedException {
+		System.out.println("QuantifierExample3");
+		Log.append("QuantifierExample3");
+
+		/*
+		 * If quantified formulas are asserted in a logical context, then the
+		 * model produced by Z3 should be viewed as a potential model.
+		 */
+
+		/* declare function f */
+		Sort I = ctx.getIntSort();
+		FuncDecl f = ctx.mkFuncDecl("f", new Sort[] { I, I }, I);
+
+		/* f is injective in the second argument. */
+		BoolExpr inj = injAxiom(ctx, f, 1);
+
+		/* create x, y, v, w, fxy, fwv */
+		Expr x = ctx.mkIntConst("x");
+		Expr y = ctx.mkIntConst("y");
+		Expr v = ctx.mkIntConst("v");
+		Expr w = ctx.mkIntConst("w");
+		Expr fxy = ctx.mkApp(f, x, y);
+		Expr fwv = ctx.mkApp(f, w, v);
+
+		/* f(x, y) = f(w, v) */
+		BoolExpr p1 = ctx.mkEq(fxy, fwv);
+
+		/* prove f(x, y) = f(w, v) implies y = v */
+		BoolExpr p2 = ctx.mkEq(y, v);
+		prove(ctx, p2, false, inj, p1);
+
+		/* disprove f(x, y) = f(w, v) implies x = w */
+		BoolExpr p3 = ctx.mkEq(x, w);
+		disprove(ctx, p3, false, inj, p1);
+	}
 
 	// / Prove that <tt>f(x, y) = f(w, v) implies y = v</tt> when
 	// / <code>f</code> is injective in the second argument. <seealso
 	// cref="inj_axiom"/>
 
-//	public void quantifierExample4(Context ctx) throws Z3Exception,
-//			TestFailedException {
-//		System.out.println("QuantifierExample4");
-//		Log.append("QuantifierExample4");
-//
-//		/*
-//		 * If quantified formulas are asserted in a logical context, then the
-//		 * model produced by Z3 should be viewed as a potential model.
-//		 */
-//
-//		/* declare function f */
-//		Sort I = ctx.getIntSort();
-//		FuncDecl f = ctx.mkFuncDecl("f", new Sort[] { I, I }, I);
-//
-//		/* f is injective in the second argument. */
-//		BoolExpr inj = injAxiomAbs(ctx, f, 1);
-//
-//		/* create x, y, v, w, fxy, fwv */
-//		Expr x = ctx.mkIntConst("x");
-//		Expr y = ctx.mkIntConst("y");
-//		Expr v = ctx.mkIntConst("v");
-//		Expr w = ctx.mkIntConst("w");
-//		Expr fxy = ctx.mkApp(f, x, y);
-//		Expr fwv = ctx.mkApp(f, w, v);
-//
-//		/* f(x, y) = f(w, v) */
-//		BoolExpr p1 = ctx.mkEq(fxy, fwv);
-//
-//		/* prove f(x, y) = f(w, v) implies y = v */
-//		BoolExpr p2 = ctx.mkEq(y, v);
-//		prove(ctx, p2, false, inj, p1);
-//
-//		/* disprove f(x, y) = f(w, v) implies x = w */
-//		BoolExpr p3 = ctx.mkEq(x, w);
-//		disprove(ctx, p3, false, inj, p1);
-//	}
+	public void quantifierExample4(Context ctx) throws Z3Exception,
+			TestFailedException {
+		System.out.println("QuantifierExample4");
+		Log.append("QuantifierExample4");
+
+		/*
+		 * If quantified formulas are asserted in a logical context, then the
+		 * model produced by Z3 should be viewed as a potential model.
+		 */
+
+		/* declare function f */
+		Sort I = ctx.getIntSort();
+		FuncDecl f = ctx.mkFuncDecl("f", new Sort[] { I, I }, I);
+
+		/* f is injective in the second argument. */
+		BoolExpr inj = injAxiomAbs(ctx, f, 1);
+
+		/* create x, y, v, w, fxy, fwv */
+		Expr x = ctx.mkIntConst("x");
+		Expr y = ctx.mkIntConst("y");
+		Expr v = ctx.mkIntConst("v");
+		Expr w = ctx.mkIntConst("w");
+		Expr fxy = ctx.mkApp(f, x, y);
+		Expr fwv = ctx.mkApp(f, w, v);
+
+		/* f(x, y) = f(w, v) */
+		BoolExpr p1 = ctx.mkEq(fxy, fwv);
+
+		/* prove f(x, y) = f(w, v) implies y = v */
+		BoolExpr p2 = ctx.mkEq(y, v);
+		prove(ctx, p2, false, inj, p1);
+
+		/* disprove f(x, y) = f(w, v) implies x = w */
+		BoolExpr p3 = ctx.mkEq(x, w);
+		disprove(ctx, p3, false, inj, p1);
+	}
 
 	// / Some basic tests.
 
@@ -987,7 +994,6 @@ public class JavaExampleOfCH {
 
 	void smt2FileTest(String filename) throws Z3Exception {
 		Date before = new Date();
-
 		System.out.println("SMT2 File test ");
 		System.gc();
 
@@ -2099,197 +2105,13 @@ public class JavaExampleOfCH {
 		// System.out.println(ctx.mkEq(s1, t1));
 	}
 
-	public static String test(String ix, String iy, int constraint,
-			int xLowBound, int xHighBound) throws Z3Exception {
-		HashMap<String, String> cfg = new HashMap<String, String>();
-		cfg.put("model", "true");
-
-		Context ctx = new Context(cfg);
-		IntExpr x = ctx.mkIntConst(ix);
-		IntExpr y = ctx.mkIntConst(iy);
-
-		IntExpr diff = ctx.mkInt(constraint);
-		IntExpr xlow = ctx.mkInt(xLowBound);
-		IntExpr xhigh = ctx.mkInt(xHighBound);
-		ArithExpr y_plus_diff = ctx.mkAdd(y, diff);
-
-		BoolExpr c1 = ctx.mkLt(x, y_plus_diff);
-		BoolExpr c2 = ctx.mkGt(x, xlow);
-		BoolExpr c3 = ctx.mkLt(x, xhigh);
-		BoolExpr q = ctx.mkAnd(c1, c2, c3);
-
-		String resultString = "";
-
-		resultString = resultString + "model for:\nx < y + " + constraint
-				+ "\nx > " + xLowBound + "\nx < " + xHighBound + "\n";
-		Solver s = ctx.mkSolver();
-		s.add(q);
-
-		resultString = resultString + s.check();
-		if (s.check() == Status.SATISFIABLE) {
-
-			Model model = s.getModel();
-
-			resultString = resultString + "the Model is : x = "
-					+ model.evaluate(x, false) + ", y ="
-					+ model.evaluate(y, false) + "\n";
-
-			resultString = resultString + model.toString();
-		}
-		return resultString;
-
-	}
-
-	public static String getSatifiable(String string) throws Z3Exception {
-		HashMap<String, String> cfg = new HashMap<String, String>();
-		cfg.put("model", "true");
-
-		Context ctx = new Context(cfg);
-		
-		String[] exprStrings = string.split("\\^");
-		
-		for (int i = 0; i < exprStrings.length; i++) {
-			System.out.println(exprStrings[i]);
-		}
-	
-		Set<IntExpr> intExprSet = new HashSet<IntExpr>();
-		BoolExpr[] checkExprs = new BoolExpr[exprStrings.length];
-		
-		Pattern pattern = Pattern.compile("[0-9]*");
-		Matcher isNum0,isNum1;
-		String[] subStrings;
-		for (int i = 0; i < exprStrings.length; i++) {
-			//checkExprs[i] =  
-			String temp = exprStrings[i];//为每一个子表达式建立BoolExpr,如  x<y
-			if (temp.indexOf(">=")!=-1) {
-				subStrings = temp.split(">=");
-				if (subStrings.length>2) { //如果不是x>=y的模式，
-					System.out.println("incorrect formula");
-					return "wrong expression";
-				}
-				isNum0 = pattern.matcher(subStrings[0]);
-				isNum1 = pattern.matcher(subStrings[1]);
-				if(!isNum0.matches() && !isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkIntConst(subStrings[1]);
-					intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkGe(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else if(!isNum0.matches() && isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkInt(subStrings[1]);
-					//intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkGe(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else {
-					return "wrong expression";
-				}
-			}else if (temp.indexOf("<=")!=-1) {
-				subStrings = temp.split("<=");
-				if (subStrings.length>2) { //如果不是 x<=y 的模式，
-					System.out.println("incorrect formula");
-					return "wrong expression";
-				}
-				isNum0 = pattern.matcher(subStrings[0]);
-				isNum1 = pattern.matcher(subStrings[1]);
-				if(!isNum0.matches() && !isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkIntConst(subStrings[1]);
-					intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkLe(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}
-				else if(!isNum0.matches() && isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkInt(subStrings[1]);
-					//intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkLe(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else {
-					return "wrong expression";
-				}
-					
-			}else if (temp.indexOf("<")!=-1) {
-				subStrings = temp.split("<");
-				if (subStrings.length>2) { //如果不是 x<=y 的模式，
-					System.out.println("incorrect formula");
-					return "wrong expression";
-				}
-				isNum0 = pattern.matcher(subStrings[0]);
-				isNum1 = pattern.matcher(subStrings[1]);
-				if(!isNum0.matches() && !isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkIntConst(subStrings[1]);
-					intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkLt(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else if(!isNum0.matches() && isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkInt(subStrings[1]);
-					//intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkLt(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else {
-					return "wrong expression";
-				}
-			}else if (temp.indexOf(">")!=-1) {
-				subStrings = temp.split(">");
-				if (subStrings.length>2) { //如果不是 x<=y 的模式，
-					System.out.println("incorrect formula");
-					return "wrong expression";
-				}
-				isNum0 = pattern.matcher(subStrings[0]);
-				isNum1 = pattern.matcher(subStrings[1]);
-				if(!isNum0.matches() && !isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkIntConst(subStrings[1]);
-					intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkGt(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else if(!isNum0.matches() && isNum1.matches()){
-					IntExpr temp0 = ctx.mkIntConst(subStrings[0]);
-					intExprSet.add(temp0);
-					IntExpr temp1 = ctx.mkInt(subStrings[1]);
-					//intExprSet.add(temp1);
-					BoolExpr tempBoolExpr = ctx.mkGt(temp0, temp1);
-					checkExprs[i] = tempBoolExpr;
-				}else {
-					return "wrong expression";
-				}
-			}else {
-				return "wrong expression";
-			}	
-		}
-		Solver solver = ctx.mkSolver();
-		solver.add(checkExprs);
-		if (solver.check() == Status.SATISFIABLE) {
-			Model m = solver.getModel();
-			System.out.println(m.toString());
-			return "SATISFIABLE";
-		}else {
-			return "UNSATISFIABLE";
-		}
-
-	}
- 
 	public static void main(String[] args) {
 		 JavaExampleOfCH p = new JavaExampleOfCH();
 		try {
 
 			Log.open("test.log");
-			//
-			// System.out.print("Z3 Major Version: ");
-			// System.out.println(Version.getMajor());
-			// System.out.print("Z3 Full Version: ");
 			// System.out.println(Version.getString());
-			// p.simpleExample();
+			 p.simpleExample();
 
 			{ // These examples need model generation turned on.
 				HashMap<String, String> cfg = new HashMap<String, String>();
@@ -2297,15 +2119,14 @@ public class JavaExampleOfCH {
 				Context ctx = new Context(cfg);
 
 				// p.basicTests(ctx);
-
 				// p.castingTest(ctx);
-				//System.out.println(test("x", "y", 10, 100, 103));
 
-				//  System.out.println(getSatifiable("x<=10^y>=10^x>=y"));
 				// p.sudokuExample(ctx);
-				// p.quantifierExample1(ctx);
-				// p.quantifierExample2(ctx);
-				// p.logicExample(ctx);
+				 p.quantifierExample1(ctx);
+				 
+				 System.out.println();System.out.println();System.out.println();
+				 p.quantifierExample2(ctx);
+				 p.logicExample(ctx);
 				// p.parOrExample(ctx);
 				//p.findModelExample1(ctx);
 				//p.findModelExample2(ctx);
@@ -2324,14 +2145,14 @@ public class JavaExampleOfCH {
 				// p.findSmallModelExample(ctx);
 				 p.simplifierExample(ctx);
 //				 p.finiteDomainExample(ctx);
-				// }
+				 }
 				//
-				// { // These examples need proof generation turned on.
-				// HashMap<String, String> cfg = new HashMap<String, String>();
-				// cfg.put("proof", "true");
-				// Context ctx = new Context(cfg);
+				 { // These examples need proof generation turned on.
+				 HashMap<String, String> cfg = new HashMap<String, String>();
+				 cfg.put("proof", "true");
+				 Context ctx = new Context(cfg);
 				 p.proveExample1(ctx);
-				// p.proveExample2(ctx);
+				 p.proveExample2(ctx);
 				//p.arrayExample2(ctx);
 				// p.tupleExample(ctx);
 				// p.parserExample3(ctx);
@@ -2339,7 +2160,7 @@ public class JavaExampleOfCH {
 				// p.listExample(ctx);
 				// p.treeExample(ctx);
 				// p.forestExample(ctx);
-				// p.unsatCoreAndProofExample(ctx);
+				 p.unsatCoreAndProofExample(ctx);
 				// }
 				//
 				// { // These examples need proof generation turned on and
@@ -2349,8 +2170,8 @@ public class JavaExampleOfCH {
 				// cfg.put("proof", "true");
 				// cfg.put("auto-config", "false");
 				// Context ctx = new Context(cfg);
-				// p.quantifierExample3(ctx);
-				// p.quantifierExample4(ctx);
+				 p.quantifierExample3(ctx);
+				 p.quantifierExample4(ctx);
 			}
 
 			Log.close();

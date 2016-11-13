@@ -19,10 +19,13 @@ public class Tansformation {
         for (DLClause dlClause : dlClauseSet) {
 
         }
+        return context;
     }
 
     public Expr parSingleDLCLause(Context context, DLClause dlClause) {
-        Expr expr =
+        // TODO solve 
+        Expr expr = context.mkInt(10);
+        return expr;
     }
 
 }

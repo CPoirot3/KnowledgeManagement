@@ -161,7 +161,6 @@ public class Test {
 	}
 	
 	public static void main(String[] args){
-		
+		System.out.println(getSatifiable("x<=10^y>=10^x>=y"));
 	}
-
 }
