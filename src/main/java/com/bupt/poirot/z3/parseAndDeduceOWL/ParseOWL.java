@@ -95,6 +95,6 @@ public class ParseOWL {
 		}
 	}
 	public static void main(String[] args){
-	
+
 	}
 }
