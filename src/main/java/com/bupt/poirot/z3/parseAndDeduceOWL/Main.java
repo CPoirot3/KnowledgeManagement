@@ -17,7 +17,6 @@ import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 import com.microsoft.z3.Status;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.semanticweb.HermiT.model.DLClause;
 
 public class Main {
@@ -49,10 +48,13 @@ public class Main {
             }
         }
 
-
         BoolExpr expression = null;
-        String[] strings = domain.split(",");
+        String[] strings = domain.split(", ");
         for (String str : strings) {
+            if (str.equals("<http://www.semanticweb.org/traffic-ontology#hasLatitude>(X,Y")) {
+                System.out.println("mark : " + expression);
+            }
+
             Matcher matcher = pattern.matcher(str);
             if (matcher.find()) {
                 String funcString = matcher.group(1);
@@ -87,63 +89,71 @@ public class Main {
                 } else {
                     expression = ctx.mkAnd(expression, (BoolExpr)ctx.mkApp(funcDecl, exprs));
                 }
-
             }
         }
 
-
-
-        BoolExpr expression2 = null;
-        strings = formua.split(", ");
-        System.out.println(strings.length);
-        for (String str : strings) {
-            Matcher matcher = pattern.matcher(str);
-            if (matcher.find()) {
-                String funcString = matcher.group(1);
-                FuncDecl funcDecl = null;
-                if (stringToFuncMap.containsKey(funcString)) {
-                    funcDecl = stringToFuncMap.get(funcString);
-                }
-
-                String string = matcher.group(2);
-                String[] variables = string.split(",");
-                Sort[] domains = new Sort[variables.length];
-
-                if (funcDecl != null) {
-                    domains = funcDecl.getDomain();
-                } else {
-                    // need to mk FuncDecl
-                    for (int i = 0; i < domains.length; i++) {
-                        domains[i] = ctx.mkUninterpretedSort(variables[i]);
+        BoolExpr formuaExpr = null;
+        for (String s : formua.split(" v ")) {
+            BoolExpr expression2 = null;
+            strings = s.split(", ");
+            for (String str : strings) {
+                Matcher matcher = pattern.matcher(str);
+                if (matcher.find()) {
+                    String funcString = matcher.group(1);
+                    FuncDecl funcDecl = null;
+                    if (stringToFuncMap.containsKey(funcString)) {
+                        funcDecl = stringToFuncMap.get(funcString);
                     }
-                    funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
-                    stringToFuncMap.put(funcString, funcDecl);
-                }
-                Expr[] exprs = new Expr[variables.length];
-                for (int i = 0; i < exprs.length; i++) {
-                    String variableName = varaibleNameToExprName.containsKey(variables[i]) ? varaibleNameToExprName.get(variables[i]) : variables[i] + (begin++);
-                    varaibleNameToExprName.put(variables[i], variableName);
-                    System.out.println(variableName);
-                    exprs[i] = ctx.mkConst(variables[i], domains[i]);
-                }
 
-                if (expression2 == null) {
-                    expression2 = (BoolExpr)ctx.mkApp(funcDecl, exprs);
-                } else {
-                    expression2 = ctx.mkAnd(expression2, (BoolExpr)ctx.mkApp(funcDecl, exprs));
-                }
+                    String string = matcher.group(2);
+                    String[] variables = string.split(",");
+                    Sort[] domains = new Sort[variables.length];
 
+                    if (funcDecl != null) {
+                        domains = funcDecl.getDomain();
+                    } else {
+                        // need to mk FuncDecl
+                        for (int i = 0; i < domains.length; i++) {
+                            domains[i] = ctx.mkUninterpretedSort(variables[i]);
+                        }
+                        funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
+                        stringToFuncMap.put(funcString, funcDecl);
+                    }
+                    Expr[] exprs = new Expr[variables.length];
+                    for (int i = 0; i < exprs.length; i++) {
+                        String variableName = varaibleNameToExprName.containsKey(variables[i]) ? varaibleNameToExprName.get(variables[i]) : variables[i] + (begin++);
+                        varaibleNameToExprName.put(variables[i], variableName);
+                        System.out.println(variableName);
+                        exprs[i] = ctx.mkConst(variables[i], domains[i]);
+                    }
+
+                    if (expression2 == null) {
+                        expression2 = (BoolExpr)ctx.mkApp(funcDecl, exprs);
+                    } else {
+                        expression2 = ctx.mkAnd(expression2, (BoolExpr)ctx.mkApp(funcDecl, exprs));
+                    }
+
+                }
             }
-//            System.out.println("test" + expression2);
+            if (expression2 == null) {
+                continue;
+            }
+            if (formuaExpr == null) {
+                formuaExpr = expression2;
+            } else {
+                formuaExpr = ctx.mkOr(formuaExpr, expression2);
+            }
         }
+
+
 
         System.out.println("expression : " + expression);
-        System.out.println("expression2 : " + expression2);
+        System.out.println("expression2 : " + formuaExpr);
 
-        if (expression == null || expression2 == null) {
+        if (expression == null || formuaExpr == null) {
             return null;
         }
-        BoolExpr finalExpr = ctx.mkImplies(expression, expression2);
+        BoolExpr finalExpr = ctx.mkImplies(expression, formuaExpr);
         System.out.println(finalExpr);
         System.out.println();
 
@@ -182,7 +192,7 @@ public class Main {
 
 		if (solver.check() == Status.SATISFIABLE) {
             System.out.println(Status.SATISFIABLE);
-            System.out.println(solver.getModel());
+//            System.out.println(solver.getModel());
         } else {
             System.out.println(Status.UNSATISFIABLE);
         }
