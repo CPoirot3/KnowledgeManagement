@@ -2061,8 +2061,18 @@ public class Main {
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("model", "true");
 				Context ctx = new Context(cfg);
-				p.quantifierExampleByHui(ctx);
 
+
+				Sort sortA = ctx.mkUninterpretedSort("a");
+				Sort sortB = ctx.mkUninterpretedSort("a");
+				System.out.println(sortA.equals(sortB));
+
+				Expr expr1 = ctx.mkConst("m", sortA);
+				Expr expr2 = ctx.mkConst("n", sortB);
+				System.out.println(expr1.equals(expr2));
+
+
+				p.quantifierExampleByHui(ctx);
 				// p.basicTests(ctx);
 				// p.castingTest(ctx);
 

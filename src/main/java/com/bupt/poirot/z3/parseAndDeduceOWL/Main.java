@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.BoolSort;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.FuncDecl;
@@ -16,53 +17,140 @@ import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 import com.microsoft.z3.Status;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.semanticweb.HermiT.model.DLClause;
 
 public class Main {
 
+    public static Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
+
     public static Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
+    public static int begin = 0;
 
-    public static Quantifier mkQuantifier(Context ctx, String boundString, String quantifierString, Set<String> sortSet) {
-        Map<String, Sort> map = new HashMap<>();
-        String[] strings = quantifierString.split(",");
-        for (String str : strings) {
-            Matcher matcher = pattern.matcher(str);
-            if (matcher.find()) {
-
-                String string = matcher.group(2);
-                System.out.println(string);
-
-                String[] varibles = string.split(",");
-                for (String var : varibles) {
-                    if (!map.containsKey(var)) {
-                        Sort sort = ctx.mkUninterpretedSort(var);
-                        map.put(var, sort);
-                    }
-                }
-
-                Sort[] domains = new Sort[varibles.length];
-                for (int i = 0; i < domains.length; i++) {
-                    domains[i] = map.get(varibles[i]);
-                }
-                String funcName = matcher.group(1);
+    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2, Set<String> sortSet, Set<String> quantifierSet) {
+        Map<String, String> varaibleNameToExprName = new HashMap<>();
 
 
-                FuncDecl funcDecl = ctx.mkFuncDecl(funcName, domains, ctx.mkBoolSort());
 
-                Expr[] exprs = new Expr[varibles.length];
-                for (int i = 0; i < exprs.length; i++) {
-                    exprs[i] = ctx.mk
-                }
-                BoolExpr boolExpr = ctx.mkApp(funcdecl
+        String domain, formua;
+        if (string1.contains("atLeast") || string1.contains("atMost") || string1.contains(" v ")) {
+            domain = string2;
+            formua = string1;
+        } else if (string2.contains("atLeast") || string2.contains("atMost") || string2.contains(" v ")) {
+            domain = string1;
+            formua = string2;
+        } else {
+            if (string1.contains(",")) {
+                domain = string2;
+                formua = string1;
+            } else {
+                domain = string1;
+                formua = string2;
             }
         }
 
-        strings = boundString.split(",");
-        for (String str : strings) {
 
+        BoolExpr expression = null;
+        String[] strings = domain.split(",");
+        for (String str : strings) {
+            Matcher matcher = pattern.matcher(str);
+            if (matcher.find()) {
+                String funcString = matcher.group(1);
+                FuncDecl funcDecl = null;
+                if (stringToFuncMap.containsKey(funcString)) {
+                    funcDecl = stringToFuncMap.get(funcString);
+                }
+
+                String string = matcher.group(2);
+                String[] variables = string.split(",");
+                Sort[] domains = new Sort[variables.length];
+
+                if (funcDecl != null) {
+                    domains = funcDecl.getDomain();
+                } else {
+                    // need to mk FuncDecl
+                    for (int i = 0; i < domains.length; i++) {
+                        domains[i] = ctx.mkUninterpretedSort(variables[i]);
+                    }
+                    funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
+                    stringToFuncMap.put(funcString, funcDecl);
+                }
+                Expr[] exprs = new Expr[variables.length];
+                for (int i = 0; i < exprs.length; i++) {
+                    String variableName = varaibleNameToExprName.containsKey(variables[i]) ? varaibleNameToExprName.get(variables[i]) :variables[i] + (begin++);
+                    varaibleNameToExprName.put(variables[i], variableName);
+
+                    exprs[i] = ctx.mkConst(variables[i], domains[i]);
+                }
+                if (expression == null) {
+                    expression = (BoolExpr)ctx.mkApp(funcDecl, exprs);
+                } else {
+                    expression = ctx.mkAnd(expression, (BoolExpr)ctx.mkApp(funcDecl, exprs));
+                }
+
+            }
         }
-        Quantifier quantifier = null;
-        return quantifier;
+
+
+
+        BoolExpr expression2 = null;
+        strings = formua.split(", ");
+        System.out.println(strings.length);
+        for (String str : strings) {
+            Matcher matcher = pattern.matcher(str);
+            if (matcher.find()) {
+                String funcString = matcher.group(1);
+                FuncDecl funcDecl = null;
+                if (stringToFuncMap.containsKey(funcString)) {
+                    funcDecl = stringToFuncMap.get(funcString);
+                }
+
+                String string = matcher.group(2);
+                String[] variables = string.split(",");
+                Sort[] domains = new Sort[variables.length];
+
+                if (funcDecl != null) {
+                    domains = funcDecl.getDomain();
+                } else {
+                    // need to mk FuncDecl
+                    for (int i = 0; i < domains.length; i++) {
+                        domains[i] = ctx.mkUninterpretedSort(variables[i]);
+                    }
+                    funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
+                    stringToFuncMap.put(funcString, funcDecl);
+                }
+                Expr[] exprs = new Expr[variables.length];
+                for (int i = 0; i < exprs.length; i++) {
+                    String variableName = varaibleNameToExprName.containsKey(variables[i]) ? varaibleNameToExprName.get(variables[i]) : variables[i] + (begin++);
+                    varaibleNameToExprName.put(variables[i], variableName);
+                    System.out.println(variableName);
+                    exprs[i] = ctx.mkConst(variables[i], domains[i]);
+                }
+
+                if (expression2 == null) {
+                    expression2 = (BoolExpr)ctx.mkApp(funcDecl, exprs);
+                } else {
+                    expression2 = ctx.mkAnd(expression2, (BoolExpr)ctx.mkApp(funcDecl, exprs));
+                }
+
+            }
+//            System.out.println("test" + expression2);
+        }
+
+        System.out.println("expression : " + expression);
+        System.out.println("expression2 : " + expression2);
+
+        if (expression == null || expression2 == null) {
+            return null;
+        }
+        BoolExpr finalExpr = ctx.mkImplies(expression, expression2);
+        System.out.println(finalExpr);
+        System.out.println();
+
+//        Quantifier quantifier = null;
+//        return quantifier;
+
+        return finalExpr;
     }
 
 	public static void main(String[] args) {
@@ -74,7 +162,6 @@ public class Main {
 
 
         Set<String> quantifiersSet = new HashSet<>();
-        Set<String> boundStringSet = new HashSet<>();
         Set<String> sortSet = new HashSet<>();
 
         Context context = new Context();
@@ -82,15 +169,15 @@ public class Main {
 
 		for (DLClause dlClause: set) {
             String dlClauseString = dlClause.toString();
-
 			String[] strings = dlClauseString.split(":-");
 
 			System.out.println(dlClauseString);
-            String quantifier = strings[1];
-            quantifiersSet.add(quantifier);
-            String boundString = strings[0];
-            boundStringSet.add(boundString);
-            mkQuantifier(context, boundString, quantifier, sortSet);
+
+            BoolExpr boolExpr = mkQuantifier(context, strings[0], strings[1], sortSet, quantifiersSet);
+
+            if (boolExpr != null) {
+                solver.add(boolExpr);
+            }
 		}
 
 		if (solver.check() == Status.SATISFIABLE) {
@@ -99,7 +186,5 @@ public class Main {
         } else {
             System.out.println(Status.UNSATISFIABLE);
         }
-
 	}
-
 }
