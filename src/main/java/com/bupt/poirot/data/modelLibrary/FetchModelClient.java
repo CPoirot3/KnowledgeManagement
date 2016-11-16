@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLEncoder;
 
 import org.apache.http.HttpEntity;
@@ -21,7 +20,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.jena.sparql.pfunction.library.str;
 
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 
@@ -29,12 +27,12 @@ import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
  * @author Poirot
  *
  */
-public class FetchModel {
+public class FetchModelClient {
 	HttpClient httpClient;
 	HttpGet httpGet;
 	HttpPost httpPost;
 	
-	public FetchModel() {
+	public FetchModelClient() {
 		httpClient = HttpClients.createDefault();
 		httpGet = new HttpGet("");
 		httpPost = new HttpPost();
@@ -84,7 +82,7 @@ public class FetchModel {
 	}
 	
 	public static void main(String[] args) {
-		FetchModel fetchModel = new FetchModel();
+		FetchModelClient fetchModel = new FetchModelClient();
 		String host = "http://localhost:3030";
 		String domain = "traffic-data";
 		//		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";

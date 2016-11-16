@@ -1,7 +1,5 @@
 package com.bupt.poirot.z3.parseAndDeduceOWL;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +20,7 @@ import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 import com.microsoft.z3.Status;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.semanticweb.HermiT.model.DLClause;
 
 public class OWLToZ3 {
@@ -165,7 +164,7 @@ public class OWLToZ3 {
         return finalExpr;
     }
 
-    public static void parseFromStream(InputStream inputStream) {
+    public static BoolExpr parseFromStream(Context context, Solver solver, InputStream inputStream) {
     	Set<DLClause> set = ParseOWL.owlToDLClsuses(inputStream);
 		System.out.println(set.size());
 
@@ -173,9 +172,8 @@ public class OWLToZ3 {
         Set<String> quantifiersSet = new HashSet<>();
         Set<String> sortSet = new HashSet<>();
 
-        Context context = new Context();
-        Solver solver = context.mkSolver();
 
+        BoolExpr res = null;
 		for (DLClause dlClause: set) {
             String dlClauseString = dlClause.toString();
 			String[] strings = dlClauseString.split(":-");
@@ -186,6 +184,9 @@ public class OWLToZ3 {
 
             if (boolExpr != null) {
                 solver.add(boolExpr);
+                res = context.mkAnd(res, boolExpr);
+            } else {
+                res = boolExpr;
             }
 		}
 
@@ -195,6 +196,7 @@ public class OWLToZ3 {
         } else {
             System.out.println(Status.UNSATISFIABLE);
         }
+        return res;
     }
     
 	public static void main(String[] args) {
@@ -207,6 +209,8 @@ public class OWLToZ3 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		parseFromStream(inputStream);
+		Context context = new Context();
+        Solver solver = context.mkSolver();
+		parseFromStream(context, solver, inputStream);
 	}
 }
