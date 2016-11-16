@@ -16,23 +16,23 @@ import org.apache.jena.atlas.json.JsonObject;
 import com.bupt.poirot.main.Config;
 public class Client {
 	
-	DealData dealData;
-	Map<String, String> paramsMap;
-	LinkedList<String> linkedList; 
+	public DealData dealData;
+	public LinkedList<String> resultQueue; 
 	
-	
-	public Client(Map<String, String> paramsMap) {
-		System.out.println("new client");
-		this.paramsMap = paramsMap;
-		String sections = paramsMap.get("sections");
-		System.out.println(sections);
-		this.dealData = new DealData(sections);
-		this.linkedList = new LinkedList<>();
+	public String domain;
+	public String topic;
+	public Client(Map<String, String[]> paramsMap) {
+		topic = paramsMap.get("topic")[0];
+		domain = paramsMap.get("domain")[0];
+//		this.dealData = new DealData(sections);
+		this.resultQueue = new LinkedList<>();
 		accept();
 	}
 
 	
-	public JsonObject getOne() {
+	
+	
+	public JsonObject getResult() {
 		return dealData.gerOne();
 	}
 	
@@ -42,15 +42,15 @@ public class Client {
             String line = null;
             int count = 0;
 			while ((line = reader.readLine()) != null) {
-                linkedList.addLast(line);
+                resultQueue.addLast(line);
                 count++;
                 if (count > 100000) {
                 	return;
                 }
-                if (linkedList.size() >= 10000) {
+                if (resultQueue.size() >= 10000) {
 //                	System.out.println("count " + count);
                 	deduceWithOneSection();
-                	linkedList.clear();
+                	resultQueue.clear();
                 	
                 }
 //                Thread.sleep(1);
@@ -63,7 +63,7 @@ public class Client {
 	private void deduceWithOneSection() {
 //		System.out.println("list size : " + linkedList.size());
 //		System.out.println("before deal  dataSortByTime size : " + dealData.dataSortByTime.size());
-		for (String message : linkedList) {
+		for (String message : resultQueue) {
 			dealData.deal(message);
 		}
 		

@@ -1,4 +1,4 @@
-package com.bupt.poirot.kafka;
+package com.bupt.poirot.dataStream;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -7,7 +7,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
-public class KafkaConsumerDemo {
+public class ConsumerDemo {
 
 	public static void main(String[] args) {
 		System.out.println("begin consumer");
@@ -38,7 +38,6 @@ public class KafkaConsumerDemo {
 //				e.printStackTrace();
 //			}
 			for (ConsumerRecord<String, String> record : records) {
-				System.out.println("ocnsumer a message");
 				System.out.printf("offset = %d, key = %s, value = %s", record.offset(), record.key(), record.value());
 				System.out.println();
 			}

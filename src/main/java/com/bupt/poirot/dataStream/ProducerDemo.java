@@ -1,4 +1,4 @@
-package com.bupt.poirot.kafka;
+package com.bupt.poirot.dataStream;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-public class KafkaProducerDemo {
+public class ProducerDemo {
 
     public static void main(String[] args) {
         System.out.println("begin produce");
@@ -36,15 +36,13 @@ public class KafkaProducerDemo {
 			int messageNumber = 1;
 			while ((message = reader.readLine()) != null) {
 				Thread.sleep(1000);
-				System.out.println(message);
+//				System.out.println(message);
 				producer.send(new ProducerRecord<String, String>("traffic-data", Integer.toString(messageNumber++), message));
 			}
 			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        
-                
         producer.close();
     }
 
