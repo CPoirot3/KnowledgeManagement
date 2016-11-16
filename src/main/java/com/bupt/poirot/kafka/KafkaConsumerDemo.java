@@ -19,8 +19,8 @@ public class KafkaConsumerDemo {
 	public static void connectionKafka() {
 
 		Properties props = new Properties();
-//		props.put("bootstrap.servers", "10.109.253.74:9092");
-		props.put("bootstrap.servers", "localhost:9092");
+		props.put("bootstrap.servers", "10.109.253.74:9092");
+//		props.put("bootstrap.servers", "localhost:9092");
 		props.put("group.id", "testConsumer");
 		props.put("enable.auto.commit", "true");
 		props.put("auto.commit.interval.ms", "1000");
@@ -31,7 +31,7 @@ public class KafkaConsumerDemo {
 		KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 		consumer.subscribe(Arrays.asList("traffic-data"));
 		while (true) {
-			ConsumerRecords<String, String> records = consumer.poll(3);
+			ConsumerRecords<String, String> records = consumer.poll(1);
 //			try {
 //				Thread.sleep(200);
 //			} catch (InterruptedException e) {

@@ -20,7 +20,7 @@ public class KafkaProducerDemo {
         Properties props = new Properties();
         props.put("bootstrap.servers", "10.109.253.74:9092");
 //        props.put("bootstrap.servers", "localhost:9092");             
-//        props.put("acks", "all");
+        props.put("acks", "all");
         props.put("retries", 0);
         props.put("batch.size", 16384);
         props.put("linger.ms", 1);
@@ -31,12 +31,12 @@ public class KafkaProducerDemo {
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         
         try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File("output.txt")));
+			BufferedReader reader = new BufferedReader(new FileReader(new File("traffic_data")));
 			String message = "";
 			int messageNumber = 1;
 			while ((message = reader.readLine()) != null) {
 				Thread.sleep(1000);
-//				System.out.println(message);
+				System.out.println(message);
 				producer.send(new ProducerRecord<String, String>("traffic-data", Integer.toString(messageNumber++), message));
 			}
 			reader.close();
