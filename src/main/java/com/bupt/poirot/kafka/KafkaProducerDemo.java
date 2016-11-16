@@ -19,7 +19,7 @@ public class KafkaProducerDemo {
     public static void connectionKafka() {
         Properties props = new Properties();
         props.put("bootstrap.servers", "10.109.253.74:9092");
-//        props.put("bootstrap.servers", "localhost:9092");      
+//        props.put("bootstrap.servers", "localhost:9092");             
 //        props.put("acks", "all");
         props.put("retries", 0);
         props.put("batch.size", 16384);
