@@ -37,6 +37,9 @@ public class Client {
 	}
 	
 	public void accept() {
+		// 通过sparql获得定义好的owl
+		
+		
 		File file = new File(Config.getValue("mac"));
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
             String line = null;

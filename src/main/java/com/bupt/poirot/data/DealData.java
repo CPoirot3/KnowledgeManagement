@@ -15,7 +15,7 @@ import org.bson.Document;
 
 import com.bupt.poirot.data.modelLibrary.Domain;
 import com.bupt.poirot.mongodb.SaveToMongo;
-import com.bupt.poirot.z3.ProveResult;
+import com.bupt.poirot.z3_z3backup.ProveResult;
 import com.mysql.cj.api.jdbc.Statement;
 import com.mysql.cj.jdbc.PreparedStatement;
 

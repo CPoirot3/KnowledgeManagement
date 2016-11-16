@@ -7,6 +7,7 @@ package com.bupt.poirot.data.modelLibrary;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -21,6 +22,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.sparql.pfunction.library.str;
+
+import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 
 /**
  * @author Poirot
@@ -51,7 +54,6 @@ public class FetchModel {
 				stringBuilder.append(line);
 			}
 		} catch (URISyntaxException | UnsupportedOperationException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (parse(stringBuilder.toString(), mark)) {
@@ -63,37 +65,32 @@ public class FetchModel {
 	
 	// mark stands for domain
 	private boolean parse(String response, String mark) {
-		// TODO Auto-generated method stub
 		return response.contains(mark);
 	}
 	
-	public String fetch(String urlString, String sparqlQuery) {
-		StringBuilder stringBuilder = new StringBuilder();
+	public InputStream fetch(String host, String domain, String sparqlQuery) {
+		InputStream inputStream = null;
 		try {
-			URI uri = new URI(urlString + URLEncoder.encode(sparqlQuery, "utf-8"));
+			URI uri = new URI(host + "/" + domain + "?" + URLEncoder.encode(sparqlQuery, "utf-8"));
 			httpGet.setURI(uri);
 			HttpResponse response = httpClient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(entity.getContent()));
-			String line = null;
-			while ((line = bufferedReader.readLine()) != null) {
-				stringBuilder.append(line);
-			}
+			inputStream = entity.getContent();
+			
 		} catch (URISyntaxException | UnsupportedOperationException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return stringBuilder.toString();
+		return inputStream;
 	}
 	
 	public static void main(String[] args) {
 		FetchModel fetchModel = new FetchModel();
-		String url = "http://localhost:3030/section1?query=";
-		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
-		System.out.println(url + query);
-		String model = fetchModel.fetch(url, query);
-		System.out.println(model);
-		
+		String host = "http://localhost:3030";
+		String domain = "traffic-data";
+		//		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
+		String query = "";
+		InputStream inputStream = fetchModel.fetch(host, domain, query);
+		OWLToZ3.parseFromStream(inputStream);
 	}
 
 }

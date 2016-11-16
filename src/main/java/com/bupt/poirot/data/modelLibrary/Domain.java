@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 public class Domain {
 	public static HashMap<String, String> domainMap = new HashMap<>();
-	
+	static {
+		
+	}
 	public static String getDomain(String message) {
 		return domainMap.containsKey(message) ? domainMap.get(message) : "交通";
 	}
