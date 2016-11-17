@@ -1,11 +1,47 @@
 package com.bupt.poirot.z3.main;
 
-import java.util.*;
-
-import com.microsoft.z3.*;
+import com.microsoft.z3.AST;
+import com.microsoft.z3.ApplyResult;
+import com.microsoft.z3.ArithExpr;
+import com.microsoft.z3.ArrayExpr;
+import com.microsoft.z3.ArraySort;
+import com.microsoft.z3.BitVecExpr;
+import com.microsoft.z3.BitVecNum;
+import com.microsoft.z3.BitVecSort;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Constructor;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.EnumSort;
+import com.microsoft.z3.Expr;
+import com.microsoft.z3.FiniteDomainSort;
+import com.microsoft.z3.FuncDecl;
+import com.microsoft.z3.Goal;
+import com.microsoft.z3.IntExpr;
+import com.microsoft.z3.IntNum;
+import com.microsoft.z3.IntSort;
+import com.microsoft.z3.IntSymbol;
+import com.microsoft.z3.ListSort;
+import com.microsoft.z3.Log;
+import com.microsoft.z3.Model;
+import com.microsoft.z3.Params;
 import com.microsoft.z3.Pattern;
+import com.microsoft.z3.Quantifier;
+import com.microsoft.z3.RatNum;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Sort;
+import com.microsoft.z3.Status;
+import com.microsoft.z3.StringSymbol;
+import com.microsoft.z3.Symbol;
+import com.microsoft.z3.Tactic;
+import com.microsoft.z3.TupleSort;
+import com.microsoft.z3.Version;
+import com.microsoft.z3.Z3Exception;
 
-public class Main {
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+
+public class Z3Library {
 	@SuppressWarnings("serial")
 	class TestFailedException extends Exception {
 		public TestFailedException() {
@@ -632,6 +668,19 @@ public class Main {
 
 			q1 = ctx.mkForall(bound, body, 1, null, no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
 
+
+			Expr z = ctx.mkConst("z", ctx.getIntSort());
+			Expr w = ctx.mkConst("w", ctx.getIntSort());
+			Expr f_z = ctx.mkApp(f, z);
+			Expr g_w = ctx.mkApp(g, w);
+			BoolExpr boolExpr = ctx.mkEq(f_z, g_w);
+
+			try {
+				prove(ctx, boolExpr, false, q1);
+			} catch (TestFailedException e) {
+				e.printStackTrace();
+			}
+
 			System.out.println(q1);
 //			Model model = check(ctx, (BoolExpr) q1, Status.SATISFIABLE); 
 			Solver solver = ctx.mkSolver();
@@ -639,7 +688,6 @@ public class Main {
 			if (solver.check() == Status.SATISFIABLE) {
 				System.out.println(solver.getModel());
 			}
-			System.out.println(q1.isUniversal());
 			System.out.println();
 		}
 
@@ -660,10 +708,9 @@ public class Main {
 			q2 = ctx.mkForall(sorts, names, body, 1, null, // pats,
 					no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
 			System.out.println(q2);
-			System.out.println(q2.isUniversal());
 		}
 
-		System.out.println(q1.equals(q2));
+//		System.out.println(q1.equals(q2));
 	}
 
 	// / Prove that <tt>f(x, y) = f(w, v) implies y = v</tt> when
@@ -2050,7 +2097,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		Main p = new Main();
+		Z3Library p = new Z3Library();
 		try {
 
 			Log.open("test.log");
@@ -2059,19 +2106,20 @@ public class Main {
 			{ // These examples need model generation turned on.
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("model", "true");
+				cfg.put("proof", "true");
 				Context ctx = new Context(cfg);
 
 
-				Sort sortA = ctx.mkUninterpretedSort("a");
-				Sort sortB = ctx.mkUninterpretedSort("a");
-				System.out.println(sortA.equals(sortB));
+//				Sort sortA = ctx.mkUninterpretedSort("a");
+//				Sort sortB = ctx.mkUninterpretedSort("a");
+//				System.out.println(sortA.equals(sortB));
+//
+//				Expr expr1 = ctx.mkConst("m", sortA);
+//				Expr expr2 = ctx.mkConst("n", sortB);
+//				System.out.println(expr1.equals(expr2));
 
-				Expr expr1 = ctx.mkConst("m", sortA);
-				Expr expr2 = ctx.mkConst("n", sortB);
-				System.out.println(expr1.equals(expr2));
 
-
-				p.quantifierExampleByHui(ctx);
+//				p.quantifierExampleByHui(ctx);
 				// p.basicTests(ctx);
 				// p.castingTest(ctx);
 
@@ -2079,15 +2127,11 @@ public class Main {
 //				p.quantifierExample1(ctx);
 
 //				System.out.println();
-//				System.out.println();
-//				System.out.println();
 				p.quantifierExample2(ctx);
 				
 				System.out.println();
 				System.out.println();
-				System.out.println();
-				p.logicExample(ctx);
-				System.out.println();
+//				p.logicExample(ctx);
 				System.out.println();
 				System.out.println();
 				
@@ -2115,8 +2159,8 @@ public class Main {
 				HashMap<String, String> cfg = new HashMap<String, String>();
 				cfg.put("proof", "true");
 				Context ctx = new Context(cfg);
-				p.proveExample1(ctx);
-				p.proveExample2(ctx);
+//				p.proveExample1(ctx);
+//				p.proveExample2(ctx);
 				// p.arrayExample2(ctx);
 				// p.tupleExample(ctx);
 				// p.parserExample3(ctx);
@@ -2124,7 +2168,7 @@ public class Main {
 				// p.listExample(ctx);
 				// p.treeExample(ctx);
 				// p.forestExample(ctx);
-				p.unsatCoreAndProofExample(ctx);
+//				p.unsatCoreAndProofExample(ctx);
 			}
 
 			{ // These examples need proof generation turned on and
@@ -2136,7 +2180,7 @@ public class Main {
 				Context ctx = new Context(cfg);
 
 				p.quantifierExample3(ctx);
-				p.quantifierExample4(ctx);
+//				p.quantifierExample4(ctx);
 			}
 			Log.close();
 			if (Log.isOpen())

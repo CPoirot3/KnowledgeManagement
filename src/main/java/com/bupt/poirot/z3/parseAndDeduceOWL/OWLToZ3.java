@@ -22,6 +22,8 @@ import org.semanticweb.HermiT.model.DLClause;
 
 public class OWLToZ3 {
 
+	public static Set<FuncDecl>  funcDeclSet = new HashSet<>();;
+
     public static Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
 
     public static Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
@@ -29,7 +31,9 @@ public class OWLToZ3 {
 
 //    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2, Set<String> sortSet, Set<String> quantifierSet) {
     public static BoolExpr mkQuantifier(Context ctx, String string1, String string2) {
-        Map<String, String> varaibleNameToExprName = new HashMap<>();
+        Map<String, String> variableNameToExprName = new HashMap<>();
+		Map<String, Sort> variableNameToSort = new HashMap<>();
+		Set<Sort> sets = new HashSet<>();
 
         String domain, formua;
         if (string1.contains("atLeast") || string1.contains("atMost") || string1.contains(" v ")) {
@@ -48,16 +52,13 @@ public class OWLToZ3 {
             }
         }
 
-        BoolExpr expression = null;
+        BoolExpr preExpr = null;
         String[] strings = domain.split(", ");
         for (String str : strings) {
             Matcher matcher = pattern.matcher(str);
             if (matcher.find()) {
                 String funcString = matcher.group(1);
-                FuncDecl funcDecl = null;
-                if (stringToFuncMap.containsKey(funcString)) {
-                    funcDecl = stringToFuncMap.get(funcString);
-                }
+                FuncDecl funcDecl = stringToFuncMap.get(funcString);
 
                 String string = matcher.group(2);
                 String[] variables = string.split(",");
@@ -68,38 +69,37 @@ public class OWLToZ3 {
                 } else {
                     // need to mk FuncDecl
                     for (int i = 0; i < domains.length; i++) {
-                        domains[i] = ctx.mkUninterpretedSort(variables[i]);
+						domains[i] = variableNameToSort.containsKey(variables[i]) ? variableNameToSort.get(variables[i]) : 	ctx.mkUninterpretedSort(variables[i]);
+						variableNameToSort.put(variables[i], domains[i]);
                     }
                     funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
-                    stringToFuncMap.put(funcString, funcDecl);
                 }
+				stringToFuncMap.put(funcString, funcDecl);
+
+				funcDeclSet.add(funcDecl);
                 Expr[] exprs = new Expr[variables.length];
                 for (int i = 0; i < exprs.length; i++) {
-                    String variableName = varaibleNameToExprName.containsKey(variables[i]) ? varaibleNameToExprName.get(variables[i]) :variables[i] + (begin++);
-                    varaibleNameToExprName.put(variables[i], variableName);
-
-                    exprs[i] = ctx.mkConst(variables[i], domains[i]);
+                    String variableName = variableNameToExprName.containsKey(variables[i]) ? variableNameToExprName.get(variables[i]) : variables[i] + (begin++);
+                    variableNameToExprName.put(variables[i], variableName);
+                    exprs[i] = ctx.mkConst(variableName, domains[i]);
                 }
-                if (expression == null) {
-                    expression = (BoolExpr)ctx.mkApp(funcDecl, exprs);
+                if (preExpr == null) {
+                    preExpr = (BoolExpr)ctx.mkApp(funcDecl, exprs);
                 } else {
-                    expression = ctx.mkAnd(expression, (BoolExpr)ctx.mkApp(funcDecl, exprs));
+                    preExpr = ctx.mkAnd(preExpr, (BoolExpr)ctx.mkApp(funcDecl, exprs));
                 }
             }
         }
 
-        BoolExpr formuaExpr = null;
+        BoolExpr formulaExpr = null;
         for (String s : formua.split(" v ")) {
-            BoolExpr expression2 = null;
+            BoolExpr subExpr = null;
             strings = s.split(", ");
             for (String str : strings) {
                 Matcher matcher = pattern.matcher(str);
                 if (matcher.find()) {
                     String funcString = matcher.group(1);
-                    FuncDecl funcDecl = null;
-                    if (stringToFuncMap.containsKey(funcString)) {
-                        funcDecl = stringToFuncMap.get(funcString);
-                    }
+                    FuncDecl funcDecl = stringToFuncMap.get(funcString);
 
                     String string = matcher.group(2);
                     String[] variables = string.split(",");
@@ -108,48 +108,49 @@ public class OWLToZ3 {
                     if (funcDecl != null) {
                         domains = funcDecl.getDomain();
                     } else {
-                        // need to mk FuncDecl
                         for (int i = 0; i < domains.length; i++) {
-                            domains[i] = ctx.mkUninterpretedSort(variables[i]);
+							domains[i] = variableNameToSort.containsKey(variables[i]) ? variableNameToSort.get(variables[i]) : 	ctx.mkUninterpretedSort(variables[i]);
+							variableNameToSort.put(variables[i], domains[i]);
                         }
                         funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
-                        stringToFuncMap.put(funcString, funcDecl);
+						System.out.println("");
+
                     }
+					stringToFuncMap.put(funcString, funcDecl);
+					funcDeclSet.add(funcDecl);
                     Expr[] exprs = new Expr[variables.length];
                     for (int i = 0; i < exprs.length; i++) {
-                        String variableName = varaibleNameToExprName.containsKey(variables[i]) ? varaibleNameToExprName.get(variables[i]) : variables[i] + (begin++);
-                        varaibleNameToExprName.put(variables[i], variableName);
-                        System.out.println(variableName);
-                        exprs[i] = ctx.mkConst(variables[i], domains[i]);
+                        String variableName = variableNameToExprName.containsKey(variables[i]) ? variableNameToExprName.get(variables[i]) : variables[i] + (begin++);
+                        variableNameToExprName.put(variables[i], variableName);
+                        exprs[i] = ctx.mkConst(variableName, domains[i]);
                     }
 
-                    if (expression2 == null) {
-                        expression2 = (BoolExpr)ctx.mkApp(funcDecl, exprs);
+                    if (subExpr == null) {
+                        subExpr = (BoolExpr)ctx.mkApp(funcDecl, exprs);
                     } else {
-                        expression2 = ctx.mkAnd(expression2, (BoolExpr)ctx.mkApp(funcDecl, exprs));
+                        subExpr = ctx.mkAnd(subExpr, (BoolExpr)ctx.mkApp(funcDecl, exprs));
                     }
 
                 }
             }
-            if (expression2 == null) {
+            if (subExpr == null) {
                 continue;
             }
-            if (formuaExpr == null) {
-                formuaExpr = expression2;
+            if (formulaExpr == null) {
+                formulaExpr = subExpr;
             } else {
-                formuaExpr = ctx.mkOr(formuaExpr, expression2);
+                formulaExpr = ctx.mkOr(formulaExpr, subExpr);
             }
         }
 
         
-        System.out.println("expression : " + expression);
-        System.out.println("expression2 : " + formuaExpr);
+        System.out.println("expression : " + preExpr);
+        System.out.println("expression2 : " + formulaExpr);
 
-        if (expression == null || formuaExpr == null) {
-            System.out.println("has null");
+        if (preExpr == null || formulaExpr == null) {
             return null;
         }
-        BoolExpr finalExpr = ctx.mkImplies(expression, formuaExpr);
+        BoolExpr finalExpr = ctx.mkImplies(preExpr, formulaExpr);
         System.out.println("finalExpr : " + finalExpr);
         System.out.println();
 
@@ -169,7 +170,7 @@ public class OWLToZ3 {
         BoolExpr res = null;
 		for (DLClause dlClause: set) {
             String dlClauseString = dlClause.toString();
-			String[] strings = dlClauseString.split(":-");
+			String[] strings = dlClauseString.split(" :- ");
 
 			System.out.println("dlClauseString : " + dlClauseString);
 
@@ -177,13 +178,12 @@ public class OWLToZ3 {
 
             if (boolExpr != null) {
                 if (res != null) {
-//                solver.add(boolExpr);
                     res = context.mkAnd(res, boolExpr);
                 } else {
                     res = boolExpr;
                 }
             }
-//            break;
+            break;
 		}
 
 //		if (solver.check() == Status.SATISFIABLE) {

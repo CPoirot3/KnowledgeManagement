@@ -103,57 +103,58 @@ public class FetchModelClient {
 		Context context = new Context();
 		Solver solver = context.mkSolver();
 		Params params = context.mkParams();
-		params.add("mbqi", false);
+		params.add("mbqi", true);
 		solver.setParameters(params);
 
-		BoolExpr boolExpr = OWLToZ3.parseFromStream(context, inputStream);
-		boolExpr = context.mkEq(boolExpr, context.mkTrue());
-		System.out.println(boolExpr);
-
-
-		solver.add(boolExpr);
-		if (solver.check() == Status.SATISFIABLE) {
-			System.out.println("Yes");
-		} else {
-			System.out.println("No");
-		}
-
+		BoolExpr preAsumptions = OWLToZ3.parseFromStream(context, inputStream);
+		solver.push();
+		solver.add(preAsumptions);
 
 		Sort x = context.mkUninterpretedSort("X");
 		Sort y = context.mkUninterpretedSort("Y");
-		String targetString = "<http://www.semanticweb.org/traffic-ontology#Conjestion>(X)";
 		FuncDecl funcDecl = context.mkFuncDecl("<http://www.semanticweb.org/traffic-ontology#Conjestion>", x,
 				context.getBoolSort());
-		BoolExpr p = (BoolExpr)funcDecl.apply(new Expr[]{context.mkConst("X", context.mkUninterpretedSort("X"))});
+		BoolExpr p = (BoolExpr)funcDecl.apply(new Expr[]{context.mkConst("X0", context.mkUninterpretedSort("X"))});
 
-
-		targetString = "<http://www.semanticweb.org/traffic-ontology#hasRoad>(X,Y)";
-		FuncDecl funcDecl1 = context.mkFuncDecl("<http://www.semanticweb.org/traffic-ontology#hasRoad>", new Sort[] {x, y}
+		Sort[] domains = new Sort[2];
+		domains[0] = x;
+		domains[1] = y;
+		FuncDecl funcDecl1 = context.mkFuncDecl("<http://www.semanticweb.org/traffic-ontology#hasRoad>", domains
 				, context.mkBoolSort());
-		BoolExpr m = (BoolExpr)context.mkApp(funcDecl1, new Expr[]{context.mkConst("X", x), context.mkConst("Y", y)});
+//		funcDecl1 = OWLToZ3.stringToFuncMap.get("<http://www.semanticweb.org/traffic-ontology#hasRoad>");
+		BoolExpr m = (BoolExpr)context.mkApp(funcDecl1, new Expr[]{context.mkConst("X0", x), context.mkConst("Y1", y)});
 
-		targetString = "<http://www.semanticweb.org/traffic-ontology#Road>(Y)";
 		FuncDecl funcDecl2 = context.mkFuncDecl("<http://www.semanticweb.org/traffic-ontology#Road>", y,
 				context.getBoolSort());
-		BoolExpr n = (BoolExpr)funcDecl2.apply(new Expr[]{context.mkConst("Y", y)});
+		BoolExpr n = (BoolExpr)funcDecl2.apply(new Expr[]{context.mkConst("Y1", y)});
+
 		BoolExpr q = context.mkAnd(m, n);
 
-
-		BoolExpr targetExpr = context.mkImplies(p, q);
-		targetExpr = context.mkEq(targetExpr, context.mkFalse());
+		BoolExpr targetExpr = context.mkAnd(p, context.mkNot(q));
 		System.out.println(targetExpr);
 
-//		targetExpr = context.mkNot(targetExpr);
-//		BoolExpr targetExpr = context.mkApp(context.mkConst("X", context.mkUninterpretedSort("X")));
-//		solver.add(context.mkNot(targetExpr));
 		solver.add(targetExpr);
+
 		if (solver.check() == Status.SATISFIABLE) {
 			System.out.println("Yes");
-			System.out.println(solver.getModel());
 		} else {
 			System.out.println("No");
 		}
 
+		solver.pop();
+		solver.push();
+
+		System.out.println(preAsumptions.equals(targetExpr));
+
+//		Expr e1 = context.mkApp(funcDecl1, context.mkConst("m", x), context.mkConst("n", y));
+//		Expr e2 = context.mkApp(funcDecl1, context.mkConst("m", x), context.mkConst("n", y));
+//		System.out.println(e1.equals(e2));
+//
+//		BoolExpr p1 = (BoolExpr)context.mkApp(funcDecl, context.mkConst("X0", x));
+//		BoolExpr m1 = (BoolExpr)context.mkApp(funcDecl1, new Expr[]{context.mkConst("X0", x), context.mkConst("Y1", y)});
+//		BoolExpr n1 = (BoolExpr)funcDecl2.apply(new Expr[]{context.mkConst("Y1", y)});
+//		BoolExpr target2 = context.mkImplies(p1, context.mkAnd(m1, n1));
+//		System.out.println(targetExpr.equals(target2));
 	}
 
 }
