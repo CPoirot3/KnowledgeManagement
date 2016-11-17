@@ -14,6 +14,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
+import com.microsoft.z3.Context;
+import com.microsoft.z3.Solver;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -88,7 +90,10 @@ public class FetchModelClient {
 		//		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
 		String query = "";
 		InputStream inputStream = fetchModel.fetch(host, domain, query);
-		OWLToZ3.parseFromStream(inputStream);
+
+		Context context = new Context();
+		Solver solver = context.mkSolver();
+		OWLToZ3.parseFromStream(context, inputStream);
 	}
 
 }

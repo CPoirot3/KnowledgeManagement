@@ -14,6 +14,7 @@ import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
 import org.apache.jena.atlas.json.JsonObject;
 
 import com.bupt.poirot.main.Config;
@@ -22,7 +23,8 @@ public class Client {
 	public Solver solver;
 
 	public DealData dealData;
-	public LinkedList<String> resultQueue; 
+	public LinkedList<JsonObject> resultQueue;
+	public LinkedList<String> data;
 	public String target;
 	public String domain;
 	public String topic;
@@ -37,13 +39,30 @@ public class Client {
 
 		target = paramsMap.get("target")[0];
 		topic = paramsMap.get("topic")[0];
-		domain = paramsMap.get("domain")[0];
+		domain = paramsMap.get("topic")[0];
+
+		System.out.println("target : " + target + " topic : " + topic + " domain : " + domain);
 //		this.dealData = new DealData(sections);
+
+		if (topic == null) {
+			System.out.println("need topic info");
+			throw new RuntimeException("need topic info");
+		}
 		this.resultQueue = new LinkedList<>();
+		this.data = new LinkedList<>();
+		workflow();
+	}
 
+	public void workflow() {
 		fetchModel(domain);
+		System.out.println("Fetch Model done");
+		BoolExpr preAxiom = OWLToZ3.parseFromStream(context, inputStream);
+		// 预先定义的公理 --- z3模式
+		System.out.println("preAxiom : " + preAxiom);
 
-		accept();
+		BoolExpr t = parseTarget(target);
+		deduce(preAxiom, t);
+
 	}
 
 	private void fetchModel(String domain) {
@@ -51,15 +70,9 @@ public class Client {
 		String host = "http://localhost:3030/";
 		String query = ""; // TODO
 		inputStream = fetchModelClient.fetch(host, domain, query);
-
-		BoolExpr preAxiom = OWLToZ3.parseFromStream(context, solver, inputStream);
-		// 预先定义的公理 --- z3模式
-		System.out.println(preAxiom);
-
-
-		BoolExpr t = parseTarget(target);
-
-		deduce(preAxiom, t);
+		if (inputStream == null) {
+			throw new RuntimeException("fetch model failed");
+		}
 	}
 
 
@@ -74,33 +87,49 @@ public class Client {
 
 	private void deduce(BoolExpr preAxiom, BoolExpr t) {
 		// TODO 推理后的结果存入resultQueue中
+		solver.add(preAxiom);
+		if (t != null) {
+			solver.add(context.mkNot(t));
+		}
+		boolean res;
+		if (solver.check() == Status.UNSATISFIABLE) {
+			res = true;
+		} else {
+			res = false;
+		}
 
+		JsonObject jsonObject = new JsonObject();
+		if (res) {
+			jsonObject.put("result", "yes");
+		} else {
+			jsonObject.put("result", "no");
+		}
+		resultQueue.addLast(jsonObject);
 	}
 
 
 	public JsonObject getResult() {
-		return dealData.gerOne();
+//		return dealData.gerOne();
+		return resultQueue.removeFirst();
 	}
+
 	
 	public void accept() {
-
 		File file = new File(Config.getValue("mac"));
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
-            String line = null;
+            String line;
             int count = 0;
 			while ((line = reader.readLine()) != null) {
-                resultQueue.addLast(line);
+				data.addLast(line);
                 count++;
                 if (count > 100000) {
                 	return;
                 }
-                if (resultQueue.size() >= 10000) {
-//                	System.out.println("count " + count);
+                if (data.size() >= 10000) {
                 	deduceWithOneSection();
-                	resultQueue.clear();
+					data.clear();
                 	
                 }
-//                Thread.sleep(1);
             }
 		} catch (Exception e ) {
 			e.printStackTrace();
@@ -108,9 +137,7 @@ public class Client {
 	}
 
 	private void deduceWithOneSection() {
-//		System.out.println("list size : " + linkedList.size());
-//		System.out.println("before deal  dataSortByTime size : " + dealData.dataSortByTime.size());
-		for (String message : resultQueue) {
+		for (String message : data) {
 			dealData.deal(message);
 		}
 		

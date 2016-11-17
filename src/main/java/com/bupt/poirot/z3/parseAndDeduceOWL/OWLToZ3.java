@@ -16,11 +16,8 @@ import com.microsoft.z3.BoolSort;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.FuncDecl;
-import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
-import com.microsoft.z3.Status;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.semanticweb.HermiT.model.DLClause;
 
 public class OWLToZ3 {
@@ -30,7 +27,8 @@ public class OWLToZ3 {
     public static Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
     public static int begin = 0;
 
-    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2, Set<String> sortSet, Set<String> quantifierSet) {
+//    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2, Set<String> sortSet, Set<String> quantifierSet) {
+    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2) {
         Map<String, String> varaibleNameToExprName = new HashMap<>();
 
         String domain, formua;
@@ -53,10 +51,6 @@ public class OWLToZ3 {
         BoolExpr expression = null;
         String[] strings = domain.split(", ");
         for (String str : strings) {
-            if (str.equals("<http://www.semanticweb.org/traffic-ontology#hasLatitude>(X,Y")) {
-                System.out.println("mark : " + expression);
-            }
-
             Matcher matcher = pattern.matcher(str);
             if (matcher.find()) {
                 String funcString = matcher.group(1);
@@ -152,10 +146,11 @@ public class OWLToZ3 {
         System.out.println("expression2 : " + formuaExpr);
 
         if (expression == null || formuaExpr == null) {
+            System.out.println("has null");
             return null;
         }
         BoolExpr finalExpr = ctx.mkImplies(expression, formuaExpr);
-        System.out.println(finalExpr);
+        System.out.println("finalExpr : " + finalExpr);
         System.out.println();
 
 //        Quantifier quantifier = null;
@@ -164,38 +159,38 @@ public class OWLToZ3 {
         return finalExpr;
     }
 
-    public static BoolExpr parseFromStream(Context context, Solver solver, InputStream inputStream) {
+    public static BoolExpr parseFromStream(Context context, InputStream inputStream) {
     	Set<DLClause> set = ParseOWL.owlToDLClsuses(inputStream);
-		System.out.println(set.size());
-
+		System.out.println("DLClause number : " + set.size());
 
         Set<String> quantifiersSet = new HashSet<>();
         Set<String> sortSet = new HashSet<>();
-
 
         BoolExpr res = null;
 		for (DLClause dlClause: set) {
             String dlClauseString = dlClause.toString();
 			String[] strings = dlClauseString.split(":-");
 
-			System.out.println(dlClauseString);
+			System.out.println("dlClauseString : " + dlClauseString);
 
-            BoolExpr boolExpr = mkQuantifier(context, strings[0], strings[1], sortSet, quantifiersSet);
+            BoolExpr boolExpr = mkQuantifier(context, strings[0], strings[1]);
 
             if (boolExpr != null) {
-                solver.add(boolExpr);
-                res = context.mkAnd(res, boolExpr);
-            } else {
-                res = boolExpr;
+                if (res != null) {
+//                solver.add(boolExpr);
+                    res = context.mkAnd(res, boolExpr);
+                } else {
+                    res = boolExpr;
+                }
             }
 		}
 
-		if (solver.check() == Status.SATISFIABLE) {
-            System.out.println(Status.SATISFIABLE);
-//            System.out.println(solver.getModel());
-        } else {
-            System.out.println(Status.UNSATISFIABLE);
-        }
+//		if (solver.check() == Status.SATISFIABLE) {
+//            System.out.println(Status.SATISFIABLE);
+////            System.out.println(solver.getModel());
+//        } else {
+//            System.out.println(Status.UNSATISFIABLE);
+//        }
         return res;
     }
     
@@ -210,7 +205,6 @@ public class OWLToZ3 {
 			e.printStackTrace();
 		}
 		Context context = new Context();
-        Solver solver = context.mkSolver();
-		parseFromStream(context, solver, inputStream);
+		parseFromStream(context, inputStream);
 	}
 }

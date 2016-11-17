@@ -22,8 +22,9 @@ public class DataHandler extends AbstractHandler {
 		 
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		Map<String, String[]> params = request.getParameterMap();
-			
-//		System.out.println(params.containsKey("district") + " :" + params.get("district")[0]);
+
+//		System.out.println(params == null);
+
 		JsonObject jsonObject = deal(params);
 		response.setContentType("text/json;charset=utf-8");
 		response.setStatus(HttpServletResponse.SC_OK);
@@ -37,6 +38,7 @@ public class DataHandler extends AbstractHandler {
 	
 	private JsonObject deal(Map<String, String[]> params) {
 		Client client = new Client(params);
+		System.out.println("get result");
 		return client.getResult();
 	}
 
