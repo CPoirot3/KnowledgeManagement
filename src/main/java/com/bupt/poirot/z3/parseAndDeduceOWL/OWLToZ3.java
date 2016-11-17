@@ -183,6 +183,7 @@ public class OWLToZ3 {
                     res = boolExpr;
                 }
             }
+//            break;
 		}
 
 //		if (solver.check() == Status.SATISFIABLE) {

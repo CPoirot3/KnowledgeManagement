@@ -575,7 +575,6 @@ public class Main {
 				names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
 				vars[j] = (IntExpr) ctx.mkBound(1, types[j]); // <-- vars
 																	// reversed!
-				
 				xs[j] = (IntExpr) ctx.mkConst(names[j], types[j]);
 			}
 			System.out.println();

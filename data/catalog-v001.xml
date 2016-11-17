@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.co-ode.org/ontologies/pizza/pizza.owl" uri="ontologies/pizza-inferred.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.co-ode.org/ontologies/pizza/pizza.owl" uri="ontologies/pizza.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="http://www.semanticweb.org/hui.chen/ontologies/2016/10/untitled-ontology-10" uri="ontologies/Animal.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology" uri="schema_rdf_bakup.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology" uri="schema_test.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology" uri="test.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="schema.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="schema_atom_rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="schema_rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="http://www.w3.org/2002/07/owl#" uri="ontologies/Animal-inferred.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/owlDemoData.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/owlDemoSchema.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/rdfsDemoData.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/rdfsDemoSchema.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/warnData.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/warnSchema.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/warnSchemaTest.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/warnSchemaTest0.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="shadowed:urn:x-hp:eg/" uri="ontologies/warnSchemaTest00.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:urn:x-hp:eg/" uri="owlDemoData.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:urn:x-hp:eg/" uri="owlDemoSchema.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:urn:x-hp:eg/" uri="rdfsDemoData.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1479372192152" name="duplicate:urn:x-hp:eg/" uri="rdfsDemoSchema.rdf"/>
+    </group>
+</catalog>
