@@ -251,6 +251,7 @@ public class Z3Library {
 		for (BoolExpr a : assumptions)
 			s.add(a);
 		s.add(ctx.mkNot(f));
+
 		Status q = s.check();
 
 		switch (q) {
@@ -557,28 +558,28 @@ public class Z3Library {
 		Sort[] types = new Sort[3];
 		IntExpr[] xs = new IntExpr[3];
 		Symbol[] names = new Symbol[3];
-		IntExpr[] vars = new IntExpr[3];
+//		IntExpr[] vars = new IntExpr[3];
 
 		for (int j = 0; j < 3; j++) {
 			types[j] = ctx.getIntSort();
 			names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
 			xs[j] = (IntExpr) ctx.mkConst(names[j], types[j]);
-			vars[j] = (IntExpr) ctx.mkBound(2 - j, types[j]); // <-- vars
+//			vars[j] = (IntExpr) ctx.mkBound(2 - j, types[j]); // <-- vars
 																// reversed!
 		}
 //		System.out.println();
 //		for (IntExpr intExpr : vars) {
 //			System.out.println(intExpr);
 //		}
-		Expr body_vars = ctx.mkAnd(ctx.mkEq(ctx.mkAdd(vars[0], ctx.mkInt(1)), ctx.mkInt(2)),
-				ctx.mkEq(ctx.mkAdd(vars[1], ctx.mkInt(2)), ctx.mkAdd(vars[2], ctx.mkInt(3))));
+//		Expr body_vars = ctx.mkAnd(ctx.mkEq(ctx.mkAdd(vars[0], ctx.mkInt(1)), ctx.mkInt(2)),
+//				ctx.mkEq(ctx.mkAdd(vars[1], ctx.mkInt(2)), ctx.mkAdd(vars[2], ctx.mkInt(3))));
 
 		// xs[0] + 1 == 2 && xs[1] + 2 == xs[2] + 3
 		Expr body_const = ctx.mkAnd(ctx.mkEq(ctx.mkAdd(xs[0], ctx.mkInt(1)), ctx.mkInt(2)),
 				ctx.mkEq(ctx.mkAdd(xs[1], ctx.mkInt(2)), ctx.mkAdd(xs[2], ctx.mkInt(3))));
 
-		Expr x = ctx.mkForall(types, names, body_vars, 1, null, null, ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
-		System.out.println("Quantifier X: " + x.toString());
+//		Expr x = ctx.mkForall(types, names, body_vars, 1, null, null, ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
+//		System.out.println("Quantifier X: " + x.toString());
 		
 //		Solver solver = ctx.mkSimpleSolver();
 //		solver.add((BoolExpr) x);
@@ -587,8 +588,25 @@ public class Z3Library {
 //			System.out.println(solver.getModel());
 //		}
 //		solver.reset();
-		Expr y = ctx.mkForall(xs, body_const, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
 
+//		Expr y = ctx.mkForall(xs, body_const, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
+
+
+		Expr[] no_pats = new Expr[]{ctx.mkEq(ctx.mkAdd(xs[0], ctx.mkInt(1)), ctx.mkInt(2))};
+		Expr y = ctx.mkExists(xs, body_const, 1, null, no_pats, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
+
+		Solver solver = ctx.mkSimpleSolver();
+		solver.add((BoolExpr) y);
+		System.out.println(solver.check());
+		if (solver.check() == Status.SATISFIABLE) {
+			System.out.println(solver.getModel());
+		}
+
+//		try {
+//			prove(ctx, ctx.mkEq(xs[0], ctx.mkInt(1)), false, (BoolExpr)y);
+//		} catch (TestFailedException e) {
+//			e.printStackTrace();
+//		}
 //		solver.add((BoolExpr) y);
 //		System.out.println(solver.check());
 		System.out.println("Quantifier Y: " + y.toString());
@@ -668,7 +686,6 @@ public class Z3Library {
 
 			q1 = ctx.mkForall(bound, body, 1, null, no_pats, ctx.mkSymbol("q"), ctx.mkSymbol("sk"));
 
-
 			Expr z = ctx.mkConst("z", ctx.getIntSort());
 			Expr w = ctx.mkConst("w", ctx.getIntSort());
 			Expr f_z = ctx.mkApp(f, z);
@@ -681,13 +698,13 @@ public class Z3Library {
 				e.printStackTrace();
 			}
 
-			System.out.println(q1);
+			System.out.println("q1 : " + q1);
 //			Model model = check(ctx, (BoolExpr) q1, Status.SATISFIABLE); 
-			Solver solver = ctx.mkSolver();
-			solver.add((BoolExpr) q1);
-			if (solver.check() == Status.SATISFIABLE) {
-				System.out.println(solver.getModel());
-			}
+//			Solver solver = ctx.mkSolver();
+//			solver.add((BoolExpr) q1);
+//			if (solver.check() == Status.SATISFIABLE) {
+//				System.out.println(solver.getModel());
+//			}
 			System.out.println();
 		}
 
@@ -2105,7 +2122,7 @@ public class Z3Library {
 
 			{ // These examples need model generation turned on.
 				HashMap<String, String> cfg = new HashMap<String, String>();
-				cfg.put("model", "true");
+//				cfg.put("model", "true");
 				cfg.put("proof", "true");
 				Context ctx = new Context(cfg);
 
@@ -2124,9 +2141,11 @@ public class Z3Library {
 				// p.castingTest(ctx);
 
 				// p.sudokuExample(ctx);
-//				p.quantifierExample1(ctx);
+				p.quantifierExample1(ctx);
 
-//				System.out.println();
+				System.out.println();
+				System.out.println();
+				System.out.println();
 				p.quantifierExample2(ctx);
 				
 				System.out.println();
@@ -2179,7 +2198,7 @@ public class Z3Library {
 				cfg.put("auto-config", "false");
 				Context ctx = new Context(cfg);
 
-				p.quantifierExample3(ctx);
+//				p.quantifierExample3(ctx);
 //				p.quantifierExample4(ctx);
 			}
 			Log.close();

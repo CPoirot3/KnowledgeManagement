@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.BoolSort;
 import com.microsoft.z3.Context;
@@ -99,7 +100,21 @@ public class OWLToZ3 {
                 Matcher matcher = pattern.matcher(str);
                 if (matcher.find()) {
                     String funcString = matcher.group(1);
+                    String funcName = matcher.group(1);
                     FuncDecl funcDecl = stringToFuncMap.get(funcString);
+                    int limit = Integer.MIN_VALUE;
+                    if (funcName.indexOf("atLeast") > -1 || funcName.indexOf("atMost") > -1) {
+                        Matcher matcherOfAtLeastAndAtMost = pattern.matcher(funcName);
+                        if (matcherOfAtLeastAndAtMost.find()) {
+                            String conditionName = matcherOfAtLeastAndAtMost.group(1);
+                            String[] strs = matcherOfAtLeastAndAtMost.group(2).split(" ");
+                            limit = Integer.valueOf(strs[0]);
+                            funcName = conditionName + "@" + strs[1] + "@" + strs[2];
+                        } else {
+                            System.out.println("mark");
+                            throw new RuntimeException();
+                        }
+                    }
 
                     String string = matcher.group(2);
                     String[] variables = string.split(",");
@@ -112,9 +127,12 @@ public class OWLToZ3 {
 							domains[i] = variableNameToSort.containsKey(variables[i]) ? variableNameToSort.get(variables[i]) : 	ctx.mkUninterpretedSort(variables[i]);
 							variableNameToSort.put(variables[i], domains[i]);
                         }
-                        funcDecl = ctx.mkFuncDecl(funcString, domains, ctx.getBoolSort());
+                        if (funcName.contains("atLeast") || funcName.contains("atMost")) {
+                            funcDecl = ctx.mkFuncDecl(funcName, domains, ctx.getIntSort());
+                        } else {
+                            funcDecl = ctx.mkFuncDecl(funcName, domains, ctx.getBoolSort());
+                        }
 						System.out.println("");
-
                     }
 					stringToFuncMap.put(funcString, funcDecl);
 					funcDeclSet.add(funcDecl);
@@ -124,11 +142,17 @@ public class OWLToZ3 {
                         variableNameToExprName.put(variables[i], variableName);
                         exprs[i] = ctx.mkConst(variableName, domains[i]);
                     }
+                    Expr expr = ctx.mkApp(funcDecl, exprs);
+                    if (funcName.contains("atLeast")) {
+                        expr = ctx.mkGe((ArithExpr)expr, ctx.mkInt(limit));
+                    } else if (funcName.contains("atMost")) {
+                        expr = ctx.mkLe((ArithExpr)expr, ctx.mkInt(limit));
+                    }
 
                     if (subExpr == null) {
-                        subExpr = (BoolExpr)ctx.mkApp(funcDecl, exprs);
+                        subExpr = (BoolExpr)expr;
                     } else {
-                        subExpr = ctx.mkAnd(subExpr, (BoolExpr)ctx.mkApp(funcDecl, exprs));
+                        subExpr = ctx.mkAnd(subExpr, (BoolExpr)expr);
                     }
 
                 }
@@ -183,7 +207,7 @@ public class OWLToZ3 {
                     res = boolExpr;
                 }
             }
-            break;
+//            break;
 		}
 
 //		if (solver.check() == Status.SATISFIABLE) {

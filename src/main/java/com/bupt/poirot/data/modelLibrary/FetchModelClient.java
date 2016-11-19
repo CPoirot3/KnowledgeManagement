@@ -13,13 +13,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.BoolSort;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.FuncDecl;
 import com.microsoft.z3.Params;
+import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 import com.microsoft.z3.Status;
@@ -33,6 +37,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
+import org.apache.jena.query.Query;
 
 /**
  * @author Poirot
@@ -58,7 +63,7 @@ public class FetchModelClient {
 			HttpResponse response = httpClient.execute(httpGet);
 			HttpEntity entity = response.getEntity();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(entity.getContent()));
-			String line = null;
+			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				stringBuilder.append(line);
 			}
@@ -114,7 +119,7 @@ public class FetchModelClient {
 		Sort y = context.mkUninterpretedSort("Y");
 		FuncDecl funcDecl = context.mkFuncDecl("<http://www.semanticweb.org/traffic-ontology#Conjestion>", x,
 				context.getBoolSort());
-		BoolExpr p = (BoolExpr)funcDecl.apply(new Expr[]{context.mkConst("X0", context.mkUninterpretedSort("X"))});
+		BoolExpr p = (BoolExpr)funcDecl.apply(new Expr[]{context.mkConst("X0", x)});
 
 		Sort[] domains = new Sort[2];
 		domains[0] = x;
@@ -144,7 +149,7 @@ public class FetchModelClient {
 		solver.pop();
 		solver.push();
 
-		System.out.println(preAsumptions.equals(targetExpr));
+		System.out.println(preAsumptions.equals(context.mkImplies(p, q)));
 
 //		Expr e1 = context.mkApp(funcDecl1, context.mkConst("m", x), context.mkConst("n", y));
 //		Expr e2 = context.mkApp(funcDecl1, context.mkConst("m", x), context.mkConst("n", y));
@@ -155,6 +160,58 @@ public class FetchModelClient {
 //		BoolExpr n1 = (BoolExpr)funcDecl2.apply(new Expr[]{context.mkConst("Y1", y)});
 //		BoolExpr target2 = context.mkImplies(p1, context.mkAnd(m1, n1));
 //		System.out.println(targetExpr.equals(target2));
+
+//		Expr exprs = new Expr[] {context.mkApp(funcDecl, context.mkConst(""))}
+
+		Expr a = context.mkConst("X0", x);
+		Expr b = context.mkConst("Y1", y);
+
+		Expr body = context.mkImplies((BoolExpr)context.mkApp(funcDecl, a),
+				context.mkAnd((BoolExpr)context.mkApp(funcDecl1, new Expr[]{a, b}), (BoolExpr)context.mkApp(funcDecl2, b)));
+		Expr[] bound = new Expr[]{a, b};
+		Expr quantifier = context.mkForall(bound , body, 1, null, null, context.mkSymbol("q"), context.mkSymbol("sk"));
+		System.out.println(quantifier);
+		solver.reset();
+		solver.add((BoolExpr)quantifier);
+		if (solver.check() == Status.UNSATISFIABLE) {
+			System.out.println("unsat");
+		} else {
+			System.out.println("sat");
+		}
+
+		Quantifier quantifier1 = context.mkForall(new Expr[]{a}, context.mkApp(funcDecl, a), 1, null, null,
+				context.mkSymbol("q"), context.mkSymbol("sk"));
+
+		Quantifier quantifier2 = context.mkExists(new Expr[]{b}, context.mkAnd((BoolExpr)context.mkApp(funcDecl1, new Expr[]{a, b}), (BoolExpr)context.mkApp(funcDecl2, b)),
+				1, null, null, context.mkSymbol("q"), context.mkSymbol("sk"));
+
+		BoolExpr quan = context.mkImplies((BoolExpr)quantifier1, (BoolExpr)quantifier2);
+
+		System.out.println(quan);
+		solver.reset();
+		solver.add(quan);
+		if (solver.check() == Status.UNSATISFIABLE) {
+			System.out.println("unsat");
+		} else {
+			System.out.println("sat");
+		}
+
+		String str = "atLeast(1 <http://www.semanticweb.org/traffic-ontology#hasRoad> <http://www.semanticweb.org/traffic-ontology#Road>)";
+		str = str.trim();
+		Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
+		if (str.indexOf("atLeast") > -1 || str.indexOf("atMost") > -1) {
+			Matcher matcher = pattern.matcher(str);
+			if (matcher.find()) {
+				String conditionName = matcher.group(1);
+				String[] strs = matcher.group(2).split(" ");
+				String funcName = conditionName + "@" + strs[1] + "@" + strs[2];
+				FuncDecl funcdecl = context.mkFuncDecl(funcName, x, context.getIntSort());
+				Expr expr = context.mkGe((ArithExpr)funcdecl.apply(context.mkConst("X0", x)), context.mkInt(strs[0]));
+				System.out.println(expr);
+			} else {
+				throw new RuntimeException();
+			}
+		}
 	}
 
 }
