@@ -100,7 +100,7 @@ public class FetchModelClient {
 	public static void main(String[] args) {
 		FetchModelClient fetchModel = new FetchModelClient();
 		String host = "http://localhost:3030";
-		String domain = "traffic-data";
+		String domain = "traffic";
 		//		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
 		String query = "";
 		InputStream inputStream = fetchModel.fetch(host, domain, query);
@@ -114,6 +114,13 @@ public class FetchModelClient {
 		BoolExpr preAsumptions = OWLToZ3.parseFromStream(context, inputStream);
 		solver.push();
 		solver.add(preAsumptions);
+
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        // mkQuantifier for test
 
 		Sort x = context.mkUninterpretedSort("X");
 		Sort y = context.mkUninterpretedSort("Y");

@@ -166,10 +166,8 @@ public class OWLToZ3 {
                 formulaExpr = ctx.mkOr(formulaExpr, subExpr);
             }
         }
-
-        
-        System.out.println("expression : " + preExpr);
-        System.out.println("expression2 : " + formulaExpr);
+//        System.out.println("expression : " + preExpr);
+//        System.out.println("expression2 : " + formulaExpr);
 
         if (preExpr == null || formulaExpr == null) {
             return null;
@@ -192,11 +190,12 @@ public class OWLToZ3 {
         Set<String> sortSet = new HashSet<>();
 
         BoolExpr res = null;
+        int count = 1;
 		for (DLClause dlClause: set) {
             String dlClauseString = dlClause.toString();
 			String[] strings = dlClauseString.split(" :- ");
 
-			System.out.println("dlClauseString : " + dlClauseString);
+			System.out.println("dlClauseString " + (count++) + " : " + dlClauseString);
 
             BoolExpr boolExpr = mkQuantifier(context, strings[0], strings[1]);
 

@@ -168,15 +168,15 @@ public class PreDealData {
 //			writeToMysql();
 		}
 		// get Document
-//		HashMap<String, Object> map = new HashMap<>();
-//		map.put("CarName", carName);
-//		map.put("Time", time);
-//		map.put("Longitude", x);
-//		map.put("Latitude", y);
-//		map.put("Speed", speed);
-//		map.put("Status", states);
-//		map.put("Direction", direction);
-//		Document document = new Document(map);
+//		HashMap<String, Object> stringRoadDataHashMap = new HashMap<>();
+//		stringRoadDataHashMap.put("CarName", carName);
+//		stringRoadDataHashMap.put("Time", time);
+//		stringRoadDataHashMap.put("Longitude", x);
+//		stringRoadDataHashMap.put("Latitude", y);
+//		stringRoadDataHashMap.put("Speed", speed);
+//		stringRoadDataHashMap.put("Status", states);
+//		stringRoadDataHashMap.put("Direction", direction);
+//		Document document = new Document(stringRoadDataHashMap);
 //		saveToMongo.save(document);
 	}
 

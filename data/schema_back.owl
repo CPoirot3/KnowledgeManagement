@@ -39,6 +39,12 @@
     
 
 
+    <!-- http://www.semanticweb.org/traffic-ontology#hasRoad -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasRoad"/>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -47,12 +53,6 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
-
-
-    <!-- http://www.co-ode.org/ontologies/ont.owl#speed -->
-
-    <owl:DatatypeProperty rdf:about="http://www.co-ode.org/ontologies/ont.owl#speed"/>
     
 
 
@@ -81,12 +81,25 @@
 
     <!-- http://www.semanticweb.org/traffic-ontology#Car -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Car">
+    <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Car"/>
+    
+
+
+    <!-- http://www.semanticweb.org/traffic-ontology#Conjestion -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Conjestion">
         <owl:equivalentClass>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.co-ode.org/ontologies/ont.owl#speed"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/traffic-ontology#hasCar"/>
+                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">3</owl:minQualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/traffic-ontology#Car"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/traffic-ontology#hasRoad"/>
+                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
             </owl:Restriction>
         </owl:equivalentClass>
     </owl:Class>

@@ -1,7 +1,6 @@
 package com.bupt.poirot.main.jetty;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,8 +11,6 @@ import org.apache.jena.atlas.json.JsonObject;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-import com.bupt.poirot.data.Client;
- 
 
 public class DataHandler extends AbstractHandler {
 	
