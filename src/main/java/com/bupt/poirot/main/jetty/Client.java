@@ -38,9 +38,10 @@ public class Client {
 	public String domain;
 	public String topic;
 	public String roadName;
-	InputStream inputStream;
+	public RoadData roadData;
+	public InputStream inputStream;
 
-	public static HashMap<String, RoadData> stringRoadDataHashMap;
+	public static HashMap<String, RoadData> stringRoadDataHashMap = new HashMap<>();
 
 	static {
 		stringRoadDataHashMap.put("翠竹路", new RoadData(114.134266, 22.582957, 114.134606, 22.580431));
@@ -52,24 +53,28 @@ public class Client {
 	private TimeData timeData;
 
 	public Client(Map<String, String[]> paramsMap) {
+		if (paramsMap == null) {
+			System.out.println("NULL");
+		}
+		target = paramsMap.get("target")[0];
+		topic = paramsMap.get("topic")[0];
+		domain = paramsMap.get("topic")[0];
+		System.out.println("target : " + target + " topic : " + topic + " domain : " + domain);
+
 		context = new Context();
 		solver = context.mkSolver();
 		Params params = context.mkParams();
 		params.add("mbqi", false);
 		solver.setParameters(params);
 
-		target = paramsMap.get("target")[0];
-		topic = paramsMap.get("topic")[0];
-		domain = paramsMap.get("topic")[0];
-		roadName = paramsMap.get("road")[0];
-
-		System.out.println("target : " + target + " topic : " + topic + " domain : " + domain);
-//		this.dealData = new DealData(sections);
-
 		if (topic == null) {
 			System.out.println("need topic info");
 			throw new RuntimeException("need topic info");
 		}
+
+		roadName = paramsMap.get("road")[0];
+		roadData = stringRoadDataHashMap.get(roadName);
+		System.out.println(roadData.x1 + "  " + roadData.y1 + "  " + roadData.x2 + "  " + roadData.y2);
 
 		timeData = parseTimeSection(paramsMap.get("time")[0]);
 		this.resultQueue = new LinkedList<>();
@@ -96,6 +101,7 @@ public class Client {
 	}
 
 	public void workflow() {
+		System.out.println("Fetch Model begin");
 		fetchModel(domain);
 		System.out.println("Fetch Model done");
 		BoolExpr preAxiom = OWLToZ3.parseFromStream(context, inputStream);
@@ -103,8 +109,6 @@ public class Client {
 		System.out.println("preAxiom : " + preAxiom);
 
 		BoolExpr t = parseTarget(target);
-
-		RoadData roadData = stringRoadDataHashMap.get(roadName);
 		deduce(preAxiom, t, roadData);
 	}
 
@@ -124,6 +128,9 @@ public class Client {
 		String[] strs = target.split("&");
 		for (String str : strs) {
 			// TODO
+		}
+		if (res == null) {
+			return context.mkTrue();
 		}
 		return res;
 	}
@@ -145,6 +152,7 @@ public class Client {
 //			res = false;
 //		}
 
+		System.out.println("deduce done");
 		JsonObject jsonObject = new JsonObject();
 		if (res) {
 			jsonObject.put("result", "yes");
@@ -158,9 +166,32 @@ public class Client {
 		double m = (roadData.x1 - x) * (roadData.y2 - y);
 		double n = (roadData.x2 - x) * (roadData.y1 - y);
 		double result = m * n;
-		if (Math.abs(result) > 0.00000001 || result > 0) {
+		if (Math.abs(result) > 0.000000000001) {
 			return false;
 		}
+
+		if ((roadData.x1 - x) * (roadData.x2 - x) + (roadData.y1 - y) * (roadData.y2 - y) > 0) {
+			return false;
+		}
+
+		double ax = x - roadData.x1;
+		double ay = y - roadData.y1;
+
+		double bx = roadData.x2 - roadData.x1;
+		double by = roadData.y2 - roadData.x2;
+
+		double aLength = Math.sqrt(ax * ax + ay * ay);
+		double bLength = Math.sqrt(bx * bx + by * by);
+
+		double cos = aLength * bLength / (ax * bx + ay * by);
+		double sin = Math.sqrt(1.0 - cos * cos);
+
+		double distane = aLength * sin;
+
+		if (distane > 0.0000001) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -172,10 +203,12 @@ public class Client {
 			String line;
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
-				data.addLast(line);
 				count++;
-				if (count > 100000) {
+				if (count > 10000000) {
 					break;
+				}
+				if (count % 1000000 == 0) {
+					System.out.println("dealt lines : " + count);
 				}
 
 				if (line == null || line.length() == 0) {
@@ -185,26 +218,8 @@ public class Client {
 				if (strs.length < 7) {
 					continue;
 				}
-				String carName = strs[0]; // 车名
 				String time = strs[1]; // 时间
-				boolean states = strs[4].equals("1") ? true : false; // 状态
-				float x, y, speed;
-				byte direction;
-				try {
-					x = Float.parseFloat(strs[3]); // 经度
-					y = Float.parseFloat(strs[2]); // 纬度
-					speed = Float.parseFloat(strs[5]); // 速度
-					direction = Byte.parseByte(strs[6]); // 方向
-				} catch (Exception e) {
-					continue;
-				}
-				if (x <= 10 || x >= 40 || y <= 100 || y >= 140) {
-					continue;
-				}
-				if (!isInTheRoad(x, y, roadData)) {
-					continue;
-				}
-				long t = 0;
+				long t;
 				try {
 					t = formater.parse(time).getTime();
 				} catch (ParseException e1) {
@@ -215,8 +230,26 @@ public class Client {
 					continue;
 				}
 
-				System.out.println("got one");
+//				String carName = strs[0]; // 车名
+//				boolean states = strs[4].equals("1") ? true : false; // 状态
+				float x, y, speed;
+				byte direction;
+				try {
+					x = Float.parseFloat(strs[2]); // 经度
+					y = Float.parseFloat(strs[3]); // 纬度
+					speed = Float.parseFloat(strs[5]); // 速度
+					direction = Byte.parseByte(strs[6]); // 方向
+				} catch (Exception e) {
+					continue;
+				}
+				if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
+					continue;
+				}
+				if (!isInTheRoad(x, y, roadData)) {
+					continue;
+				}
 
+				System.out.println("got one x : " + x + "  y : " + y);
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();

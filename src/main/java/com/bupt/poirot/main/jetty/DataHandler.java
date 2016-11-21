@@ -20,14 +20,21 @@ public class DataHandler extends AbstractHandler {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		Map<String, String[]> params = request.getParameterMap();
 
-//		System.out.println(params == null);
+//		System.out.println(params.get("time")[0]);
+//		System.out.println(params.get("road")[0]);
+//		System.out.println(params.get("topic")[0]);
+//		System.out.println(params.get("min")[0]);
+//		System.out.println(params.get("target")[0]);
 
 		JsonObject jsonObject = deal(params);
+
 		response.setContentType("text/json;charset=utf-8");
 		response.setStatus(HttpServletResponse.SC_OK);
 		
 		if (jsonObject == null) {
 			System.out.println("no results");
+			jsonObject = new JsonObject();
+			jsonObject.put("res", "no result");
 		}
 		response.getWriter().println(jsonObject.toString());
 		response.flushBuffer();
