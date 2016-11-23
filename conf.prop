@@ -1,3 +1,3 @@
-mac=data/output.txt
-win=data/output.txt
-linux=data/output.txt
+mac=data/all_data.txt
+win=data/all_data.txt
+linux=data/all_data.txt

@@ -173,6 +173,7 @@ public class Z3WB3 {
 		Params p = ctx.mkParams();
 		p.add("mbqi", false);
 		solver.setParameters(p);
+
 		solver.add(parseString(str));
 		for (int i = 0; i < solver.getAssertions().length; i++) {
 			System.out.println(solver.getAssertions()[i]);

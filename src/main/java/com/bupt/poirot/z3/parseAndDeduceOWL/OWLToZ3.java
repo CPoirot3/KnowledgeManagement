@@ -23,15 +23,15 @@ import org.semanticweb.HermiT.model.DLClause;
 
 public class OWLToZ3 {
 
-	public static Set<FuncDecl>  funcDeclSet = new HashSet<>();;
+	public Set<FuncDecl>  funcDeclSet = new HashSet<>();;
 
-    public static Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
+    public Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
 
-    public static Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
-    public static int begin = 0;
+    public Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
+    public int begin = 0;
 
 //    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2, Set<String> sortSet, Set<String> quantifierSet) {
-    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2) {
+    public BoolExpr mkQuantifier(Context ctx, String string1, String string2) {
         Map<String, String> variableNameToExprName = new HashMap<>();
 		Map<String, Sort> variableNameToSort = new HashMap<>();
 		Set<Sort> sets = new HashSet<>();
@@ -182,7 +182,7 @@ public class OWLToZ3 {
         return finalExpr;
     }
 
-    public static BoolExpr parseFromStream(Context context, InputStream inputStream) {
+    public BoolExpr parseFromStream(Context context, InputStream inputStream) {
     	Set<DLClause> set = ParseOWL.owlToDLClsuses(inputStream);
 		System.out.println("DLClause number : " + set.size());
 
@@ -219,16 +219,6 @@ public class OWLToZ3 {
     }
     
 	public static void main(String[] args) {
-		System.out.println("begin");
-        File file = new File("data/schema_atom_rdf.owl");
-        InputStream inputStream = null;
-		try {
-			inputStream = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Context context = new Context();
-		parseFromStream(context, inputStream);
+
 	}
 }

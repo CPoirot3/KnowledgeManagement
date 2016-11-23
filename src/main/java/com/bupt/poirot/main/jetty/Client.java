@@ -8,28 +8,35 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.bupt.poirot.data.DealData;
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
+import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.Expr;
 import com.microsoft.z3.Params;
+import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
+import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.atlas.json.JsonObject;
 
 import com.bupt.poirot.main.Config;
-import org.apache.kafka.common.utils.Time;
 
 public class Client {
+
 	public Context context;
 	public Solver solver;
 
-	public static DateFormat formater = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
+	public DateFormat formater = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
 
 	public DealData dealData;
 	public LinkedList<JsonObject> resultQueue;
@@ -41,18 +48,17 @@ public class Client {
 	public RoadData roadData;
 	public InputStream inputStream;
 
-	public static HashMap<String, RoadData> stringRoadDataHashMap = new HashMap<>();
+	public HashMap<String, RoadData> stringRoadDataHashMap = new HashMap<>();
 
-	static {
+	private TimeData timeData;
+	private int min;
+
+	public Client(Map<String, String[]> paramsMap) {
 		stringRoadDataHashMap.put("翠竹路", new RoadData(114.134266, 22.582957, 114.134606, 22.580431));
 		stringRoadDataHashMap.put("红岭中路", new RoadData(114.110848, 22.568226, 114.110848, 22.561985));
 		stringRoadDataHashMap.put("福中路", new RoadData(114.056446, 22.548233, 114.059447, 22.548283));
 		stringRoadDataHashMap.put("金田路", new RoadData(114.069633, 22.553857, 114.069562, 22.54835));
-	}
 
-	private TimeData timeData;
-
-	public Client(Map<String, String[]> paramsMap) {
 		if (paramsMap == null) {
 			System.out.println("NULL");
 		}
@@ -74,6 +80,8 @@ public class Client {
 
 		roadName = paramsMap.get("road")[0];
 		roadData = stringRoadDataHashMap.get(roadName);
+		min = Integer.valueOf(paramsMap.get("min")[0]);
+		System.out.println("min : " + min);
 		System.out.println(roadData.x1 + "  " + roadData.y1 + "  " + roadData.x2 + "  " + roadData.y2);
 
 		timeData = parseTimeSection(paramsMap.get("time")[0]);
@@ -82,29 +90,12 @@ public class Client {
 		workflow();
 	}
 
-	private TimeData parseTimeSection(String time) {
-		int num = Integer.valueOf(time.substring(0, time.length() - 1));
-		long begin = 0;
-		try {
-			begin = formater.parse("2011/04/18 17:00:00").getTime();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		long end = begin;
-		if (time.endsWith("s")) {
-			end += num * 1000000;
-		} if (time.endsWith("m")) {
-			end += num * 60 * 1000000;
-		}
-		TimeData timeData = new TimeData(begin, end);
-		return timeData;
-	}
-
 	public void workflow() {
 		System.out.println("Fetch Model begin");
 		fetchModel(domain);
 		System.out.println("Fetch Model done");
-		BoolExpr preAxiom = OWLToZ3.parseFromStream(context, inputStream);
+		OWLToZ3 owlToZ3 = new OWLToZ3();
+		BoolExpr preAxiom = owlToZ3.parseFromStream(context, inputStream);
 		// 预先定义的公理 --- z3模式
 		System.out.println("preAxiom : " + preAxiom);
 
@@ -123,7 +114,32 @@ public class Client {
 	}
 
 
+	private TimeData parseTimeSection(String timeSection) {
+		System.out.println("Time section : " + timeSection);
+
+		String[] times = timeSection.split(" - ");
+
+		if (times.length < 2) {
+
+			throw new RuntimeIOException();
+		}
+		long begin = 0;
+		long end = begin;
+		try {
+			begin = formater.parse(times[0]).getTime();
+			end = formater.parse(times[1]).getTime();
+			System.out.println("begin :" + begin);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		TimeData timeData = new TimeData(begin, end);
+		return timeData;
+	}
+
 	private BoolExpr parseTarget(String target) {
+
+
+
 		BoolExpr res = null;
 		String[] strs = target.split("&");
 		for (String str : strs) {
@@ -199,14 +215,18 @@ public class Client {
 		boolean res = false;
 		File file = new File(Config.getValue("mac"));
 
+		List<Expr> list = new ArrayList<>();
+		int valid = 0;
+		int carsInRoad = 0;
+
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
 			String line;
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				count++;
-				if (count > 10000000) {
-					break;
-				}
+//				if (count > 20000000) {
+//					break;
+//				}
 				if (count % 1000000 == 0) {
 					System.out.println("dealt lines : " + count);
 				}
@@ -249,7 +269,41 @@ public class Client {
 					continue;
 				}
 
-				System.out.println("got one x : " + x + "  y : " + y);
+				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed);
+
+				carsInRoad++;
+				if (speed < 15) {
+					valid++;
+				}
+
+				ArithExpr a = context.mkIntConst("valid");
+				ArithExpr b = context.mkIntConst("carsInRoad");
+
+				// target
+				solver.add(context.mkNot(context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(70), b)),
+						context.mkGe(b, context.mkInt(min)))));
+				System.out.println("solver assertion length : " + solver.getAssertions().length);
+
+				// mark push for insert
+				solver.push();
+				solver.add(context.mkEq(a, context.mkInt(valid)));
+				solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
+				System.out.println(solver.check());
+
+				System.out.println("carsInRoad : " + carsInRoad + "  valid : " + valid);
+				if (solver.check() == Status.UNSATISFIABLE) {
+					res = true;
+					System.out.println("proved " + time);
+				} else {
+					System.out.println("not proved " + time);
+				}
+				solver.pop();
+
+				if (solver.getAssertions().length == 3) {
+					for (Expr expr : solver.getAssertions()) {
+						System.out.println(expr);
+					}
+				}
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();

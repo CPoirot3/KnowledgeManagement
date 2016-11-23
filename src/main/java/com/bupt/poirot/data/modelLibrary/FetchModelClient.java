@@ -111,7 +111,8 @@ public class FetchModelClient {
 		params.add("mbqi", true);
 		solver.setParameters(params);
 
-		BoolExpr preAsumptions = OWLToZ3.parseFromStream(context, inputStream);
+		OWLToZ3 owlToZ3 = new OWLToZ3();
+		BoolExpr preAsumptions = owlToZ3.parseFromStream(context, inputStream);
 		solver.push();
 		solver.add(preAsumptions);
 
