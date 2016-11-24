@@ -9,21 +9,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.bupt.poirot.data.DealData;
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
 import com.microsoft.z3.Params;
-import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 import org.apache.jena.atlas.RuntimeIOException;
@@ -34,21 +30,20 @@ import com.bupt.poirot.main.Config;
 public class Client {
 
 	public Context context;
-	public Solver solver;
+	private List<Solver> solverList;
 
-	public DateFormat formater = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss");
-
-	public DealData dealData;
-	public LinkedList<JsonObject> resultQueue;
+	private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//	private DealData dealData;
+	private LinkedList<JsonObject> resultQueue;
 	public LinkedList<String> data;
-	public String target;
+	private String target;
 	public String domain;
-	public String topic;
-	public String roadName;
-	public RoadData roadData;
-	public InputStream inputStream;
+	private String topic;
+	private String roadName;
+	private RoadData roadData;
+	private InputStream inputStream;
 
-	public HashMap<String, RoadData> stringRoadDataHashMap = new HashMap<>();
+	private HashMap<String, RoadData> stringRoadDataHashMap = new HashMap<>();
 
 	private TimeData timeData;
 	private int min;
@@ -59,26 +54,22 @@ public class Client {
 		stringRoadDataHashMap.put("福中路", new RoadData(114.056446, 22.548233, 114.059447, 22.548283));
 		stringRoadDataHashMap.put("金田路", new RoadData(114.069633, 22.553857, 114.069562, 22.54835));
 
-		if (paramsMap == null) {
-			System.out.println("NULL");
-		}
+		solverList = new ArrayList<>();
+
 		target = paramsMap.get("target")[0];
 		topic = paramsMap.get("topic")[0];
 		domain = paramsMap.get("topic")[0];
-		System.out.println("target : " + target + " topic : " + topic + " domain : " + domain);
+		roadName = paramsMap.get("road")[0];
+		System.out.println("target : " + target + " topic : " + topic + " domain : " + domain + " road : " + roadName);
 
 		context = new Context();
-		solver = context.mkSolver();
-		Params params = context.mkParams();
-		params.add("mbqi", false);
-		solver.setParameters(params);
 
 		if (topic == null) {
 			System.out.println("need topic info");
 			throw new RuntimeException("need topic info");
 		}
 
-		roadName = paramsMap.get("road")[0];
+
 		roadData = stringRoadDataHashMap.get(roadName);
 		min = Integer.valueOf(paramsMap.get("min")[0]);
 		System.out.println("min : " + min);
@@ -99,8 +90,8 @@ public class Client {
 		// 预先定义的公理 --- z3模式
 		System.out.println("preAxiom : " + preAxiom);
 
-		BoolExpr t = parseTarget(target);
-		deduce(preAxiom, t, roadData);
+		parseTarget(target);
+		deduce(preAxiom, roadData);
 	}
 
 	private void fetchModel(String domain) {
@@ -112,7 +103,6 @@ public class Client {
 			throw new RuntimeException("fetch model failed");
 		}
 	}
-
 
 	private TimeData parseTimeSection(String timeSection) {
 		System.out.println("Time section : " + timeSection);
@@ -132,48 +122,95 @@ public class Client {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		System.out.println(begin + "  " + end);
 		TimeData timeData = new TimeData(begin, end);
 		return timeData;
 	}
 
-	private BoolExpr parseTarget(String target) {
-
-
-
-		BoolExpr res = null;
-		String[] strs = target.split("&");
-		for (String str : strs) {
-			// TODO
+	private void parseTarget(String target) {
+		int solverSize = target.split("&&").length < 4 ? 4 : target.split("&&").length;
+		for(int i = 0; i < solverSize; i++) {
+			// make sure at least one solver
+			Solver solver = context.mkSolver();
+			Params params = context.mkParams();
+			params.add("mbqi", false);
+			solver.setParameters(params);
+			solverList.add(solver);
 		}
-		if (res == null) {
-			return context.mkTrue();
+
+		System.out.println("solverList size : " + solverList.size());
+		ArithExpr a = context.mkIntConst("valid");
+		ArithExpr b = context.mkIntConst("carsInRoad");
+
+		// target 严重拥堵
+		BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(80), b)),
+				context.mkGe(b, context.mkInt(min)));
+		System.out.println(targetExpr);
+		Solver solver = solverList.get(0);
+		solver.add(context.mkNot(targetExpr));
+
+		// 拥堵
+		BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(60), b)),
+				context.mkGe(b, context.mkInt(min)));
+		System.out.println(targetExpr2);
+		Solver solver2 = solverList.get(1);
+		solver2.add(context.mkNot(targetExpr2));
+
+		// 轻微拥堵
+		BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(40), b)),
+				context.mkGe(b, context.mkInt(min)));
+		System.out.println(targetExpr3);
+		Solver solver3 = solverList.get(2);
+		solver3.add(context.mkNot(targetExpr3));
+
+		// 畅通
+		BoolExpr targetExpr4 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(20), b)),
+				context.mkGe(b, context.mkInt(min)));
+		System.out.println(targetExpr4);
+		Solver solver4 = solverList.get(3);
+		solver4.add(context.mkNot(targetExpr4));
+
+		for (Solver sol : solverList) {
+			System.out.println(sol.check());
 		}
-		return res;
+		System.out.println("parse target done");
 	}
 
-	private void deduce(BoolExpr preAxiom, BoolExpr t, RoadData roadData) {
+	private void deduce(BoolExpr preAxiom, RoadData roadData) {
 		// TODO 推理后的结果存入resultQueue中
-		boolean res = dealWithData(preAxiom, t, roadData);
 
-//		solver.add(preAxiom);
-//		if (t != null) {
-//			solver.add(context.mkNot(t));
-//		} else {
-//			throw new RuntimeException("target is null");
-//		}
-//		boolean res;
-//		if (solver.check() == Status.UNSATISFIABLE) {
-//			res = true;
-//		} else {
-//			res = false;
-//		}
+		List<Boolean> resultList = new ArrayList<>();
 
+		dealWithData(preAxiom, roadData, resultList);
 		System.out.println("deduce done");
 		JsonObject jsonObject = new JsonObject();
-		if (res) {
-			jsonObject.put("result", "yes");
-		} else {
-			jsonObject.put("result", "no");
+		int index = 3;
+		for (int i = 0; i < resultList.size(); i++) {
+			if (resultList.get(i)) {
+				index = i;
+				break;
+			}
+		}
+
+		System.out.println(resultList.size());
+		for (boolean b : resultList) {
+			System.out.print(b + "  ");
+		}
+		System.out.println();
+
+		System.out.println("index  : " + index);
+		switch (index) {
+			case 0:
+				jsonObject.put("result", "严重拥堵");
+				break;
+			case 1:
+				jsonObject.put("result", "拥堵");
+				break;
+			case 2:
+				jsonObject.put("result", "轻微拥堵");
+				break;
+			default:
+				jsonObject.put("result", "畅通");
 		}
 		resultQueue.addLast(jsonObject);
 	}
@@ -182,7 +219,7 @@ public class Client {
 		double m = (roadData.x1 - x) * (roadData.y2 - y);
 		double n = (roadData.x2 - x) * (roadData.y1 - y);
 		double result = m * n;
-		if (Math.abs(result) > 0.000000000001) {
+		if (Math.abs(result) > 0.0000000001) {
 			return false;
 		}
 
@@ -211,12 +248,15 @@ public class Client {
 		return true;
 	}
 
-	private boolean dealWithData(BoolExpr preAxiom, BoolExpr target, RoadData roadData) {
-		boolean res = false;
-		File file = new File(Config.getValue("mac"));
+	private void dealWithData(BoolExpr preAxiom, RoadData roadData, List<Boolean> resultList) {
+//		System.out.println(preAxiom);
 
-		List<Expr> list = new ArrayList<>();
-		int valid = 0;
+		File file = new File(Config.getValue("data_file"));
+		int length = solverList.size();
+		int[] validCars = new int[length];
+		for (int i = 0; i < length; i++) {
+			resultList.add(false);
+		}
 		int carsInRoad = 0;
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
@@ -224,18 +264,18 @@ public class Client {
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				count++;
-//				if (count > 20000000) {
+//				if (count > 50000000) {
 //					break;
 //				}
 				if (count % 1000000 == 0) {
 					System.out.println("dealt lines : " + count);
 				}
 
-				if (line == null || line.length() == 0) {
+				if (line.length() == 0) {
 					continue;
 				}
 				String[] strs = line.split(",");
-				if (strs.length < 7) {
+				if (strs.length < 5) {
 					continue;
 				}
 				String time = strs[1]; // 时间
@@ -253,12 +293,12 @@ public class Client {
 //				String carName = strs[0]; // 车名
 //				boolean states = strs[4].equals("1") ? true : false; // 状态
 				float x, y, speed;
-				byte direction;
+//				byte direction;
 				try {
 					x = Float.parseFloat(strs[2]); // 经度
 					y = Float.parseFloat(strs[3]); // 纬度
 					speed = Float.parseFloat(strs[5]); // 速度
-					direction = Byte.parseByte(strs[6]); // 方向
+//					direction = Byte.parseByte(strs[6]); // 方向
 				} catch (Exception e) {
 					continue;
 				}
@@ -269,46 +309,47 @@ public class Client {
 					continue;
 				}
 
-				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed);
+				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed + " time : " + time + "  " + t);
 
 				carsInRoad++;
-				if (speed < 15) {
-					valid++;
+				if (speed < 5) {
+					for (int i = 0; i < validCars.length; i++) {
+						validCars[i]++;
+					}
+//				} else if (speed < 10) {
+//					for (int i = 1; i < validCars.length; i++) {
+//						validCars[i]++;
+//					}
+//				} else if (speed < 15) {
+//					for (int i = 2; i < validCars.length; i++) {
+//						validCars[i]++;
+//					}
 				}
 
 				ArithExpr a = context.mkIntConst("valid");
 				ArithExpr b = context.mkIntConst("carsInRoad");
 
-				// target
-				solver.add(context.mkNot(context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(70), b)),
-						context.mkGe(b, context.mkInt(min)))));
-				System.out.println("solver assertion length : " + solver.getAssertions().length);
 
-				// mark push for insert
-				solver.push();
-				solver.add(context.mkEq(a, context.mkInt(valid)));
-				solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
-				System.out.println(solver.check());
-
-				System.out.println("carsInRoad : " + carsInRoad + "  valid : " + valid);
-				if (solver.check() == Status.UNSATISFIABLE) {
-					res = true;
-					System.out.println("proved " + time);
-				} else {
-					System.out.println("not proved " + time);
-				}
-				solver.pop();
-
-				if (solver.getAssertions().length == 3) {
-					for (Expr expr : solver.getAssertions()) {
-						System.out.println(expr);
+				for (int i = 0; i < solverList.size(); i++) {
+					Solver solver = solverList.get(i);
+					// push
+					solver.push();
+					solver.add(context.mkEq(a, context.mkInt(validCars[i])));
+					solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
+					System.out.println("carsInRoad : " + carsInRoad + "  valid : " + validCars[i]);
+					if (solver.check() == Status.UNSATISFIABLE) {
+						resultList.set(i, true);
+						System.out.println("proved ");
+					} else {
+						System.out.println("not proved ");
 					}
+					// pop
+					solver.pop();
 				}
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
-		return res;
 	}
 
 	private boolean isInTimeSection(long t, TimeData timeData) {
@@ -320,10 +361,8 @@ public class Client {
 
 
 	public JsonObject getResult() {
-//		return dealData.gerOne();
 		return resultQueue.removeFirst();
 	}
-
 	
 //	public void accept() {
 //		File file = new File(Config.getValue("mac"));
@@ -346,24 +385,6 @@ public class Client {
 //			e.printStackTrace();
 //		}
 //	}
-
-	private void deduceWithOneSection() {
-		for (String message : data) {
-			dealData.deal(message);
-		}
-		
-		dealData.deduce();
-	}
-
-	public static void main(String[] args) {
-//		System.out.println("begin accept");
-		
-//		HashMap<String, String> stringRoadDataHashMap = new HashMap<>();
-//		String values = "10";
-//		stringRoadDataHashMap.put("sections", values);
-//		new Client(stringRoadDataHashMap);
-		
-	}
 	
 	public void acceptSocket() {
 //		try (Socket socket = new Socket("127.0.0.1", 30000)) {
@@ -377,5 +398,14 @@ public class Client {
 //		} catch (IOException | InterruptedException e) {
 //			e.printStackTrace();
 //		}
+	}
+
+
+	public static void main(String[] args) {
+		try {
+			System.out.println(formater.parse("2011/04/18 12:04:22").getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 }
