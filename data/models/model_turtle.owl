@@ -1,0 +1,174 @@
+@prefix : <http://www.semanticweb.org/traffic-ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/traffic-ontology> .
+
+<http://www.semanticweb.org/traffic-ontology> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/traffic-ontology#hasBeginPoint
+:hasBeginPoint rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/traffic-ontology#hasEndPoint
+:hasEndPoint rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.co-ode.org/ontologies/ont.owl#speed
+<http://www.co-ode.org/ontologies/ont.owl#speed> rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/traffic-ontology#hasLatitude
+:hasLatitude rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/traffic-ontology#hasLongitude
+:hasLongitude rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/traffic-ontology#Car
+:Car rdf:type owl:Class ;
+     owl:equivalentClass [ rdf:type owl:Restriction ;
+                           owl:onProperty <http://www.co-ode.org/ontologies/ont.owl#speed> ;
+                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange xsd:double
+                         ] .
+
+
+###  http://www.semanticweb.org/traffic-ontology#Point
+:Point rdf:type owl:Class ;
+       owl:equivalentClass [ rdf:type owl:Restriction ;
+                             owl:onProperty :hasLatitude ;
+                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                             owl:onDataRange xsd:double
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :hasLongitude ;
+                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                             owl:onDataRange xsd:double
+                           ] .
+
+
+###  http://www.semanticweb.org/traffic-ontology#Road
+:Road rdf:type owl:Class ;
+      owl:equivalentClass [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasBeginPoint ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass :Point
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasEndPoint ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass :Point
+                          ] .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.co-ode.org/ontologies/ont.owl#出租车X
+<http://www.co-ode.org/ontologies/ont.owl#出租车X> rdf:type owl:NamedIndividual ,
+                                                         :Car ;
+                                                <http://www.co-ode.org/ontologies/ont.owl#speed> "20.0"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#福中路
+<http://www.co-ode.org/ontologies/ont.owl#福中路> rdf:type owl:NamedIndividual ,
+                                                        :Road ;
+                                               :hasBeginPoint <http://www.co-ode.org/ontologies/ont.owl#福中路起点> ;
+                                               :hasEndPoint <http://www.co-ode.org/ontologies/ont.owl#福中路终点> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#福中路终点
+<http://www.co-ode.org/ontologies/ont.owl#福中路终点> rdf:type owl:NamedIndividual ,
+                                                          :Point ;
+                                                 :hasLatitude "22.548283"^^xsd:double ;
+                                                 :hasLongitude "114.059447"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#福中路起点
+<http://www.co-ode.org/ontologies/ont.owl#福中路起点> rdf:type owl:NamedIndividual ,
+                                                          :Point ;
+                                                 :hasLatitude "22.548233"^^xsd:double ;
+                                                 :hasLongitude "114.056446"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#红岭中路
+<http://www.co-ode.org/ontologies/ont.owl#红岭中路> rdf:type owl:NamedIndividual ,
+                                                         :Road ;
+                                                :hasBeginPoint <http://www.co-ode.org/ontologies/ont.owl#红岭中路起点> ;
+                                                :hasEndPoint <http://www.co-ode.org/ontologies/ont.owl#红岭中路终点> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#红岭中路终点
+<http://www.co-ode.org/ontologies/ont.owl#红岭中路终点> rdf:type owl:NamedIndividual ,
+                                                           :Point ;
+                                                  :hasLatitude "22.561985"^^xsd:double ;
+                                                  :hasLongitude "114.110848"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#红岭中路起点
+<http://www.co-ode.org/ontologies/ont.owl#红岭中路起点> rdf:type owl:NamedIndividual ,
+                                                           :Point ;
+                                                  :hasLatitude "22.568226"^^xsd:double ;
+                                                  :hasLongitude "114.110848"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#翠竹路
+<http://www.co-ode.org/ontologies/ont.owl#翠竹路> rdf:type owl:NamedIndividual ,
+                                                        :Road ;
+                                               :hasBeginPoint <http://www.co-ode.org/ontologies/ont.owl#翠竹路起点> ;
+                                               :hasEndPoint <http://www.co-ode.org/ontologies/ont.owl#翠竹路终点> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#翠竹路终点
+<http://www.co-ode.org/ontologies/ont.owl#翠竹路终点> rdf:type owl:NamedIndividual ,
+                                                          :Point ;
+                                                 :hasLatitude "22.580431"^^xsd:double ;
+                                                 :hasLongitude "114.134606"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#翠竹路起点
+<http://www.co-ode.org/ontologies/ont.owl#翠竹路起点> rdf:type owl:NamedIndividual ,
+                                                          :Point ;
+                                                 :hasLatitude "22.582957"^^xsd:double ;
+                                                 :hasLongitude "114.134266"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#金田路
+<http://www.co-ode.org/ontologies/ont.owl#金田路> rdf:type owl:NamedIndividual ,
+                                                        :Road ;
+                                               :hasBeginPoint <http://www.co-ode.org/ontologies/ont.owl#金田路起点> ;
+                                               :hasEndPoint <http://www.co-ode.org/ontologies/ont.owl#金田路终点> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#金田路终点
+<http://www.co-ode.org/ontologies/ont.owl#金田路终点> rdf:type owl:NamedIndividual ,
+                                                          :Point ;
+                                                 :hasLatitude "22.54835"^^xsd:double ;
+                                                 :hasLongitude "114.069562"^^xsd:double .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#金田路起点
+<http://www.co-ode.org/ontologies/ont.owl#金田路起点> rdf:type owl:NamedIndividual ,
+                                                          :Point ;
+                                                 :hasLatitude "22.553857"^^xsd:double ;
+                                                 :hasLongitude "114.069633"^^xsd:double .
+
+
+###  Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi

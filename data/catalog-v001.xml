@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="http://www.co-ode.org/ontologies/pizza/pizza.owl" uri="ontologies/pizza.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="http://www.semanticweb.org/hui.chen/ontologies/2016/10/untitled-ontology-10" uri="ontologies/Animal.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="http://www.semanticweb.org/poirot3/ontologies/2016/10/traffic-ontology" uri="schema_rdf_bakup.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="schema_atom_rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="schema_back.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="schema_rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="shadowed:http://www.semanticweb.org/traffic-ontology" uri="models/model.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="shadowed:http://www.semanticweb.org/traffic-ontology" uri="models/model_owl.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="shadowed:http://www.semanticweb.org/traffic-ontology" uri="models/model_rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="shadowed:urn:x-hp:eg/" uri="ontologies/owlDemoData.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="shadowed:urn:x-hp:eg/" uri="ontologies/owlDemoSchema.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:urn:x-hp:eg/" uri="owlDemoData.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:urn:x-hp:eg/" uri="owlDemoSchema.xml"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:urn:x-hp:eg/" uri="rdfsDemoData.rdf"/>
+        <uri id="Automatically generated entry, Timestamp=1480050487364" name="duplicate:urn:x-hp:eg/" uri="rdfsDemoSchema.rdf"/>
+    </group>
+</catalog>
