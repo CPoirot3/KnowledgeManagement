@@ -1,4 +1,4 @@
-package com.bupt.poirot.main.jetty;
+package com.bupt.poirot.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
+import com.bupt.poirot.main.jetty.Config;
+import com.bupt.poirot.main.jetty.RoadData;
+import com.bupt.poirot.main.jetty.TimeData;
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
