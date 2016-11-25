@@ -1,4 +1,4 @@
-package com.bupt.poirot.dataStream;
+package com.bupt.poirot.data.dataStream;
 
 import java.util.Arrays;
 import java.util.Properties;

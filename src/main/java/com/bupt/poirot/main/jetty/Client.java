@@ -25,8 +25,6 @@ import com.microsoft.z3.Status;
 import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.atlas.json.JsonObject;
 
-import com.bupt.poirot.main.Config;
-
 public class Client {
 
 	public Context context;

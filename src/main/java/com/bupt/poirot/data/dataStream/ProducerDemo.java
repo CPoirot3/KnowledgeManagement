@@ -1,4 +1,4 @@
-package com.bupt.poirot.dataStream;
+package com.bupt.poirot.data.dataStream;
 
 import java.io.BufferedReader;
 import java.io.File;

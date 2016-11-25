@@ -1,4 +1,4 @@
-package com.bupt.poirot.data;
+package com.bupt.poirot.data.processing;
 
 public class WriteToMysql {
 

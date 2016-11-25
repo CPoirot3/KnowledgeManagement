@@ -4,7 +4,7 @@
  * 下午4:39:01
  * KnowledgeManagement
  */
-package com.bupt.poirot.main;
+package com.bupt.poirot.data.processing;
 
 import java.io.*;
 import java.net.Socket;
@@ -34,18 +34,20 @@ public class ThreadSolve implements Runnable {
 				sendData(f);
 			}
 		}
-//		if (!file.getName().startsWith("粤")) {
-//			return;
-//		}
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
+		if (!file.getName().startsWith("粤")) {
+			return;
+		}
+		System.out.println(file.getAbsolutePath());
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gbk"))) {
+//			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new PrintStream(socket.getOutputStream()), "utf-8"));
 			PrintStream ps = new PrintStream(socket.getOutputStream());
-			
 //			int count = 0;
-            String line = null;
-           
+            String line = reader.readLine();
 			while ((line = reader.readLine()) != null) {
+//				writer.write(line);
+//				writer.newLine();
                 ps.println(line);
-                Thread.sleep(500);
+                Thread.sleep(100);
             }
 		} catch (Exception e ) {
 			// TODO Auto-generated catch block

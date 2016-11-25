@@ -1,9 +1,5 @@
-package com.bupt.poirot.data;
+package com.bupt.poirot.data.processing;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,8 +12,6 @@ import org.bson.Document;
 import com.bupt.poirot.data.modelLibrary.Domain;
 import com.bupt.poirot.mongodb.SaveToMongo;
 import com.bupt.poirot.z3_z3backup.ProveResult;
-import com.mysql.cj.api.jdbc.Statement;
-import com.mysql.cj.jdbc.PreparedStatement;
 
 public class DealData {
 	

@@ -1,4 +1,4 @@
-package com.bupt.poirot.main;
+package com.bupt.poirot.main.jetty;
 
 import java.io.File;
 import java.io.FileInputStream;
