@@ -206,19 +206,20 @@ public class OWLToZ3 {
                     res = boolExpr;
                 }
             }
-//            break;
 		}
-
-//		if (solver.check() == Status.SATISFIABLE) {
-//            System.out.println(Status.SATISFIABLE);
-////            System.out.println(solver.getModel());
-//        } else {
-//            System.out.println(Status.UNSATISFIABLE);
-//        }
         return res;
     }
     
 	public static void main(String[] args) {
+        File schemaFile = new File("data/schema.owl");
+        try {
+            InputStream inputStream = new FileInputStream(schemaFile);
+            OWLToZ3 owlToZ3 = new OWLToZ3();
+            BoolExpr boolExpr = owlToZ3.parseFromStream(new Context(), inputStream);
+//            System.out.println(boolExpr);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 }

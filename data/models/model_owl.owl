@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.semanticweb.org/traffic-ontology"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.semanticweb.org/traffic-ontology">
+    <Prefix name="" IRI="http://www.semanticweb.org/traffic-ontology#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路终点"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasBeginPoint"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Car"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#出租车X"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasLatitude"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路起点"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasEndPoint"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Road"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路终点"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasLongitude"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="http://www.co-ode.org/ontologies/ont.owl#speed"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路终点"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Point"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路起点"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路终点"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路起点"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路起点"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#Car"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="http://www.co-ode.org/ontologies/ont.owl#speed"/>
+            <Datatype abbreviatedIRI="xsd:double"/>
+        </DataExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Point"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#hasLatitude"/>
+            <Datatype abbreviatedIRI="xsd:double"/>
+        </DataExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Point"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#hasLongitude"/>
+            <Datatype abbreviatedIRI="xsd:double"/>
+        </DataExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Road"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#hasBeginPoint"/>
+            <Class IRI="#Point"/>
+        </ObjectExactCardinality>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#Road"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#hasEndPoint"/>
+            <Class IRI="#Point"/>
+        </ObjectExactCardinality>
+    </EquivalentClasses>
+    <ClassAssertion>
+        <Class IRI="#Car"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#出租车X"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Road"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路终点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路起点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Road"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路终点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路起点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Road"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路终点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路起点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Road"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路终点"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Point"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路起点"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasBeginPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路起点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasEndPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路终点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasBeginPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路起点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasEndPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路终点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasBeginPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路起点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasEndPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路终点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasBeginPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路起点"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasEndPoint"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路终点"/>
+    </ObjectPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="http://www.co-ode.org/ontologies/ont.owl#speed"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#出租车X"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">20.0</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.548283</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.059447</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.548233</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#福中路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.056446</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.561985</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.110848</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.568226</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#红岭中路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.110848</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.580431</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.134606</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.582957</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#翠竹路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.134266</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.54835</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路终点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.069562</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLatitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">22.553857</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasLongitude"/>
+        <NamedIndividual IRI="http://www.co-ode.org/ontologies/ont.owl#金田路起点"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#double">114.069633</Literal>
+    </DataPropertyAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi -->
+
