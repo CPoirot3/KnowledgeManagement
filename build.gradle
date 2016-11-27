@@ -37,12 +37,15 @@ dependencies {
 	compile group: 'org.apache.jena', name: 'jena-iri', version: '3.1.0'
 	
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
-	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.4'
+	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
 	
 	// https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
 	compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.12.v20160915'
 	compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.3.12.v20160915'
-    
+
+
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
 
 	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 	compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'

@@ -1,5 +1,7 @@
 package com.bupt.poirot.main.jetty;
 
+import com.bupt.poirot.utils.Config;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -25,9 +27,9 @@ public class SocketSendData {
 				String datafile = "";
 				
 				if (os.contains("Mac")) {
-					datafile = Config.getValue("mac");
+					datafile = Config.getString("mac");
 				} else {
-					datafile = Config.getValue("win");
+					datafile = Config.getString("win");
 				}
 				System.out.println(datafile);
                 File file = new File(datafile);

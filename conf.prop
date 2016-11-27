@@ -1,2 +1,6 @@
 data_file=data/all_data_utf-8.txt
 #data_file=data/all_data_utf-8.txt
+
+mongo.host.dev = localhost
+mongo.port.dev = 27017
+mongo.db.dev = traffic

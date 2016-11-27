@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
-import com.bupt.poirot.main.jetty.Config;
 import com.bupt.poirot.main.jetty.RoadData;
 import com.bupt.poirot.main.jetty.TimeData;
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
@@ -252,7 +251,7 @@ public class Client {
 	private void dealWithData(BoolExpr preAxiom, RoadData roadData, List<Boolean> resultList) {
 //		System.out.println(preAxiom);
 
-		File file = new File(Config.getValue("data_file"));
+		File file = new File(Config.getString("data_file"));
 		int length = solverList.size();
 		int[] validCars = new int[length];
 		for (int i = 0; i < length; i++) {
