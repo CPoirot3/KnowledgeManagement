@@ -8,10 +8,10 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="http://www.semanticweb.org/traffic-ontology"/>
-    
 
 
-    <!-- 
+
+    <!--
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Object Properties
@@ -19,22 +19,22 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasBeginPoint -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasBeginPoint"/>
-    
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasEndPoint -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasEndPoint"/>
-    
 
 
-    <!-- 
+
+    <!--
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Data properties
@@ -42,28 +42,28 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
 
 
-    <!-- http://www.co-ode.org/ontologies/ont.owl#speed -->
 
-    <owl:DatatypeProperty rdf:about="http://www.co-ode.org/ontologies/ont.owl#speed"/>
-    
+    <!-- http://www.co-ode.org/ontologies/ont.owl#hasSpeed -->
+
+    <owl:DatatypeProperty rdf:about="http://www.co-ode.org/ontologies/ont.owl#hasSpeed"/>
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasLatitude -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasLatitude"/>
-    
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasLongitude -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasLongitude"/>
-    
 
 
-    <!-- 
+
+    <!--
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Classes
@@ -71,7 +71,7 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#Car -->
@@ -79,13 +79,13 @@
     <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Car">
         <owl:equivalentClass>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.co-ode.org/ontologies/ont.owl#speed"/>
+                <owl:onProperty rdf:resource="http://www.co-ode.org/ontologies/ont.owl#hasSpeed"/>
                 <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
             </owl:Restriction>
         </owl:equivalentClass>
     </owl:Class>
-    
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#Point -->
@@ -106,7 +106,7 @@
             </owl:Restriction>
         </owl:equivalentClass>
     </owl:Class>
-    
+
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#Road -->
@@ -127,10 +127,10 @@
             </owl:Restriction>
         </owl:equivalentClass>
     </owl:Class>
-    
 
 
-    <!-- 
+
+    <!--
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Individuals
@@ -138,16 +138,16 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#出租车X -->
 
     <owl:NamedIndividual rdf:about="http://www.co-ode.org/ontologies/ont.owl#出租车X">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Car"/>
-        <ont:speed rdf:datatype="http://www.w3.org/2001/XMLSchema#double">20.0</ont:speed>
+        <ont:hasSpeed rdf:datatype="http://www.w3.org/2001/XMLSchema#double">20.0</ont:hasSpeed>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#福中路 -->
@@ -157,7 +157,7 @@
         <hasBeginPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#福中路起点"/>
         <hasEndPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#福中路终点"/>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#福中路终点 -->
@@ -167,7 +167,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.548283</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.059447</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#福中路起点 -->
@@ -177,7 +177,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.548233</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.056446</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#红岭中路 -->
@@ -187,7 +187,7 @@
         <hasBeginPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#红岭中路起点"/>
         <hasEndPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#红岭中路终点"/>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#红岭中路终点 -->
@@ -197,7 +197,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.561985</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.110848</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#红岭中路起点 -->
@@ -207,7 +207,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.568226</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.110848</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#翠竹路 -->
@@ -217,7 +217,7 @@
         <hasBeginPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#翠竹路起点"/>
         <hasEndPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#翠竹路终点"/>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#翠竹路终点 -->
@@ -227,7 +227,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.580431</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.134606</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#翠竹路起点 -->
@@ -237,7 +237,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.582957</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.134266</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#金田路 -->
@@ -247,7 +247,7 @@
         <hasBeginPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#金田路起点"/>
         <hasEndPoint rdf:resource="http://www.co-ode.org/ontologies/ont.owl#金田路终点"/>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#金田路终点 -->
@@ -257,7 +257,7 @@
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">22.54835</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#double">114.069562</hasLongitude>
     </owl:NamedIndividual>
-    
+
 
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#金田路起点 -->
@@ -272,4 +272,3 @@
 
 
 <!-- Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi -->
-
