@@ -596,71 +596,32 @@ public class Z3Library {
 		Expr y = ctx.mkExists(xs, body_const, 1, null, no_pats, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
 
 		Solver solver = ctx.mkSimpleSolver();
+
+		solver.add(ctx.mkEq(ctx.mkAdd(xs[2], ctx.mkInt(2)), xs[1]));
+
+		System.out.println(solver.check());
+		if (solver.check() == Status.SATISFIABLE) {
+			System.out.println(solver.getModel());
+		}
+
+		FiniteDomainSort finiteDomainSort = ctx.mkFiniteDomainSort("finit", 100);
+		Expr expr = ctx.mkConst("x", finiteDomainSort);
+		Solver s = ctx.mkSimpleSolver();
+		s.push();
+		;
+		System.out.println("mark : " + s.check());
+
+
+//		solver.add(ctx.mkNot((BoolExpr) y));
 		solver.add((BoolExpr) y);
 		System.out.println(solver.check());
 		if (solver.check() == Status.SATISFIABLE) {
 			System.out.println(solver.getModel());
 		}
 
-//		try {
-//			prove(ctx, ctx.mkEq(xs[0], ctx.mkInt(1)), false, (BoolExpr)y);
-//		} catch (TestFailedException e) {
-//			e.printStackTrace();
-//		}
-//		solver.add((BoolExpr) y);
-//		System.out.println(solver.check());
 		System.out.println("Quantifier Y: " + y.toString());
 	}
 
-	// / A basic example of how to use quantifiers.
-		void quantifierExampleByHui(Context ctx) throws Z3Exception {
-			System.out.println("QuantifierExampleByHui");
-			Log.append("QuantifierExampleByHui");
-			
-			
-			Sort[] types = new Sort[2];
-			Symbol[] names = new Symbol[2];
-			IntExpr[] vars = new IntExpr[2];
-			IntExpr[] xs = new IntExpr[2];
-			
-			
-			for (int j = 0; j < 2; j++) {
-				types[j] = ctx.getIntSort();
-				names[j] = ctx.mkSymbol("x_" + Integer.toString(j));
-				vars[j] = (IntExpr) ctx.mkBound(1, types[j]); // <-- vars
-																	// reversed!
-				xs[j] = (IntExpr) ctx.mkConst(names[j], types[j]);
-			}
-			System.out.println();
-			for (IntExpr intExpr : vars) {
-				System.out.println(intExpr);
-			}
-//			Expr body = ctx.mkAnd(ctx.mkGe(ctx.mkMul(vars[0], vars[1]), ctx.mkInt(0)),
-//					ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(0)));
-			Expr body = ctx.mkLe(ctx.mkAdd(vars[0], vars[1]), ctx.mkInt(10));
-			
-			Expr x = ctx.mkForall(types, names, body, 1, null, null, ctx.mkSymbol("Q1"), ctx.mkSymbol("skid1"));
-			System.out.println("Quantifier X: " + x.toString());
-			
-			Solver solver = ctx.mkSimpleSolver();
-			solver.add((BoolExpr) x);
-			System.out.println(solver.check());
-			if (solver.check() == Status.SATISFIABLE) {
-				System.out.println(solver.getModel());
-			}
-			solver.reset();
-			
-			System.out.println();
-			body = ctx.mkGe(ctx.mkMul(xs[0], xs[0]), ctx.mkInt(0));
-			Expr y = ctx.mkForall(xs, body, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
-			System.out.println(y);
-			solver.add((BoolExpr) y);
-			System.out.println(solver.check());
-			if (solver.check() == Status.SATISFIABLE) {
-				System.out.println(solver.getModel());
-			}
-			solver.reset();
-		}
 	
 	void quantifierExample2(Context ctx) throws Z3Exception {
 
@@ -2146,7 +2107,7 @@ public class Z3Library {
 				System.out.println();
 				System.out.println();
 				System.out.println();
-				p.quantifierExample2(ctx);
+//				p.quantifierExample2(ctx);
 				
 				System.out.println();
 				System.out.println();

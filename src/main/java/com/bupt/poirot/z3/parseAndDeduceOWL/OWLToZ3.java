@@ -30,11 +30,11 @@ public class OWLToZ3 {
     public Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
     public int begin = 0;
 
+
 //    public static BoolExpr mkQuantifier(Context ctx, String string1, String string2, Set<String> sortSet, Set<String> quantifierSet) {
     public BoolExpr mkQuantifier(Context ctx, String string1, String string2) {
         Map<String, String> variableNameToExprName = new HashMap<>();
 		Map<String, Sort> variableNameToSort = new HashMap<>();
-		Set<Sort> sets = new HashSet<>();
 
         String domain, formua;
         if (string1.contains("atLeast") || string1.contains("atMost") || string1.contains(" v ")) {
@@ -60,6 +60,8 @@ public class OWLToZ3 {
             if (matcher.find()) {
                 String funcString = matcher.group(1);
                 FuncDecl funcDecl = stringToFuncMap.get(funcString);
+
+
 
                 String string = matcher.group(2);
                 String[] variables = string.split(",");
@@ -194,9 +196,7 @@ public class OWLToZ3 {
 		for (DLClause dlClause: set) {
             String dlClauseString = dlClause.toString();
 			String[] strings = dlClauseString.split(" :- ");
-
 			System.out.println("dlClauseString " + (count++) + " : " + dlClauseString);
-
             BoolExpr boolExpr = mkQuantifier(context, strings[0], strings[1]);
 
             if (boolExpr != null) {
@@ -207,11 +207,12 @@ public class OWLToZ3 {
                 }
             }
 		}
+
         return res;
     }
     
 	public static void main(String[] args) {
-        File schemaFile = new File("data/schema.owl");
+        File schemaFile = new File("data/models/model_rdf.owl");
         try {
             InputStream inputStream = new FileInputStream(schemaFile);
             OWLToZ3 owlToZ3 = new OWLToZ3();

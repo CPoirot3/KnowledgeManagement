@@ -13,7 +13,6 @@ import com.bupt.poirot.utils.Config;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
@@ -24,9 +23,8 @@ public class DataHandler extends AbstractHandler {
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 
-		String path = baseRequest.getContextPath();
+		String path = request.getPathInfo();
 		System.out.println(path);
-
 
 		Map<String, String[]> params = request.getParameterMap();
 		if (path.endsWith("data")) {
