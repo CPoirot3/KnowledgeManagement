@@ -308,7 +308,6 @@ public class OWLToZ3 {
         System.out.println("formulaExpr : ");
         System.out.println(formulaExpr);
 
-
         if (preExpr == null || formulaExpr == null) {
             return null;
         }

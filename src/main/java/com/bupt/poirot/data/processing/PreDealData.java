@@ -87,12 +87,7 @@ public class PreDealData {
                     list.add(new SingleLine(time, line));
                 }
 
-                Collections.sort(list, new Comparator<SingleLine>() {
-                    @Override
-                    public int compare(SingleLine o1, SingleLine o2) {
-                        return (int)(o1.time - o2.time);
-                    }
-                });
+                Collections.sort(list, (o1, o2) -> (int)(o1.time - o2.time));
 
                 for (SingleLine singleLine : list) {
                     ps.println(singleLine.value);

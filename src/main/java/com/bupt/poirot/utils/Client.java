@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
+import com.bupt.poirot.data.mongodb.FetchData;
 import com.bupt.poirot.main.jetty.RoadData;
 import com.bupt.poirot.main.jetty.TimeData;
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
@@ -24,17 +25,22 @@ import com.microsoft.z3.Context;
 import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.apache.jena.atlas.RuntimeIOException;
 import org.apache.jena.atlas.json.JsonObject;
+import org.bson.Document;
 
 public class Client {
+
+	public int id;
 
 	public Context context;
 	private List<Solver> solverList;
 
 	private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 //	private DealData dealData;
-	private LinkedList<JsonObject> resultQueue;
+	private LinkedList<Document> resultQueue;
 	public LinkedList<String> data;
 	private String target;
 	public String domain;
@@ -56,6 +62,7 @@ public class Client {
 
 		solverList = new ArrayList<>();
 
+		id = Integer.valueOf(paramsMap.get("id")[0]);
 		target = paramsMap.get("target")[0];
 		topic = paramsMap.get("topic")[0];
 		domain = paramsMap.get("topic")[0];
@@ -182,37 +189,7 @@ public class Client {
 		List<Boolean> resultList = new ArrayList<>();
 
 		dealWithData(preAxiom, roadData, resultList);
-		System.out.println("deduce done");
-		JsonObject jsonObject = new JsonObject();
-		int index = 3;
-		for (int i = 0; i < resultList.size(); i++) {
-			if (resultList.get(i)) {
-				index = i;
-				break;
-			}
-		}
 
-		System.out.println(resultList.size());
-		for (boolean b : resultList) {
-			System.out.print(b + "  ");
-		}
-		System.out.println();
-
-		System.out.println("index  : " + index);
-		switch (index) {
-			case 0:
-				jsonObject.put("result", "严重拥堵");
-				break;
-			case 1:
-				jsonObject.put("result", "拥堵");
-				break;
-			case 2:
-				jsonObject.put("result", "轻微拥堵");
-				break;
-			default:
-				jsonObject.put("result", "畅通");
-		}
-		resultQueue.addLast(jsonObject);
 	}
 
 	boolean isInTheRoad(double x, double y, RoadData roadData) {
@@ -249,7 +226,7 @@ public class Client {
 	}
 
 	private void dealWithData(BoolExpr preAxiom, RoadData roadData, List<Boolean> resultList) {
-//		System.out.println(preAxiom);
+		System.out.println(preAxiom);
 
 		File file = new File(Config.getString("data_file"));
 		int length = solverList.size();
@@ -264,9 +241,6 @@ public class Client {
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				count++;
-//				if (count > 50000000) {
-//					break;
-//				}
 				if (count % 1000000 == 0) {
 					System.out.println("dealt lines : " + count);
 				}
@@ -290,10 +264,7 @@ public class Client {
 					continue;
 				}
 
-//				String carName = strs[0]; // 车名
-//				boolean states = strs[4].equals("1") ? true : false; // 状态
 				float x, y, speed;
-//				byte direction;
 				try {
 					x = Float.parseFloat(strs[2]); // 经度
 					y = Float.parseFloat(strs[3]); // 纬度
@@ -329,7 +300,6 @@ public class Client {
 				ArithExpr a = context.mkIntConst("valid");
 				ArithExpr b = context.mkIntConst("carsInRoad");
 
-
 				for (int i = 0; i < solverList.size(); i++) {
 					Solver solver = solverList.get(i);
 					// push
@@ -346,10 +316,59 @@ public class Client {
 					// pop
 					solver.pop();
 				}
+
+				if (count % 10000 == 0) {
+					Document doc = new Document();
+					int index = 3;
+					for (int i = 0; i < resultList.size(); i++) {
+						if (resultList.get(i)) {
+							index = i;
+							break;
+						}
+					}
+
+					System.out.println(resultList.size());
+					System.out.println("index  : " + index);
+					switch (index) {
+						case 0:
+							doc.put("result", "严重拥堵");
+							doc.put("value", "4");
+							doc.put("time", time);
+							break;
+						case 1:
+							doc.put("result", "拥堵");
+							doc.put("value", "3");
+							doc.put("time", time);
+							break;
+						case 2:
+							doc.put("result", "轻微拥堵");
+							doc.put("value", "2");
+							doc.put("time", time);
+							break;
+						default:
+							doc.put("result", "畅通");
+							doc.put("value", "1");
+							doc.put("time", time);
+					}
+					doc.put("id", id);
+					resultQueue.addLast(doc);
+					flushToDatabase();
+				}
+
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
+	}
+
+	private void flushToDatabase() {
+		String dbName = Config.getString("mongo.db");
+		String collectionName = "mongo.collection";
+
+		MongoDatabase mongoDatabase = FetchData.getMongoClient().getDatabase(dbName);
+		MongoCollection mongoCollection = mongoDatabase.getCollection(collectionName);
+		mongoCollection.insertMany(resultQueue);
+		resultQueue.clear();
 	}
 
 	private boolean isInTimeSection(long t, TimeData timeData) {
@@ -357,47 +376,6 @@ public class Client {
 			return false;
 		}
 		return true;
-	}
-
-
-	public JsonObject getResult() {
-		return resultQueue.removeFirst();
-	}
-	
-//	public void accept() {
-//		File file = new File(Config.getValue("mac"));
-//		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
-//            String line;
-//            int count = 0;
-//			while ((line = reader.readLine()) != null) {
-//				data.addLast(line);
-//                count++;
-//                if (count > 100000) {
-//                	return;
-//                }
-//                if (data.size() >= 10000) {
-//                	deduceWithOneSection();
-//					data.clear();
-//
-//                }
-//            }
-//		} catch (Exception e ) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-	public void acceptSocket() {
-//		try (Socket socket = new Socket("127.0.0.1", 30000)) {
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//			String message = null;
-//			while ((message = reader.readLine()) != null) {
-////				System.out.println(message);
-//				dealData.deal(message);
-//				Thread.sleep(1000);
-//			}
-//		} catch (IOException | InterruptedException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 

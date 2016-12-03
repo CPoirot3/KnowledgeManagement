@@ -12,8 +12,8 @@ import org.bson.Document;
 public class FetchData {
 
     public static class ClientHelper {
-        String host = Config.getString("mongo.host");
-        String port = Config.getString("mongo.port");
+//        String host = Config.getString("mongo.host");
+//        String port = Config.getString("mongo.port");
         public static final MongoClient mongoClient = new MongoClient("localhost", 27017);
     }
 

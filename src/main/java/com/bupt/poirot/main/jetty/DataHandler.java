@@ -12,6 +12,7 @@ import com.bupt.poirot.utils.Client;
 import com.bupt.poirot.utils.Config;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.apache.jena.atlas.json.JsonObject;
 import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -29,7 +30,6 @@ public class DataHandler extends AbstractHandler {
 		Map<String, String[]> params = request.getParameterMap();
 		if (path.endsWith("data")) {
 			Document doc = getResult(params);
-
 			response.setContentType("text/json;charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 
@@ -38,7 +38,8 @@ public class DataHandler extends AbstractHandler {
 				doc = new Document();
 				doc.put("res", "no result");
 			}
-			response.getWriter().println(doc.toString());
+			System.out.println(doc.toJson());
+			response.getWriter().println(doc.toJson());
 			response.flushBuffer();
 		} else if (path.endsWith("deduce")) {
 			deal(params);
@@ -51,13 +52,13 @@ public class DataHandler extends AbstractHandler {
 			return null;
 		}
 		String id = params.get("id")[0];
-		MongoDatabase mongoDatabase = FetchData.getMongoClient().getDatabase(Config.getString("mongo.db"));
+		System.out.println("id : " + id);
+		MongoDatabase mongoDatabase = FetchData.getMongoClient().getDatabase("traffic");
 		MongoCollection mongoCollection = mongoDatabase.getCollection("traffic");
 
 		Document filter = new Document();
-		filter.put("id", id);
+		filter.put("id", Integer.valueOf(id));
 		Document document = (Document) mongoCollection.findOneAndDelete(filter);
-
 		return document;
 	}
 
@@ -65,5 +66,4 @@ public class DataHandler extends AbstractHandler {
 	    Client client = new Client(params);
 	    client.workflow();
 	}
-
 }
