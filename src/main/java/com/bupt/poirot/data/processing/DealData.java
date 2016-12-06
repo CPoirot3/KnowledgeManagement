@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import org.apache.jena.atlas.json.JsonObject;
 import org.bson.Document;
 
-import com.bupt.poirot.data.modelLibrary.Domain;
 import com.bupt.poirot.mongodb.SaveToMongo;
 import com.bupt.poirot.z3_z3backup.ProveResult;
 

@@ -53,7 +53,23 @@ public class FetchModelClient {
 		httpGet = new HttpGet("");
 		httpPost = new HttpPost();
 	}
-	
+
+	private static InputStream fetchModel(String domain, String host, String query) {
+		FetchModelClient fetchModelClient = new FetchModelClient();
+		if (host == null) {
+			host = "http://localhost:3030/";
+		}
+		if (query == null) {
+			query = ""; // TODO
+		}
+		InputStream inputStream = fetchModelClient.fetch(host, domain, query);
+		return inputStream;
+	}
+
+	private static InputStream fetchModel(String domain) {
+		return fetchModel(domain, null, null);
+	}
+
 	public boolean modelExist(String urlString, String queryString, String mark) throws UnsupportedEncodingException {
 		 
 		StringBuilder stringBuilder = new StringBuilder();
@@ -85,7 +101,7 @@ public class FetchModelClient {
 	public InputStream fetch(String host, String domain, String sparqlQuery) {
 		InputStream inputStream = null;
 		try {
-			URI uri = new URI(host + "/" + domain + "?" + URLEncoder.encode(sparqlQuery, "utf-8"));
+			URI uri = new URI(host + "/" + domain + "?query=" + URLEncoder.encode(sparqlQuery, "utf-8"));
 			httpGet.setURI(uri);
 			HttpResponse response = httpClient.execute(httpGet);
 			HttpEntity entity = response.getEntity();

@@ -608,7 +608,6 @@ public class Z3Library {
 		Expr expr = ctx.mkConst("x", finiteDomainSort);
 		Solver s = ctx.mkSimpleSolver();
 		s.push();
-		;
 		System.out.println("mark : " + s.check());
 
 

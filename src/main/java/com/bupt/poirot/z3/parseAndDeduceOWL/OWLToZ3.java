@@ -56,11 +56,8 @@ public class OWLToZ3 {
                 formua = string2;
             }
         }
-
-
-        System.out.println(domain);
-        System.out.println(formua);
-
+//        System.out.println(domain);
+//        System.out.println(formua);
 
         BoolExpr preExpr = null;
         String[] strings = domain.split(", ");
@@ -71,8 +68,9 @@ public class OWLToZ3 {
                 FuncDecl funcDecl = stringToFuncMap.get(funcString);
 
                 String string = matcher.group(2);
+
                 String[] variables = string.split(",");
-                Sort[] funcDomainsSort = null;
+                Sort[] funcDomainsSort;
                 Sort funcRangeSort = null;
                 if (funcDecl != null) {
                     funcDomainsSort = funcDecl.getDomain();
@@ -87,24 +85,20 @@ public class OWLToZ3 {
                         funcRangeSort = ctx.getBoolSort();
                     } else {
                         // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
-                        // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
                         if (specificName.endsWith("Speed")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Car");
-//                            funcRangeSort = ctx.mkUninterpretedSort("Speed");
                             funcRangeSort = ctx.getRealSort();
-
                         } else if (specificName.endsWith("Point")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
                             funcRangeSort = ctx.mkUninterpretedSort("Point");
-
                         } else if (specificName.endsWith("tude")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Point");
                             funcRangeSort = ctx.getRealSort();
-
                         }
                     }
                     funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort[0], funcRangeSort);
                 }
+
                 stringToFuncMap.put(funcString, funcDecl);
 
                 Expr[] funcDomainExprs = new Expr[funcDomainsSort.length];
@@ -114,7 +108,7 @@ public class OWLToZ3 {
                     varToExpr.put(variables[i], funcDomainExprs[i]);
                 }
 
-                Expr funcRangeExpr = null;
+                Expr funcRangeExpr;
                 if (variables.length == 1) {
                     funcRangeExpr = ctx.mkTrue();
                 } else {
@@ -131,11 +125,9 @@ public class OWLToZ3 {
             }
         }
 
-
-        System.out.println();
-        System.out.println("preExpr : ");
-        System.out.println(preExpr);
-
+//        System.out.println();
+//        System.out.println("preExpr : ");
+//        System.out.println(preExpr);
 
         BoolExpr formulaExpr = null;
         for (String s : formua.split(" v ")) {
@@ -149,7 +141,6 @@ public class OWLToZ3 {
 
                     String string = matcher.group(2);
                     String[] variables = string.split(",");
-
 
                     BoolExpr appFuncExpr = null;
                     if (isNumeralFunc(funcString)) {
@@ -208,14 +199,7 @@ public class OWLToZ3 {
                     } else if (hasDataName(funcString)) {  // deal with the data like int , float, double
                         System.out.println("hasDataName ");
                         System.out.println(funcString);
-                        Sort[] funcDomainsSort = null;
-                        Sort funcRangeSort = null;
-                        if (funcDecl != null) {
-                            funcDomainsSort = funcDecl.getDomain();
-                            funcRangeSort = funcDecl.getRange();
-                        } else {
 
-                        }
                         stringToFuncMap.put(funcString, funcDecl);
                         String varName = variables[0];
 
@@ -304,23 +288,23 @@ public class OWLToZ3 {
             }
         }
 
-        System.out.println();
-        System.out.println("formulaExpr : ");
-        System.out.println(formulaExpr);
+//        System.out.println();
+//        System.out.println("formulaExpr : ");
+//        System.out.println(formulaExpr);
 
         if (preExpr == null || formulaExpr == null) {
             return null;
         }
         BoolExpr body = ctx.mkImplies(preExpr, formulaExpr);
 
-        System.out.println("body : " + body);
+//        System.out.println(body);
         Expr[] boundVariables = new Expr[varToExpr.size()];
         exprList.addAll(varToExpr.values());
         for (int i = 0; i < exprList.size(); i++) {
             boundVariables[i] = exprList.get(i);
         }
 
-        System.out.println(boundVariables.length);
+//        System.out.println(boundVariables.length);
 
         Quantifier res = ctx.mkForall(boundVariables, body, 1, null, null, ctx.mkSymbol("a"), ctx.mkSymbol("b"));
         return res;
@@ -496,11 +480,10 @@ public class OWLToZ3 {
         Set<String> sortSet = new HashSet<>();
 
         BoolExpr res = null;
-        int count = 1;
         for (DLClause dlClause : set) {
             String dlClauseString = dlClause.toString();
             String[] strings = dlClauseString.split(" :- ");
-            System.out.println("dlClauseString " + (count++) + " : " + dlClauseString);
+//            System.out.println(dlClauseString);
             Quantifier quantifier = mk(context, strings[0], strings[1]);
 
             if (quantifier != null) {
@@ -511,7 +494,6 @@ public class OWLToZ3 {
                 }
             }
         }
-
         return res;
     }
 

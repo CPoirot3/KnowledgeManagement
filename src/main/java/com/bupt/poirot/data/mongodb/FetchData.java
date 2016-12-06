@@ -6,15 +6,12 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-/**
- * Created by hui.chen on 11/27/16.
- */
 public class FetchData {
 
     public static class ClientHelper {
-//        String host = Config.getString("mongo.host");
-//        String port = Config.getString("mongo.port");
-        public static final MongoClient mongoClient = new MongoClient("localhost", 27017);
+        static String host = Config.getString("mongo.host");
+        static int port = Integer.valueOf(Config.getString("mongo.port"));
+        public static final MongoClient mongoClient = new MongoClient(host, port);
     }
 
     public static MongoClient getMongoClient() {
@@ -34,5 +31,14 @@ public class FetchData {
         Document document = (Document) mongoCollection.findOneAndDelete(filter);
 
         System.out.println(document);
+    }
+
+    private static void flushToDatabase(Document document) {
+        String dbName = Config.getString("mongo.db");
+        String collectionName = "mongo.collection";
+
+        MongoDatabase mongoDatabase = FetchData.getMongoClient().getDatabase(dbName);
+        MongoCollection mongoCollection = mongoDatabase.getCollection(collectionName);
+        mongoCollection.insertOne(document);
     }
 }
