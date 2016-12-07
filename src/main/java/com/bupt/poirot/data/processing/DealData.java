@@ -81,8 +81,6 @@ public class DealData {
 		} catch (ParseException e1) {
 			return;
 		}
-		SingleData singleData = new SingleData(carName, t, Domain.getDomain(message), x, y, states, speed, direction);
-		dataSortByTime.addLast(singleData);
 	}
 	
 	public void deduce() {

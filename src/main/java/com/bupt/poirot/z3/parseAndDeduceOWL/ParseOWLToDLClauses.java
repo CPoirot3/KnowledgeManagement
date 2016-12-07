@@ -4,38 +4,31 @@
  */
 package com.bupt.poirot.z3.parseAndDeduceOWL;
 
-import java.io.File;
+import org.semanticweb.HermiT.Configuration;
+import org.semanticweb.HermiT.Reasoner;
+import org.semanticweb.HermiT.model.AtomicRole;
+import org.semanticweb.HermiT.model.Constant;
+import org.semanticweb.HermiT.model.DLClause;
+import org.semanticweb.HermiT.model.DLOntology;
+import org.semanticweb.HermiT.model.Individual;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.semanticweb.HermiT.Configuration;
-import org.semanticweb.HermiT.Reasoner;
-import org.semanticweb.HermiT.model.AtomicConcept;
-import org.semanticweb.HermiT.model.AtomicRole;
-import org.semanticweb.HermiT.model.Constant;
-import org.semanticweb.HermiT.model.DLClause;
-import org.semanticweb.HermiT.model.DLOntology;
-import org.semanticweb.HermiT.model.DatatypeRestriction;
-import org.semanticweb.HermiT.model.DescriptionGraph;
-import org.semanticweb.HermiT.model.Individual;
-import org.semanticweb.HermiT.model.Role;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-
 /**
  * @author Poirot
  *
  */
-public class ParseOWL {
-	public static Set<DLClause> owlToDLClsuses(InputStream inputStream){
+public class ParseOWLToDLClauses {
+
+	public Set<DLClause> owlToDLClsuses(InputStream inputStream){
 		Reasoner reasoner = null;
 		try {
-			OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-//			OWLDataFactory dataFactory = manager.getOWLDataFactory();
+			OWLOntologyManager manager = OntologyManagerSingleton.getSingleton();
 			OWLOntology ontology = manager.loadOntologyFromOntologyDocument(inputStream);
 			reasoner = new Reasoner(new Configuration(), ontology);
 
@@ -67,7 +60,6 @@ public class ParseOWL {
 //			for (Role role : roles) {
 //				System.out.println(role);
 //			}
-//			System.out.println();
 //
 //			System.out.println("getAllIndividuals");
 //			Set<Individual> individuals = dlOntology.getAllIndividuals();
@@ -90,31 +82,29 @@ public class ParseOWL {
 //			}
 //			System.out.println();
 		} catch (Exception e) {
-			System.out.println("test");
 			e.printStackTrace();
 		}
 		if (reasoner != null) {
 			DLOntology dlOntology = reasoner.getDLOntology();
-//
-//			System.out.println();
-//			System.out.println("数据属性 :");
-//			Map<AtomicRole,Map<Individual,Set<Constant>>> m_dataPropertyAssertions = dlOntology.getDataPropertyAssertions();
-//			for (AtomicRole atomicRole : m_dataPropertyAssertions.keySet()) {
-//				System.out.println("数据属性  " + atomicRole + " :");
-//				Map<Individual, Set<Constant>> map = m_dataPropertyAssertions.get(atomicRole);
-//				for (Individual individual : map.keySet()) {
-//					System.out.print(individual + "\t:");
-//					for (Constant constant : map.get(individual)) {
-//						System.out.print(constant + "  ");
-//					}
-//					System.out.println();
-//				}
-//				System.out.println();
-//			}
-//			Set<Individual> individualSet = dlOntology.getAllIndividuals();
-//			for (Individual individual : individualSet) {
-//				System.out.println(individual);
-//			}
+			System.out.println();
+			System.out.println("数据属性 :");
+			Map<AtomicRole,Map<Individual,Set<Constant>>> m_dataPropertyAssertions = dlOntology.getDataPropertyAssertions();
+			for (AtomicRole atomicRole : m_dataPropertyAssertions.keySet()) {
+				System.out.println("数据属性  " + atomicRole + " :");
+				Map<Individual, Set<Constant>> map = m_dataPropertyAssertions.get(atomicRole);
+				for (Individual individual : map.keySet()) {
+					System.out.print(individual + "\t:");
+					for (Constant constant : map.get(individual)) {
+						System.out.print(constant + "  ");
+					}
+					System.out.println();
+				}
+				System.out.println();
+			}
+			Set<Individual> individualSet = dlOntology.getAllIndividuals();
+			for (Individual individual : individualSet) {
+				System.out.println(individual);
+			}
 			return dlOntology.getDLClauses();
 		} else {
 			return new HashSet<>();

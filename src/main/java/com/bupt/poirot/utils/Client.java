@@ -3,38 +3,23 @@ package com.bupt.poirot.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import com.bupt.poirot.data.modelLibrary.FetchModelClient;
-import com.bupt.poirot.data.mongodb.FetchData;
 import com.bupt.poirot.main.jetty.RoadData;
 import com.bupt.poirot.main.jetty.TimeData;
 import com.bupt.poirot.z3.Deduce.Deducer;
-import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
-import com.microsoft.z3.ArithExpr;
-import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
-import com.microsoft.z3.Params;
-import com.microsoft.z3.Solver;
-import com.microsoft.z3.Status;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.apache.jena.atlas.RuntimeIOException;
-import org.bson.Document;
 
 public class Client {
 
 	private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	private static HashMap<String, RoadData> roadNameToGPSData = new HashMap<>();
+	public static HashMap<String, RoadData> roadNameToGPSData = new HashMap<>();
 	public static HashMap<String, String> roadNameToOWLSyntax = new HashMap<>();
 	static {
 		roadNameToOWLSyntax.put("翠竹路",  "<http://www.co-ode.org/ontologies/ont.owl#翠竹路起点>");
@@ -55,13 +40,12 @@ public class Client {
 
 	public Client(Map<String, String[]> paramsMap) {
 		int id = paramsMap.containsKey("id") ? Integer.valueOf(paramsMap.get("id")[0]) : 1;
-		String target = paramsMap.get("target")[0];
+
 		String topic = paramsMap.get("topic")[0];
 		String roadName = paramsMap.get("road")[0];
-		TimeData timeData = parseTimeSection(paramsMap.get("time")[0]);
 		int minCars = Integer.valueOf(paramsMap.get("min")[0]);
 
-		this.requestContext = new RequestContext(id, topic, target, roadName, timeData, minCars);
+		this.requestContext = new RequestContext(id, topic, roadName, minCars);
 		this.context = new Context();
 		this.deducer = new Deducer(context, context.mkSolver(), requestContext);
 	}
@@ -97,7 +81,7 @@ public class Client {
 
 		String latestTime = "";
 		File file = new File(Config.getString("data_file"));
-
+		System.out.println(file.getAbsoluteFile());
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
 			String line;
 			int count = 0;
@@ -148,11 +132,9 @@ public class Client {
 		try {
 			begin = formater.parse(times[0]).getTime();
 			end = formater.parse(times[1]).getTime();
-			System.out.println("begin :" + begin);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		System.out.println(begin + "  " + end);
 		TimeData timeData = new TimeData(begin, end);
 		return timeData;
 	}

@@ -116,7 +116,7 @@ public class SortDeduction {
 		// TODO Auto-generated method stub
 		 
 		SortDeduction sortDeduction = new SortDeduction();
-		HashMap<String, String> cfg = new HashMap<String, String>();
+		HashMap<String, String> cfg = new HashMap<>();
 		cfg.put("proof", "true");
 		Context ctx = new Context(cfg);
 		// p.proveExample1(ctx);

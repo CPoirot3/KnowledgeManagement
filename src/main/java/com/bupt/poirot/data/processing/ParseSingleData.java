@@ -131,7 +131,7 @@ public class ParseSingleData {
 			return;
 		}
 		// get SingleData
-		SingleData singleData = new SingleData(carName, t, Domain.getDomain(message), x, y, states, speed, direction);
+		SingleData singleData = new SingleData(carName, t, "traffic", x, y, states, speed, direction);
 
 		totalDataByTime.addLast(singleData);
 		

@@ -1,14 +1,12 @@
 package com.bupt.poirot.utils;
 
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
-import com.bupt.poirot.z3.parseAndDeduceOWL.ParseOWL;
+import com.bupt.poirot.z3.parseAndDeduceOWL.ParseOWLToOWLOntology;
 import org.semanticweb.HermiT.model.DLClause;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Set;
 
 /**
@@ -50,7 +48,7 @@ public class Test {
         System.out.println("done");
 
         InputStream inputStream = fetchModel("traffic", null, query);
-        Set<DLClause> set = ParseOWL.owlToDLClsuses(inputStream);
+        Set<DLClause> set = ParseOWLToOWLOntology.owlToDLClsuses(inputStream);
         set.stream().forEach(System.out::println);
     }
 

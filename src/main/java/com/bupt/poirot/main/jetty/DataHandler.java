@@ -7,12 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.bupt.poirot.data.mongodb.FetchData;
+import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.utils.Client;
-import com.bupt.poirot.utils.Config;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.apache.jena.atlas.json.JsonObject;
 import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -53,7 +51,7 @@ public class DataHandler extends AbstractHandler {
 		}
 		String id = params.get("id")[0];
 		System.out.println("id : " + id);
-		MongoDatabase mongoDatabase = FetchData.getMongoClient().getDatabase("traffic");
+		MongoDatabase mongoDatabase = MongoTool.getMongoClient().getDatabase("traffic");
 		MongoCollection mongoCollection = mongoDatabase.getCollection("traffic");
 
 		Document filter = new Document();
