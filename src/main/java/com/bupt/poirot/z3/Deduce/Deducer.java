@@ -1,6 +1,7 @@
 package com.bupt.poirot.z3.Deduce;
 
 import com.bupt.poirot.data.model.BufferData;
+import com.bupt.poirot.data.modelLibrary.FetchModelClient;
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.main.jetty.RoadData;
 import com.bupt.poirot.utils.Client;
@@ -13,6 +14,9 @@ import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 import org.bson.Document;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,11 +54,12 @@ public class Deducer {
             e.printStackTrace();
         }
         parseTarget();
-
     }
 
     public void deduce(float x, float y, long t, float speed, String latestTime) {
+
         if (t - current > 600 * 1000) { // 积累十分钟的时间
+            System.out.println(x + "  " + y + "  " + latestTime);
             System.out.println(new Date(current));
             System.out.println("size : " + bufferQueue.size());
             // 推理一次
@@ -68,7 +73,7 @@ public class Deducer {
             for (BufferData bufferData : bufferQueue) {
                 float s = bufferData.speed;
                 carsInRoad++;
-                if (s < 6) {
+                if (s < 10) {
                     valid++;
                 }
             }
@@ -91,16 +96,16 @@ public class Deducer {
 
             switch (index) {
                 case 0:
-                    document.put("value", 50);
+                    document.put("value", 70);
                     break;
                 case 1:
-                    document.put("value", 30);
+                    document.put("value", 50);
                     break;
                 case 2:
-                    document.put("value", 10);
+                    document.put("value", 30);
                     break;
                 default:
-                    document.put("value", 0);
+                    document.put("value", 10);
                     break;
             }
 
@@ -173,20 +178,23 @@ public class Deducer {
     }
 
     private void parseTarget() {
-        int min = 30;
+        int min = Integer.valueOf(requestContext.minCars);
+        int sereve = Integer.valueOf(requestContext.severe);
+        int conjection = Integer.valueOf(requestContext.conjection);
+        int slightConjection = Integer.valueOf(requestContext.slightConjection);
 
         ArithExpr a = context.mkIntConst("valid");
         ArithExpr b = context.mkIntConst("carsInRoad");
         // target 严重拥堵
-        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(70), b)),
+        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(sereve), b)),
                 context.mkGe(b, context.mkInt(min)));
 
         // 拥堵
-        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(55), b)),
+        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(conjection), b)),
                 context.mkGe(b, context.mkInt(min)));
 
         // 轻微拥堵
-        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(40), b)),
+        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(slightConjection), b)),
                 context.mkGe(b, context.mkInt(min)));
 
         targets.add(targetExpr);
@@ -195,10 +203,33 @@ public class Deducer {
     }
 
 
-    public static boolean isInTheRoad(double x, double y) { // 根据gps坐标推理判断属于哪条路
+    public void getRoadData(String roadName) {
+        String owlSyntax = Client.roadNameToOWLSyntax.get(roadName);
+        System.out.println(owlSyntax);
+
+        String query = "SELECT ?subject ?predicate ?object\n" +
+                "WHERE {\n" +
+                "  <http://www.co-ode.org/ontologies/ont.owl#福中路起点> ?predicate ?object  \t\n" +
+                "}\n" +
+                "LIMIT 25";
+
+        FetchModelClient fetchModelClient = new FetchModelClient();
+        InputStream inputStream = fetchModelClient.fetch("http://localhost:3030", "traffic", query);
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 根据gps坐标推理判断属于哪条路
+    public static boolean isInTheRoad(double x, double y) {
         // TODO
         // get roadData
-
         double m = (roadData.x1 - x) * (roadData.y2 - y);
         double n = (roadData.x2 - x) * (roadData.y1 - y);
         double result = m * n;

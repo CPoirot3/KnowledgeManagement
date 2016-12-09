@@ -22,10 +22,10 @@ public class Client {
 	public static HashMap<String, RoadData> roadNameToGPSData = new HashMap<>();
 	public static HashMap<String, String> roadNameToOWLSyntax = new HashMap<>();
 	static {
-		roadNameToOWLSyntax.put("翠竹路",  "<http://www.co-ode.org/ontologies/ont.owl#翠竹路起点>");
-		roadNameToOWLSyntax.put("红岭中路",  "<http://www.co-ode.org/ontologies/ont.owl#红岭中路起点>");
-		roadNameToOWLSyntax.put("福中路",  "<http://www.co-ode.org/ontologies/ont.owl#福中路起点>");
-		roadNameToOWLSyntax.put("金田路",  "<http://www.co-ode.org/ontologies/ont.owl#金田路起点>");
+		roadNameToOWLSyntax.put("翠竹路",  "<http://www.co-ode.org/ontologies/ont.owl#翠竹路>");
+		roadNameToOWLSyntax.put("红岭中路",  "<http://www.co-ode.org/ontologies/ont.owl#红岭中路>");
+		roadNameToOWLSyntax.put("福中路",  "<http://www.co-ode.org/ontologies/ont.owl#福中路>");
+		roadNameToOWLSyntax.put("金田路",  "<http://www.co-ode.org/ontologies/ont.owl#金田路>");
 
 		// temp solution
 		roadNameToGPSData.put("翠竹路", new RoadData(114.134266, 22.582957, 114.134606, 22.580431));
@@ -43,9 +43,13 @@ public class Client {
 
 		String topic = paramsMap.get("topic")[0];
 		String roadName = paramsMap.get("road")[0];
-		int minCars = Integer.valueOf(paramsMap.get("min")[0]);
+		String minCars = paramsMap.get("min")[0];
+		String a = paramsMap.get("severe")[0];
+		String b = paramsMap.get("conjection")[0];
+		String c = paramsMap.get("slightConjection")[0];
+		String speed = paramsMap.get("speed")[0];
 
-		this.requestContext = new RequestContext(id, topic, roadName, minCars);
+		this.requestContext = new RequestContext(id, topic, roadName, minCars, a, b, c, speed);
 		this.context = new Context();
 		this.deducer = new Deducer(context, context.mkSolver(), requestContext);
 	}

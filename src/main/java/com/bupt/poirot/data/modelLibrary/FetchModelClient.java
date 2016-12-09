@@ -54,7 +54,7 @@ public class FetchModelClient {
 		httpPost = new HttpPost();
 	}
 
-	private static InputStream fetchModel(String domain, String host, String query) {
+	private InputStream fetchModel(String domain, String host, String query) {
 		FetchModelClient fetchModelClient = new FetchModelClient();
 		if (host == null) {
 			host = "http://localhost:3030/";
@@ -66,7 +66,7 @@ public class FetchModelClient {
 		return inputStream;
 	}
 
-	private static InputStream fetchModel(String domain) {
+	private InputStream fetchModel(String domain) {
 		return fetchModel(domain, null, null);
 	}
 
@@ -92,7 +92,7 @@ public class FetchModelClient {
 			return false;
 		}
 	}
-	
+
 	// mark stands for domain
 	private boolean parse(String response, String mark) {
 		return response.contains(mark);

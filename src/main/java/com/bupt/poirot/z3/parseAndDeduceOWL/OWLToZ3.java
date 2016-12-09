@@ -224,7 +224,6 @@ public class OWLToZ3 {
                             funcDomainsSort = funcDecl.getDomain();
                             funcRangeSort = funcDecl.getRange();
                         } else {
-
                             // need to make FuncDecl
                             funcDomainsSort = new Sort[1];
                             String specificName = funcString.substring(funcString.indexOf("#") + 1, funcString.length() - 1);
@@ -287,9 +286,9 @@ public class OWLToZ3 {
             }
         }
 
-//        System.out.println();
-//        System.out.println("formulaExpr : ");
-//        System.out.println(formulaExpr);
+        System.out.println();
+        System.out.println("formulaExpr : ");
+        System.out.println(formulaExpr);
 
         if (preExpr == null || formulaExpr == null) {
             return null;
@@ -306,6 +305,7 @@ public class OWLToZ3 {
 //        System.out.println(boundVariables.length);
 
         Quantifier res = ctx.mkForall(boundVariables, body, 1, null, null, ctx.mkSymbol("a"), ctx.mkSymbol("b"));
+        System.out.println(res);
         return res;
     }
 

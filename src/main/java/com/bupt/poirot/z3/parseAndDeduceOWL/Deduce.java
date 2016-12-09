@@ -58,7 +58,6 @@ public class Deduce {
         solver.reset();
         System.out.println();
 
-
         body = ctx.mkGe(xs[0], ctx.mkInt(100));
         Expr y = ctx.mkForall(xs, body, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
         System.out.println(y);
@@ -93,9 +92,6 @@ public class Deduce {
         solver.add((BoolExpr) y);
         System.out.println(solver.check());
         solver.pop();
-
-
-
     }
 
     public static void type(Context ctx) {
@@ -113,9 +109,6 @@ public class Deduce {
         exprs[2] = ctx.mkConst("z", type);
         Expr body = ctx.mkApp(subtype, exprs[0], exprs[0]);
         Quantifier quantifier = ctx.mkForall(exprs, body, 1, null, null, null, null);
-
-
-
 
         Solver solver = ctx.mkSimpleSolver();
         solver.add(quantifier);
@@ -161,5 +154,6 @@ public class Deduce {
             ex.printStackTrace(System.out);
         }
     }
+
 }
 
