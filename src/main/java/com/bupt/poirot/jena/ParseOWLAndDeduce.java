@@ -4,13 +4,9 @@
  * 下午4:00:27
  * KnowledgeManagement
  */
-package com.bupt.poirot.jenaModule;
+package com.bupt.poirot.jena;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

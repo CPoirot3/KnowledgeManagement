@@ -4,7 +4,7 @@
  * 8:38:03 AM
  * JenaTest
  */
-package com.bupt.poirot.jenaModule;
+package com.bupt.poirot.jena;
 
 import java.io.BufferedWriter;
 import java.io.File; 
