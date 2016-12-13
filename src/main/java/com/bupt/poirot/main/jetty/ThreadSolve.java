@@ -34,14 +34,10 @@ public class ThreadSolve implements Runnable {
 				sendData(f);
 			}
 		}
-//		if (!file.getName().startsWith("粤")) {
-//			return;
-//		}
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
 			PrintStream ps = new PrintStream(socket.getOutputStream());
 			
-//			int count = 0;
-            String line = null;
+            String line;
            
 			while ((line = reader.readLine()) != null) {
                 ps.println(line);

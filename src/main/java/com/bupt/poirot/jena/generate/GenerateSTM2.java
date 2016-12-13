@@ -1,4 +1,4 @@
-package com.bupt.poirot.jena;
+package com.bupt.poirot.jena.generate;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

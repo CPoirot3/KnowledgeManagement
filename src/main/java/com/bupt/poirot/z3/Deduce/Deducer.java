@@ -56,7 +56,12 @@ public class Deducer {
         parseTarget();
     }
 
-    public void deduce(float x, float y, long t, float speed, String latestTime) {
+    public void deduce(DeduceData deduceData) {
+        float x = deduceData.x;
+        float y = deduceData.y;
+        long t = deduceData.t;
+        float speed  = deduceData.speed;
+        String latestTime = deduceData.latestTime;
 
         if (t - current > 600 * 1000) { // 积累十分钟的时间
             System.out.println(x + "  " + y + "  " + latestTime);

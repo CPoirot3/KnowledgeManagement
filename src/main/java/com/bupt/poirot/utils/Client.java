@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.bupt.poirot.main.jetty.RoadData;
 import com.bupt.poirot.main.jetty.TimeData;
+import com.bupt.poirot.z3.Deduce.DeduceData;
 import com.bupt.poirot.z3.Deduce.Deducer;
 import com.microsoft.z3.Context;
 import org.apache.jena.atlas.RuntimeIOException;
@@ -117,7 +118,8 @@ public class Client {
 					continue;
 				}
 //				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed + " time : " + time + "  " + t);
-				deducer.deduce(x, y, t, speed, latestTime);
+				DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
+				deducer.deduce(deduceData);
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();

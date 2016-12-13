@@ -4,7 +4,7 @@
  * 下午4:00:27
  * KnowledgeManagement
  */
-package com.bupt.poirot.jena;
+package com.bupt.poirot.jena.generate;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -86,21 +86,7 @@ public class ParseOWLAndDeduce {
 			System.out.println(statement.getSubject() + "  " + statement.getPredicate() + "  " + statement.getObject());
 			// bufferedWriter.write(parseSingleStatement(statement));
 		}
-
-		// System.out.println();
-		// System.out.println(model.getNsURIPrefix("http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
-		// System.out.println(model.getNsPrefixURI("rdf"));
-		// System.out.println();
-		// Map<String, String> nsMap = model.getNsPrefixMap();
-		// for (String key : nsMap.keySet()) {
-		//
-		// System.out.println("prefix is : " + key + " uri is :" +
-		// nsMap.get(key));
-		// }
-		//
 	}
-	
-	
 
 	/**
 	 * @param args

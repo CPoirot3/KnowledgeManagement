@@ -18,8 +18,9 @@ public class ParseOWLToOWLOntology {
 	public OWLOntology parse(InputStream inputStream){
 		OWLOntology owlOntology = null;
 		try {
-			OWLOntologyManager manager = OntologyManagerSingleton.getSingleton();
-			owlOntology = manager.loadOntologyFromOntologyDocument(inputStream);
+			OntManager ontManager = new OntManager();
+
+			owlOntology = ontManager.ontologyManager.loadOntologyFromOntologyDocument(inputStream);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -30,8 +31,9 @@ public class ParseOWLToOWLOntology {
 	public OWLOntology parse(File file){
 		OWLOntology owlOntology = null;
 		try {
-			OWLOntologyManager manager = OntologyManagerSingleton.getSingleton();
-			owlOntology = manager.loadOntologyFromOntologyDocument(file);
+			OntManager ontManager = new OntManager();
+			owlOntology = ontManager.ontologyManager.loadOntologyFromOntologyDocument(file);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
