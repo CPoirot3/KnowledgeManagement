@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DatasetFactory {
-    public Map<String, Dataset> datasetMap;
-    public DatasetFactory() {
-        datasetMap = new HashMap<>();
+
+    DatasetMap datasetMap;
+    public SparqlQuery sparqlQuery;
+
+    public DatasetFactory(DatasetMap datasetMap) {
+        this.datasetMap = datasetMap;
         File dir = new File("./resource");
         if (!dir.exists()) {
             dir.mkdir();
@@ -53,7 +56,7 @@ public class DatasetFactory {
     }
 
     public static void main(String[] args) {
-        DatasetFactory datasetFactory = new DatasetFactory();
+        DatasetFactory datasetFactory = new DatasetFactory(new DatasetMap());
         datasetFactory.createDatasetByName("test");
 
         for (Dataset dataset : datasetFactory.datasetMap.values()) {

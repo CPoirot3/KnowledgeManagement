@@ -35,6 +35,8 @@ dependencies {
 	compile group: 'org.apache.jena', name: 'jena-core', version: '3.1.0'
 	compile group: 'org.apache.jena', name: 'jena-tdb', version: '3.1.0'
 	compile group: 'org.apache.jena', name: 'jena-iri', version: '3.1.0'
+	// https://mvnrepository.com/artifact/org.apache.jena/jena-fuseki
+	compile group: 'org.apache.jena', name: 'jena-fuseki', version: '2.4.1'
 	
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'

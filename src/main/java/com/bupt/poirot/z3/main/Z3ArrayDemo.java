@@ -41,7 +41,7 @@ public class Z3ArrayDemo {
 //		ctx.mkBV2Int(arg0, arg1);
 //		ctx.mkZeroExt(arg0, arg1);
 //		ctx.mkUninterpretedSort(arg0);
-//		ctx.mk
+//		ctx.mkQuantifier
 //		BoolExpr thm = ctx.mkIff(c1, c2); //
 //		System.out.println("disprove: x - 10 <= 0 IFF x <= 10 for (32-bit) machine integers");
 //		disprove(ctx, thm, false);
