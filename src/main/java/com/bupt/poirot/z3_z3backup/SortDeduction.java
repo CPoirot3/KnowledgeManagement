@@ -2,7 +2,7 @@
  * 2015年11月18日
  * Poirot
  */
-package com.bupt.poirot.z3.parseAndDeduceOWL;
+package com.bupt.poirot.z3_z3backup;
 
 import java.util.HashMap;
 

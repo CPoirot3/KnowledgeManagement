@@ -1,4 +1,10 @@
-package com.bupt.poirot.utils;
+package com.bupt.poirot.z3.Deduce;
+
+import com.bupt.poirot.main.jetty.RoadData;
+import com.bupt.poirot.main.jetty.TimeData;
+import com.bupt.poirot.utils.Config;
+import com.microsoft.z3.Context;
+import org.apache.jena.atlas.RuntimeIOException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,13 +15,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.bupt.poirot.main.jetty.RoadData;
-import com.bupt.poirot.main.jetty.TimeData;
-import com.bupt.poirot.z3.Deduce.DeduceData;
-import com.bupt.poirot.z3.Deduce.Deducer;
-import com.microsoft.z3.Context;
-import org.apache.jena.atlas.RuntimeIOException;
 
 public class Client {
 

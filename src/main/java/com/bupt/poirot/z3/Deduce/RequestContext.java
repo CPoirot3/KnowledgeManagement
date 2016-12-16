@@ -1,4 +1,4 @@
-package com.bupt.poirot.utils;
+package com.bupt.poirot.z3.Deduce;
 
 public class RequestContext {
     public int id;

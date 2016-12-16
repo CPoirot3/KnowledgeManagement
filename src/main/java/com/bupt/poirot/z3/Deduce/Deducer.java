@@ -4,8 +4,6 @@ import com.bupt.poirot.data.model.BufferData;
 import com.bupt.poirot.data.modelLibrary.FetchModelClient;
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.main.jetty.RoadData;
-import com.bupt.poirot.utils.Client;
-import com.bupt.poirot.utils.RequestContext;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
