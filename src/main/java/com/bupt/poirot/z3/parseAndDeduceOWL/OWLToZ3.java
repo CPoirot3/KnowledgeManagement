@@ -24,8 +24,6 @@ import org.semanticweb.HermiT.model.DLClause;
 
 public class OWLToZ3 {
 
-
-
     public BoolExpr parseFromStream(Context context, InputStream inputStream) {
         ParseOWLToDLClauses parseOWLToDLClauses = new ParseOWLToDLClauses();
         Set<DLClause> set = parseOWLToDLClauses.owlToDLClsuses(inputStream);

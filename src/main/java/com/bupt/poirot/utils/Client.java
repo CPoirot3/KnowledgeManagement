@@ -50,6 +50,14 @@ public class Client {
 		String c = paramsMap.get("slightConjection")[0];
 		String speed = paramsMap.get("speed")[0];
 
+		System.out.println(topic);
+		System.out.println(roadName);
+		System.out.println(minCars);
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(c);
+		System.out.println(speed);
+
 		this.requestContext = new RequestContext(id, topic, roadName, minCars, a, b, c, speed);
 		this.context = new Context();
 		this.deducer = new Deducer(context, context.mkSolver(), requestContext);

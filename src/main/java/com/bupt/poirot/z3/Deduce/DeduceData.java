@@ -7,7 +7,6 @@ public class DeduceData {
     public long t;
     public String latestTime;
 
-
     public DeduceData(float x, float y, long t, float speed, String latestTime) {
         this.x = x;
         this.y = y;

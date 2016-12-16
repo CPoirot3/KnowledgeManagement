@@ -24,14 +24,11 @@ public class SparqlQueryPerformanceTest {
         FetchModelClient fetchModelClient = new FetchModelClient();
         Date begin = new Date();
         System.out.println("main begin : " + begin);
-        Thread[] threads = new Thread[4];
+        int threadNumber = 4;
+        Thread[] threads = new Thread[threadNumber];
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Thread(new SparqlQueryPerformanceMultiThreadTest(fetchModelClient, query));
+            threads[i] = new Thread(new SparqlQueryPerformanceMultiThreadTest(fetchModelClient, query, begin, threadNumber));
             threads[i].start();
-            threads[i].join();
         }
-        Date end = new Date();
-        System.out.println("main end : " + end);
-        System.out.println((end.getTime() - begin.getTime()) / 40000);
     }
 }

@@ -9,7 +9,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 public class JettyService {
-	public static void main(int port, AbstractHandler handler) throws Exception {
+	public void start(int port, AbstractHandler handler) throws Exception {
 		Server server = new Server(new QueuedThreadPool(50));
 		ServerConnector connector = new ServerConnector(server);
 		connector.setPort(port);

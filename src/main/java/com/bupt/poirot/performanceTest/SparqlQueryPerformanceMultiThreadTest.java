@@ -17,16 +17,17 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
 
-/**
- * Created by hui.chen on 12/14/16.
- */
 public class SparqlQueryPerformanceMultiThreadTest implements Runnable {
+    Date begin;
     FetchModelClient fetchModelClient;
     String query;
+    int threadNumber;
 
-    public SparqlQueryPerformanceMultiThreadTest(FetchModelClient fetchModelClient, String query) {
+    public SparqlQueryPerformanceMultiThreadTest(FetchModelClient fetchModelClient, String query, Date begin, int threadNumber) {
         this.fetchModelClient = fetchModelClient;
         this.query = query;
+        this.begin = begin;
+        this.threadNumber = threadNumber;
     }
 
     @Override
@@ -42,8 +43,7 @@ public class SparqlQueryPerformanceMultiThreadTest implements Runnable {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 10000; i++) {
-
+        for (int i = 0; i < 1000; i++) {
             try {
                 httpGet.setURI(uri);
                 HttpResponse response = httpClient.execute(httpGet);
@@ -52,7 +52,7 @@ public class SparqlQueryPerformanceMultiThreadTest implements Runnable {
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
-//                    System.out.println(line);
+                        break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -61,5 +61,8 @@ public class SparqlQueryPerformanceMultiThreadTest implements Runnable {
                 e.printStackTrace();
             }
         }
+        Date end = new Date();
+        System.out.println("main end : " + end);
+        System.out.println((end.getTime() - begin.getTime()) / (1000 * threadNumber));
     }
 }

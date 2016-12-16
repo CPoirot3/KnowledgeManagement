@@ -8,6 +8,7 @@ public class Main {
 		int port = args.length > 0 ? Integer.parseInt(args[0]) : 15100;
 //		handler.setRealHandler(new DataHandler());
 		System.out.println("Begin listening in 15100:");
-		JettyService.main(port, new DataHandler());
+		JettyService jettyService = new JettyService();
+		jettyService.start(port, new DataHandler());
 	}
 }

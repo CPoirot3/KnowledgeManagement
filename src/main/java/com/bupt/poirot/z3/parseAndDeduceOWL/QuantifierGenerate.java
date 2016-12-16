@@ -18,9 +18,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by hui.chen on 12/14/16.
- */
 public class QuantifierGenerate {
     public Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
 
@@ -148,10 +145,8 @@ public class QuantifierGenerate {
                         Expr tempBody = ctx.mkNot(ctx.mkEq(e, expr)); //
                         appFuncExpr = ctx.mkForall(new Expr[]{e}, tempBody, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
                     } else if (hasAtLeastOrAtMost(funcString)) {
-
                         if (funcString.startsWith("at")) {
                             // startsWith form like :  atMost/atLeast
-
                             int limit = Integer.MIN_VALUE;
                             Matcher matcherOfAtLeastAndAtMost = pattern.matcher(funcString);
                             if (matcherOfAtLeastAndAtMost.find()) {
@@ -160,7 +155,6 @@ public class QuantifierGenerate {
 
                                 limit = Integer.valueOf(strs[0]);
                                 FuncDecl a = stringToFuncMap.get(strs[1]);
-
 
                                 Expr[] exprs = new Expr[limit];
                                 for (int i = 0; i < limit; i++) {
@@ -208,7 +202,6 @@ public class QuantifierGenerate {
                         } else if (funcString.contains("int")) {
                             appFuncExpr = ctx.mkIsInteger((RealExpr) expr);
                         }
-
                     } else if (hasEquals(funcString)) {
                         String[] names = funcString.split(" == ");
                         Expr a = varToExpr.get(names[0]);
