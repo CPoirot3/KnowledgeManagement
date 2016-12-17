@@ -12,3 +12,4 @@ bin
 *.log
 .gradle/
 /build/
+data/stream-data/*

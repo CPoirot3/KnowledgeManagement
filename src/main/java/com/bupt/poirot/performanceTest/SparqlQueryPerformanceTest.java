@@ -1,11 +1,7 @@
 package com.bupt.poirot.performanceTest;
 
-import com.bupt.poirot.data.modelLibrary.FetchModelClient;
+import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
 
-import java.awt.datatransfer.FlavorEvent;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Date;
 
 /**

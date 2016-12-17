@@ -1,6 +1,6 @@
 package com.bupt.poirot.performanceTest;
 
-import com.bupt.poirot.data.modelLibrary.FetchModelClient;
+import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

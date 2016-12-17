@@ -1,6 +1,6 @@
 package com.bupt.poirot.utils;
 
-import com.bupt.poirot.data.modelLibrary.FetchModelClient;
+import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
