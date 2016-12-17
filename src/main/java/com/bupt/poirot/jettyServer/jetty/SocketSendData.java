@@ -1,4 +1,4 @@
-package com.bupt.poirot.main.jetty;
+package com.bupt.poirot.jettyServer.jetty;
 
 import com.bupt.poirot.utils.Config;
 

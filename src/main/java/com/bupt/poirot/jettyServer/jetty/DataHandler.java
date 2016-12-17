@@ -1,4 +1,4 @@
-package com.bupt.poirot.main.jetty;
+package com.bupt.poirot.jettyServer.jetty;
 
 import java.io.IOException;
 import java.util.Map;
@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bupt.poirot.data.mongodb.MongoTool;
+import com.bupt.poirot.z3.deduce.Client;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -40,6 +41,7 @@ public class DataHandler extends AbstractHandler {
 			response.flushBuffer();
 		} else if (path.endsWith("deduce")) {
 			deal(params);
+
 		}
 
 	}
@@ -60,6 +62,8 @@ public class DataHandler extends AbstractHandler {
 	}
 
 	private void deal(Map<String, String[]> params) {
+		RequestInfo requestInfo = new RequestInfo(params);
+
 	    Client client = new Client(params);
 	    client.workflow();
 	}

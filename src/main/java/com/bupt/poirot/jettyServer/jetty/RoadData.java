@@ -1,4 +1,4 @@
-package com.bupt.poirot.main.jetty;
+package com.bupt.poirot.jettyServer.jetty;
 
 /**
  * Created by hui.chen on 11/21/16.

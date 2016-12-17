@@ -2,7 +2,7 @@ package com.bupt.poirot.z3.deduce;
 
 import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
 import com.bupt.poirot.data.mongodb.MongoTool;
-import com.bupt.poirot.main.jetty.RoadData;
+import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;

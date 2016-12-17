@@ -51,14 +51,13 @@ public class FetchModelClient {
 	}
 
 	private InputStream fetchModel(String domain, String host, String query) {
-		FetchModelClient fetchModelClient = new FetchModelClient();
 		if (host == null) {
 			host = "http://localhost:3030/";
 		}
 		if (query == null) {
 			query = ""; // TODO
 		}
-		InputStream inputStream = fetchModelClient.fetch(host, domain, query);
+		InputStream inputStream = fetch(host, domain, query);
 		return inputStream;
 	}
 

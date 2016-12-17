@@ -1,10 +1,11 @@
-package com.bupt.poirot.main.jettyMultiThread;
+package com.bupt.poirot.jettyServer.jettyMultiThread;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bupt.poirot.jettyServer.jetty.RequestInfo;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 

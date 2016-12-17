@@ -1,4 +1,4 @@
-package com.bupt.poirot.main.jetty;
+package com.bupt.poirot.jettyServer.jetty;
 
 public class TimeData {
     public long begin;

@@ -1,7 +1,7 @@
 package com.bupt.poirot.z3.deduce;
 
-import com.bupt.poirot.main.jetty.RoadData;
-import com.bupt.poirot.main.jetty.TimeData;
+import com.bupt.poirot.jettyServer.jetty.RoadData;
+import com.bupt.poirot.jettyServer.jetty.TimeData;
 import com.bupt.poirot.utils.Config;
 import com.microsoft.z3.Context;
 import org.apache.jena.atlas.RuntimeIOException;
