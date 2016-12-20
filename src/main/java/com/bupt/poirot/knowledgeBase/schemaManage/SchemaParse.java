@@ -20,7 +20,6 @@ public class SchemaParse {
             }
             System.out.println(stringBuilder);
 
-
             JSONObject jsonObject = new JSONObject(stringBuilder.toString());
 
             String domain = jsonObject.getString("domain");
@@ -44,4 +43,5 @@ public class SchemaParse {
             System.out.println(key + "  :  " + schema.getFiled(key));
         }
     }
+
 }
