@@ -22,15 +22,33 @@
 
 
 
+    <!-- http://www.co-ode.org/ontologies/ont.owl#contains -->
+
+    <owl:ObjectProperty rdf:about="http://www.co-ode.org/ontologies/ont.owl#contains">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ReflexiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/traffic-ontology#Car"/>
+    </owl:ObjectProperty>
+
+
+
     <!-- http://www.semanticweb.org/traffic-ontology#hasBeginPoint -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasBeginPoint"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasBeginPoint">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/traffic-ontology#Point"/>
+    </owl:ObjectProperty>
 
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasEndPoint -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasEndPoint"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasEndPoint">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/traffic-ontology#Car"/>
+    </owl:ObjectProperty>
 
 
 
@@ -47,19 +65,28 @@
 
     <!-- http://www.co-ode.org/ontologies/ont.owl#hasSpeed -->
 
-    <owl:DatatypeProperty rdf:about="http://www.co-ode.org/ontologies/ont.owl#hasSpeed"/>
+    <owl:DatatypeProperty rdf:about="http://www.co-ode.org/ontologies/ont.owl#hasSpeed">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Car"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
 
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasLatitude -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasLatitude"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasLatitude">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Point"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
 
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasLongitude -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasLongitude"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasLongitude">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Point"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    </owl:DatatypeProperty>
 
 
 
@@ -84,6 +111,7 @@
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
             </owl:Restriction>
         </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
     </owl:Class>
 
 

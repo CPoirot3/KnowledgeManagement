@@ -1,0 +1,12 @@
+{
+  "domain": "traffic",
+  "fields": {
+    "name": "string",
+    "date": "date",
+    "longitude": "float",
+    "latitude": "float",
+    "state": "boolean",
+    "speed": "int",
+    "direction": "byte"
+  }
+}
