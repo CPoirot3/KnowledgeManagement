@@ -4,9 +4,6 @@ import com.bupt.poirot.jettyServer.utils.Config;
 
 import java.util.Map;
 
-/**
- * Created by hui.chen on 2016/12/19.
- */
 public class SchemaManager {
     public Map<String, Schema> schemaMap;
 

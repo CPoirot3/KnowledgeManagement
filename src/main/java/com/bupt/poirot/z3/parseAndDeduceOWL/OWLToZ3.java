@@ -27,7 +27,12 @@ public class OWLToZ3 {
     public BoolExpr parseFromStream(Context context, InputStream inputStream) {
         ParseOWLToDLClauses parseOWLToDLClauses = new ParseOWLToDLClauses();
         Set<DLClause> set = parseOWLToDLClauses.owlToDLClsuses(inputStream);
+
         System.out.println("DLClause number : " + set.size());
+        for (DLClause dlClause : set) {
+            System.out.println(dlClause.toString());
+        }
+
         BoolExpr res = null;
 
         QuantifierGenerate quantifierGenerate = new QuantifierGenerate();
@@ -45,7 +50,9 @@ public class OWLToZ3 {
     }
 
     public static void main(String[] args) {
-        File schemaFile = new File("data/models/model_rdf.owl");
+//        File schemaFile = new File("data/models/model_rdf.owl");
+        File schemaFile = new File("/Users/hui.chen/graduatedesign/git_projects/KnowledgeManagement/data/models/new_model.owl");
+
         try {
             InputStream inputStream = new FileInputStream(schemaFile);
             OWLToZ3 owlToZ3 = new OWLToZ3();

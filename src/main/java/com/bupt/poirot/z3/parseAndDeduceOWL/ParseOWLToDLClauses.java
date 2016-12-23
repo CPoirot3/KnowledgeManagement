@@ -1,5 +1,6 @@
 package com.bupt.poirot.z3.parseAndDeduceOWL;
 
+import org.apache.jena.ontology.Ontology;
 import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.HermiT.model.AtomicRole;
@@ -27,6 +28,18 @@ public class ParseOWLToDLClauses {
 			ParseOWLToOWLOntology parseOWLToOWLOntology = new ParseOWLToOWLOntology();
 
 			reasoner = new Reasoner(new Configuration(), parseOWLToOWLOntology.parse(inputStream));
+			DLOntology ontology = reasoner.getDLOntology();
+			Set<Individual> set = ontology.getAllIndividuals();
+			for (Individual individual : set) {
+				System.out.println(individual);
+			}
+
+			Set<AtomicRole> set1 = ontology.getAllAtomicDataRoles();
+			for (AtomicRole atomicRole : set1) {
+				System.out.println(atomicRole);
+			}
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
