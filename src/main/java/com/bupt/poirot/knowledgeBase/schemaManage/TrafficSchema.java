@@ -8,4 +8,6 @@ public class TrafficSchema {
     public String getDomain() {
         return null;
     }
+
+
 }

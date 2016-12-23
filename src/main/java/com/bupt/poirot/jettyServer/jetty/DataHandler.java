@@ -41,9 +41,7 @@ public class DataHandler extends AbstractHandler {
 			response.flushBuffer();
 		} else if (path.endsWith("deduce")) {
 			deal(params);
-
 		}
-
 	}
 
 	private Document getResult(Map<String, String[]> params) {
@@ -64,7 +62,7 @@ public class DataHandler extends AbstractHandler {
 	private void deal(Map<String, String[]> params) {
 		RequestInfo requestInfo = new RequestInfo(params);
 
-	    Client client = new Client(params);
+	    Client client = new Client(requestInfo);
 	    client.workflow();
 	}
 }

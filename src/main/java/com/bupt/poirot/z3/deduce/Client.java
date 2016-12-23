@@ -1,7 +1,10 @@
 package com.bupt.poirot.z3.deduce;
 
+import com.bupt.poirot.jettyServer.jetty.RequestInfo;
 import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.bupt.poirot.jettyServer.jetty.TimeData;
+import com.bupt.poirot.knowledgeBase.schemaManage.Position;
+import com.bupt.poirot.knowledgeBase.schemaManage.TrafficIncident;
 import com.bupt.poirot.utils.Config;
 import com.microsoft.z3.Context;
 import org.apache.jena.atlas.RuntimeIOException;
@@ -38,24 +41,23 @@ public class Client {
 	public RequestContext requestContext;
 	public Deducer deducer;
 
-	public Client(Map<String, String[]> paramsMap) {
-		int id = paramsMap.containsKey("id") ? Integer.valueOf(paramsMap.get("id")[0]) : 1;
+	public Client(RequestInfo requestInfo) {
+		int id = Integer.valueOf(requestInfo.infos.get("id"));
+		String topic = requestInfo.infos.get("topic");
+		String roadName = requestInfo.infos.get("road");
+		String minCars = requestInfo.infos.get("min");
+		String a = requestInfo.infos.get("severe");
+		String b = requestInfo.infos.get("conjection");
+		String c = requestInfo.infos.get("slightConjection");
+		String speed = requestInfo.infos.get("speed");
 
-		String topic = paramsMap.get("topic")[0];
-		String roadName = paramsMap.get("road")[0];
-		String minCars = paramsMap.get("min")[0];
-		String a = paramsMap.get("severe")[0];
-		String b = paramsMap.get("conjection")[0];
-		String c = paramsMap.get("slightConjection")[0];
-		String speed = paramsMap.get("speed")[0];
-
-		System.out.println(topic);
-		System.out.println(roadName);
-		System.out.println(minCars);
-		System.out.println(a);
-		System.out.println(b);
-		System.out.println(c);
-		System.out.println(speed);
+//		System.out.println(topic);
+//		System.out.println(roadName);
+//		System.out.println(minCars);
+//		System.out.println(a);
+//		System.out.println(b);
+//		System.out.println(c);
+//		System.out.println(speed);
 
 		this.requestContext = new RequestContext(id, topic, roadName, minCars, a, b, c, speed);
 		this.context = new Context();
@@ -70,6 +72,7 @@ public class Client {
 				owlSyntax + " ?predicate ?object  \t\n" +
 				"}\n" +
 				"LIMIT 25";
+
 //		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fetchModel(domain, null, query)))) {
 //			String line;
 //			while ((line = bufferedReader.readLine()) != null) {
@@ -91,7 +94,7 @@ public class Client {
 
 	public void acceptData() { // 数据
 
-		String latestTime = "";
+
 		File file = new File(Config.getString("data_file"));
 		System.out.println(file.getAbsoluteFile());
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
@@ -102,36 +105,62 @@ public class Client {
 				if (count % 1000000 == 0) {
 					System.out.println("dealt lines : " + count);
 				}
-				String[] strs = line.split(",");
-				String time = strs[1]; // 时间
-				float x, y, speed;
-				latestTime = time;
-				long t;
-				try {
-					t = formater.parse(time).getTime();
-					x = Float.parseFloat(strs[2]); // 经度
-					y = Float.parseFloat(strs[3]); // 纬度
-					speed = Float.parseFloat(strs[5]); // 速度
-				} catch (ParseException e1) {
-					continue;
-				}
-				if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
-					continue;
-				}
-				if (!Deducer.isInTimeSection(t)) {
-					continue;
-				}
-				if (!Deducer.isInTheRoad(x, y)) {
-					continue;
-				}
-//				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed + " time : " + time + "  " + t);
-				DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
-				deducer.deduce(deduceData);
+				deal(line);
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
 	}
+
+	private void deal(String line) {
+
+		Position position = getPosition(line);
+
+
+
+		if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
+			return;
+		}
+		if (!Deducer.isInTimeSection(t)) {
+			return;
+		}
+		if (!Deducer.isInTheRoad(x, y)) {
+			return;
+		}
+//				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed + " time : " + time + "  " + t);
+		DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
+		deducer.deduce(deduceData);
+	}
+
+	private Position getPosition(String line) {
+		String[] strs = line.split(",");
+//		String carName = strs[0];
+//		String time = strs[1]; // 时间
+//		String longitude = strs[2];
+//		String latitude = strs[3];
+//		String states = strs[4];
+//		String speed = strs[5];
+//		String direction = strs[6];
+		float x, y, speed;
+		boolean status;
+		long time;
+		byte direction;
+		try {
+			time = formater.parse(strs[1]).getTime();
+			x = Float.parseFloat(strs[2]); // 经度
+			y = Float.parseFloat(strs[3]); // 纬度
+			status = Boolean.parseBoolean(strs[4])
+			speed = Float.parseFloat(strs[5]); // 速度
+			direction = Byte.parseByte(strs[6]);
+		} catch (ParseException e1) {
+			return null;
+		}
+		TrafficIncident trafficIncident = new TrafficIncident("traffic", strs[0], time, x, y, status, speed, direction);
+
+		// todo 根据事件对象映射成位置
+
+	}
+
 
 
 	private TimeData parseTimeSection(String timeSection) {
