@@ -3,6 +3,7 @@ package com.bupt.poirot.knowledgeBase.datasets;
 import org.apache.jena.query.Dataset;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DatasetMap {
@@ -10,10 +11,7 @@ public class DatasetMap {
     Config config;
     public DatasetMap() {
         config = new Config();
-    }
-
-    public void init() {
-
+        datasetMap = new HashMap<>();
     }
 
     public boolean containsKey(String datasetName) {

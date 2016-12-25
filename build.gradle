@@ -31,16 +31,20 @@ dependencies {
 	compile group: 'net.sourceforge.owlapi', name: 'org.semanticweb.hermit', version: '1.3.8.500'
     
     // https://mvnrepository.com/artifact/org.apache.jena/jena-arq
-	compile group: 'org.apache.jena', name: 'jena-arq', version: '3.1.0'
-	compile group: 'org.apache.jena', name: 'jena-core', version: '3.1.0'
-	compile group: 'org.apache.jena', name: 'jena-tdb', version: '3.1.0'
-	compile group: 'org.apache.jena', name: 'jena-iri', version: '3.1.0'
+	compile group: 'org.apache.jena', name: 'jena-arq', version: '3.1.1'
+	compile group: 'org.apache.jena', name: 'jena-core', version: '3.1.1'
+	compile group: 'org.apache.jena', name: 'jena-tdb', version: '3.1.1'
+	compile group: 'org.apache.jena', name: 'jena-iri', version: '3.1.1'
 	// https://mvnrepository.com/artifact/org.apache.jena/jena-fuseki
 	compile group: 'org.apache.jena', name: 'jena-fuseki', version: '2.4.1'
 	
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
-	
+
+	// https://mvnrepository.com/artifact/com.espertech/esper
+	compile group: 'com.espertech', name: 'esper', version: '5.5.0'
+
+
 	// https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
 //	compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.12.v20160915'
 //	compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.3.12.v20160915'
@@ -52,11 +56,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp
 	compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.0.v20161208'
 
+	// https://mvnrepository.com/artifact/org.sosy-lab/javasmt-solver-z3
+	compile group: 'org.sosy-lab', name: 'javasmt-solver-z3', version: 'z3-4.4.1-1558-gf96cfea'
 
 	// https://mvnrepository.com/artifact/org.json/json
 	compile group: 'org.json', name: 'json', version: '20160810'
 	// https://mvnrepository.com/artifact/com.alibaba/fastjson
-	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.22'
+	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.23'
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
 	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
 
@@ -64,11 +70,10 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
 
 	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
-	compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
+	compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.4.1'
 
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.5'
-
 
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'

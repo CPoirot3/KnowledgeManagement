@@ -10,13 +10,10 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by hui.chen on 2016/12/25.
- */
-public class PositionMap {
+public class IncidentToKnowledge {
     public Map<String, Road> stringRoadMap;
     public Map<Position, String> positionStringMap;
-    public PositionMap() {
+    public IncidentToKnowledge() {
         stringRoadMap = new HashMap<>();
         positionStringMap = new HashMap<>();
         load();
@@ -30,6 +27,7 @@ public class PositionMap {
     }
 
     private void parse(File file) {
+        Road road = new Road(file.getName().split("\\.")[0]);
         StringBuilder jsonString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -47,12 +45,16 @@ public class PositionMap {
             double y1 = position.getDouble("y1");
             double x2 = position.getDouble("x2");
             double y2 = position.getDouble("y2");
+
+            Position p = new Position("traffic", x1, y1, x2, y2);
+            positionStringMap.put(p, road.name);
+            System.out.println(positionStringMap.get(p));
             System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
         }
     }
 
     public static void main(String[] args) {
-        PositionMap positionMap = new PositionMap();
+//        IncidentToKnowledge positionMap = new IncidentToKnowledge();
 
     }
 }

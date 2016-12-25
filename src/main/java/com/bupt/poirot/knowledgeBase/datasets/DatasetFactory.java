@@ -10,14 +10,15 @@ public class DatasetFactory {
     DatasetMap datasetMap;
     public SparqlQuery sparqlQuery;
 
-    public DatasetFactory(DatasetMap datasetMap) {
-        this.datasetMap = datasetMap;
+    public DatasetFactory() {
+        this.datasetMap = new DatasetMap();
         File dir = new File("./resource");
         if (!dir.exists()) {
             dir.mkdir();
         }
         for (File file : dir.listFiles()) {
-            createDatasetByName(file.getName());
+            Dataset dataset = TDBFactory.createDataset(file.getAbsolutePath());
+            datasetMap.put(file.getName(), dataset);
         }
     }
 
@@ -54,7 +55,7 @@ public class DatasetFactory {
     }
 
     public static void main(String[] args) {
-        DatasetFactory datasetFactory = new DatasetFactory(new DatasetMap());
+        DatasetFactory datasetFactory = new DatasetFactory();
         datasetFactory.createDatasetByName("test");
 
         for (Dataset dataset : datasetFactory.datasetMap.values()) {

@@ -37,7 +37,7 @@ public class SparqlQueryPerformanceMultiThreadTest implements Runnable {
         InputStream inputStream;
         URI uri = null;
         try {
-            uri = new URI("http://localhost:3030/traffic?query=" + URLEncoder.encode(query, "utf-8"));
+            uri = new URI("http://localhost:3030/traffic?singleFilterQuery=" + URLEncoder.encode(query, "utf-8"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

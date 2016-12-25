@@ -3,10 +3,10 @@ package com.bupt.poirot.z3.deduce;
 import com.bupt.poirot.jettyServer.jetty.RequestInfo;
 import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.bupt.poirot.jettyServer.jetty.TimeData;
-import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
+import com.bupt.poirot.knowledgeBase.schemaManage.IncidentToKnowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Position;
-import com.bupt.poirot.knowledgeBase.schemaManage.TrafficIncident;
+import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
 import com.bupt.poirot.utils.Config;
 import com.microsoft.z3.Context;
 import org.apache.jena.atlas.RuntimeIOException;
@@ -14,7 +14,6 @@ import org.apache.jena.atlas.RuntimeIOException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,6 +41,7 @@ public class Client {
 	public Context context;
 	public RequestContext requestContext;
 	public Deducer deducer;
+	IncidentToKnowledge incidentToKnowledge;
 
 	public Client(RequestInfo requestInfo) {
 		int id = Integer.valueOf(requestInfo.infos.get("id"));
@@ -52,14 +52,6 @@ public class Client {
 		String b = requestInfo.infos.get("conjection");
 		String c = requestInfo.infos.get("slightConjection");
 		String speed = requestInfo.infos.get("speed");
-
-//		System.out.println(topic);
-//		System.out.println(roadName);
-//		System.out.println(minCars);
-//		System.out.println(a);
-//		System.out.println(b);
-//		System.out.println(c);
-//		System.out.println(speed);
 
 		this.requestContext = new RequestContext(id, topic, roadName, minCars, a, b, c, speed);
 		this.context = new Context();
@@ -75,7 +67,7 @@ public class Client {
 				"}\n" +
 				"LIMIT 25";
 
-//		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fetchModel(domain, null, query)))) {
+//		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fetchModel(domain, null, singleFilterQuery)))) {
 //			String line;
 //			while ((line = bufferedReader.readLine()) != null) {
 //				System.out.println(line);
@@ -92,10 +84,10 @@ public class Client {
 
 	public void init() {
         // TODO
+		incidentToKnowledge = new IncidentToKnowledge();
 	}
 
 	public void acceptData() { // 数据
-
 
 		File file = new File(Config.getString("data_file"));
 		System.out.println(file.getAbsoluteFile());
@@ -117,10 +109,7 @@ public class Client {
 	private void deal(String message) {
 		String domain = "traffic";
 
-
 		Knowledge knowledge = getKnowledge(message, domain);
-
-
 
 //		if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
 //			return;
@@ -164,6 +153,7 @@ public class Client {
 			return null;
 		}
 
+		// 根据
 		TrafficIncident trafficIncident = new TrafficIncident(domain, strs[0], time, x, y, status, speed, direction);
 		// todo 根据事件对象映射成位置（知识库中已有的知识） domain
 		Knowledge res = getKnowledge(trafficIncident);
@@ -172,11 +162,17 @@ public class Client {
 	}
 
 	private Knowledge getKnowledge(TrafficIncident trafficIncident) {
-		FetchModelClient fetchModelClient = new FetchModelClient();
-		InputStream inputStream = fetchModelClient.fetch(trafficIncident.domain);
-		
-
-		return null;
+//		FetchModelClient fetchModelClient = new FetchModelClient();
+//		InputStream inputStream = fetchModelClient.fetch(trafficIncident.domain);
+		Position position = null;
+		String roadName = null;
+		for (Position p : incidentToKnowledge.positionStringMap.keySet()) {
+			if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y1 && trafficIncident.y <= p.y2) {
+				position = p;
+				roadName = incidentToKnowledge.positionStringMap.get(p);
+			}
+		}
+		return position;
 	}
 
 

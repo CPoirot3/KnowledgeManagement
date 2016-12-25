@@ -1,4 +1,4 @@
-package com.bupt.poirot.knowledgeBase.schemaManage;
+package com.bupt.poirot.knowledgeBase.incidents;
 
 /**
  * Created by hui.chen on 2016/12/23.

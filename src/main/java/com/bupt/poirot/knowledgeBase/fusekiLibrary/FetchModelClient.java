@@ -94,9 +94,9 @@ public class FetchModelClient {
 			URI uri = null;
 			if (sparqlQuery == null || sparqlQuery.length() == 0) {
 				sparqlQuery = constructSparqlQueryFromSubject("<http://www.co-ode.org/ontologies/ont.owl#福中路>");
-				uri = new URI(host + "/" + domain + "?query=" + URLEncoder.encode(sparqlQuery, "utf-8"));
+				uri = new URI(host + "/" + domain + "?singleFilterQuery=" + URLEncoder.encode(sparqlQuery, "utf-8"));
 			} else {
-				uri = new URI(host + "/" + domain + "?query=" + URLEncoder.encode(sparqlQuery, "utf-8"));
+				uri = new URI(host + "/" + domain + "?singleFilterQuery=" + URLEncoder.encode(sparqlQuery, "utf-8"));
 			}
 			System.out.println("uri : " + uri.toString());
 			httpGet.setURI(uri);
@@ -163,9 +163,9 @@ public class FetchModelClient {
 
 //		String host = "http://localhost:3030";
 //		String domain = "trafficWithInstance";
-//		//		String query = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
-//		String query = "";
-//		InputStream inputStream = fetchModel.fetch(host, domain, query);
+//		//		String singleFilterQuery = "SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object } LIMIT 25";
+//		String singleFilterQuery = "";
+//		InputStream inputStream = fetchModel.fetch(host, domain, singleFilterQuery);
 //
 //		Context context = new Context();
 //		Solver solver = context.mkSolver();
