@@ -174,6 +174,7 @@ public class Client {
 	private Knowledge getKnowledge(TrafficIncident trafficIncident) {
 		FetchModelClient fetchModelClient = new FetchModelClient();
 		InputStream inputStream = fetchModelClient.fetch(trafficIncident.domain);
+		
 
 		return null;
 	}
