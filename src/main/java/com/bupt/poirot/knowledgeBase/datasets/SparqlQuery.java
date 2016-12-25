@@ -1,5 +1,6 @@
 package com.bupt.poirot.knowledgeBase.datasets;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -43,5 +44,6 @@ public class SparqlQuery {
         while (stringTokenizer.hasMoreTokens()) {
             System.out.println(stringTokenizer.nextToken());
         }
+
     }
 }

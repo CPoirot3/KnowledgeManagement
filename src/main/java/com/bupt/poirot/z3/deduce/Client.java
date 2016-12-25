@@ -3,6 +3,8 @@ package com.bupt.poirot.z3.deduce;
 import com.bupt.poirot.jettyServer.jetty.RequestInfo;
 import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.bupt.poirot.jettyServer.jetty.TimeData;
+import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
+import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Position;
 import com.bupt.poirot.knowledgeBase.schemaManage.TrafficIncident;
 import com.bupt.poirot.utils.Config;
@@ -12,12 +14,12 @@ import org.apache.jena.atlas.RuntimeIOException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Client {
 
@@ -112,27 +114,32 @@ public class Client {
 		}
 	}
 
-	private void deal(String line) {
-
-		Position position = getPosition(line);
-
+	private void deal(String message) {
+		String domain = "traffic";
 
 
-		if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
-			return;
-		}
-		if (!Deducer.isInTimeSection(t)) {
-			return;
-		}
-		if (!Deducer.isInTheRoad(x, y)) {
-			return;
-		}
+		Knowledge knowledge = getKnowledge(message, domain);
+
+
+
+//		if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
+//			return;
+//		}
+//		if (!Deducer.isInTimeSection(t)) {
+//			return;
+//		}
+//		if (!Deducer.isInTheRoad(x, y)) {
+//			return;
+//		}
 //				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed + " time : " + time + "  " + t);
-		DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
-		deducer.deduce(deduceData);
+
+		// todo
+//		DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
+//		deducer.deduce(deduceData);
+		deducer.deduce(null);
 	}
 
-	private Position getPosition(String line) {
+	private Knowledge getKnowledge(String line, String domain) {
 		String[] strs = line.split(",");
 //		String carName = strs[0];
 //		String time = strs[1]; // 时间
@@ -141,6 +148,7 @@ public class Client {
 //		String states = strs[4];
 //		String speed = strs[5];
 //		String direction = strs[6];
+
 		float x, y, speed;
 		boolean status;
 		long time;
@@ -149,18 +157,26 @@ public class Client {
 			time = formater.parse(strs[1]).getTime();
 			x = Float.parseFloat(strs[2]); // 经度
 			y = Float.parseFloat(strs[3]); // 纬度
-			status = Boolean.parseBoolean(strs[4])
+			status = Boolean.parseBoolean(strs[4]);
 			speed = Float.parseFloat(strs[5]); // 速度
 			direction = Byte.parseByte(strs[6]);
 		} catch (ParseException e1) {
 			return null;
 		}
-		TrafficIncident trafficIncident = new TrafficIncident("traffic", strs[0], time, x, y, status, speed, direction);
 
-		// todo 根据事件对象映射成位置
+		TrafficIncident trafficIncident = new TrafficIncident(domain, strs[0], time, x, y, status, speed, direction);
+		// todo 根据事件对象映射成位置（知识库中已有的知识） domain
+		Knowledge res = getKnowledge(trafficIncident);
 
+		return res;
 	}
 
+	private Knowledge getKnowledge(TrafficIncident trafficIncident) {
+		FetchModelClient fetchModelClient = new FetchModelClient();
+		InputStream inputStream = fetchModelClient.fetch(trafficIncident.domain);
+
+		return null;
+	}
 
 
 	private TimeData parseTimeSection(String timeSection) {
