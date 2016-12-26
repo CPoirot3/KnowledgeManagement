@@ -64,17 +64,29 @@ public class SparqlQueryPerformanceTest {
 //        }
 
 //        String qs1 = "SELECT * {<http://www.semanticweb.org/traffic-ontology#Road> ?p ?o}" ;
-        String qs1 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT * { info:福中路p1 info:hasX2 ?o }" ;
+//        String qs1 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT * { info:福中路p1 ?p ?o }" ;
+//        String qs1 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT ?s ?p ?o where {" +
+//                " ?s ?p ?o . " +
+//                " ?s info:hasX1 ?o}" ;
+
+        String qs1 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT ?s ?p ?o where {" +
+                " ?s info:hasX1 ?o . FILTER (?o > 114.0834)}" ;
+
+        String qs2 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT ?o ?x where {" +
+                " {?s info:hasPosition ?o } UNION {?o info:hasX1 ?x}} ORDER BY ASC(?x)" ;
+
+        String qs3 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT ?o ?x1 ?y1 ?x2 ?y2 where {" +
+                " {?o info:hasX1 ?x1 . ?o info:hasY1 ?y1 . ?o info:hasX2 ?x2 . ?o info:hasY2 ?y2}  {?s info:hasPosition ?o }}" ;
+
         dataset.begin(ReadWrite.READ);
-        try(QueryExecution qExec = QueryExecutionFactory.create(qs1, dataset)) {
+        try(QueryExecution qExec = QueryExecutionFactory.create(qs3, dataset)) {
+
             ResultSet rs = qExec.execSelect() ;
             System.out.println(rs.getResourceModel().size());
-            ResultSetFormatter.out(rs) ;
+            ResultSetFormatter.out(rs);
         } finally {
             dataset.end();
         }
-
-//        SparqlQuery sparqlQuery =
 
 //        FetchModelClient fetchModelClient = new FetchModelClient();
 //        Date begin = new Date();

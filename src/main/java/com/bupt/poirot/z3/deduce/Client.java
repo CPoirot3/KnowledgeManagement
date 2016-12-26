@@ -3,6 +3,8 @@ package com.bupt.poirot.z3.deduce;
 import com.bupt.poirot.jettyServer.jetty.RequestInfo;
 import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.bupt.poirot.jettyServer.jetty.TimeData;
+import com.bupt.poirot.knowledgeBase.incidents.Incident;
+import com.bupt.poirot.knowledgeBase.incidents.IncidentFactory;
 import com.bupt.poirot.knowledgeBase.schemaManage.IncidentToKnowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Position;
@@ -22,14 +24,15 @@ import java.util.HashMap;
 
 public class Client {
 
+	public static String IRI = "http://www.semanticweb.org/traffic-ontology#";
 	private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	public static HashMap<String, RoadData> roadNameToGPSData = new HashMap<>();
 	public static HashMap<String, String> roadNameToOWLSyntax = new HashMap<>();
 	static {
-		roadNameToOWLSyntax.put("翠竹路",  "<http://www.co-ode.org/ontologies/ont.owl#翠竹路>");
-		roadNameToOWLSyntax.put("红岭中路",  "<http://www.co-ode.org/ontologies/ont.owl#红岭中路>");
-		roadNameToOWLSyntax.put("福中路",  "<http://www.co-ode.org/ontologies/ont.owl#福中路>");
-		roadNameToOWLSyntax.put("金田路",  "<http://www.co-ode.org/ontologies/ont.owl#金田路>");
+		roadNameToOWLSyntax.put("翠竹路",  "<" + IRI + "翠竹路" + ">");
+		roadNameToOWLSyntax.put("红岭中路",  "<" + IRI + "红岭中路" + ">");
+		roadNameToOWLSyntax.put("福中路",  "<" + IRI + "福中路" + ">");
+		roadNameToOWLSyntax.put("金田路",  "<" + IRI + "金田路" + ">");
 
 		// temp solution
 		roadNameToGPSData.put("翠竹路", new RoadData(114.134266, 22.582957, 114.134606, 22.580431));
@@ -99,79 +102,53 @@ public class Client {
 				if (count % 1000000 == 0) {
 					System.out.println("dealt lines : " + count);
 				}
-				deal(line);
+				deal(line, "traffic");
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
 	}
 
-	private void deal(String message) {
-		String domain = "traffic";
+	private void deal(String message, String domain) {
 
 		Knowledge knowledge = getKnowledge(message, domain);
 
-//		if (y <= 10 || y >= 40 || x <= 100 || x >= 140) {
-//			return;
-//		}
-//		if (!Deducer.isInTimeSection(t)) {
-//			return;
-//		}
-//		if (!Deducer.isInTheRoad(x, y)) {
-//			return;
-//		}
-//				System.out.println("got one x : " + x + "  y : " + y + " speed : " + speed + " time : " + time + "  " + t);
-
-		// todo
-//		DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
-//		deducer.deduce(deduceData);
-		deducer.deduce(null);
+		if (knowledge instanceof Position) {
+			// todo
+			DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
+			deducer.deduce(deduceData);
+			deducer.deduce(null);
+		}
 	}
 
 	private Knowledge getKnowledge(String line, String domain) {
-		String[] strs = line.split(",");
-//		String carName = strs[0];
-//		String time = strs[1]; // 时间
-//		String longitude = strs[2];
-//		String latitude = strs[3];
-//		String states = strs[4];
-//		String speed = strs[5];
-//		String direction = strs[6];
+		Knowledge res = null;
 
-		float x, y, speed;
-		boolean status;
-		long time;
-		byte direction;
-		try {
-			time = formater.parse(strs[1]).getTime();
-			x = Float.parseFloat(strs[2]); // 经度
-			y = Float.parseFloat(strs[3]); // 纬度
-			status = Boolean.parseBoolean(strs[4]);
-			speed = Float.parseFloat(strs[5]); // 速度
-			direction = Byte.parseByte(strs[6]);
-		} catch (ParseException e1) {
-			return null;
+		IncidentFactory incidentFactory = new IncidentFactory();
+		Incident incident = incidentFactory.transIncident(domain, line);
+		if (incident != null) {
+			res = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}
-
-		// 根据
-		TrafficIncident trafficIncident = new TrafficIncident(domain, strs[0], time, x, y, status, speed, direction);
-		// todo 根据事件对象映射成位置（知识库中已有的知识） domain
-		Knowledge res = getKnowledge(trafficIncident);
-
 		return res;
 	}
 
-	private Knowledge getKnowledge(TrafficIncident trafficIncident) {
+	private Knowledge getKnowledge(Incident incident) {
 //		FetchModelClient fetchModelClient = new FetchModelClient();
 //		InputStream inputStream = fetchModelClient.fetch(trafficIncident.domain);
+
 		Position position = null;
 		String roadName = null;
-		for (Position p : incidentToKnowledge.positionStringMap.keySet()) {
-			if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y1 && trafficIncident.y <= p.y2) {
-				position = p;
-				roadName = incidentToKnowledge.positionStringMap.get(p);
+		if (incident instanceof TrafficIncident) {
+			TrafficIncident trafficIncident = (TrafficIncident) incident;
+			for (Position p : incidentToKnowledge.positionStringMap.keySet()) {
+				if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y1 && trafficIncident.y <= p.y2) {
+					position = p;
+					roadName = incidentToKnowledge.positionStringMap.get(p);
+					break;
+				}
 			}
 		}
+
 		return position;
 	}
 
@@ -194,4 +171,8 @@ public class Client {
 		return timeData;
 	}
 
+
+	public static void main(String[] args) {
+
+	}
 }

@@ -40,21 +40,21 @@ public class IncidentToKnowledge {
         JSONObject jsonObject = new JSONObject(jsonString.toString());
         JSONArray positions = jsonObject.getJSONArray("positions");
         for (int i = 0; i < positions.length(); i++) {
-            JSONObject position = positions.getJSONObject(i);
+            JSONObject position = positions.getJSONObject(i).getJSONObject("p" + (i + 1));
             double x1 = position.getDouble("x1");
             double y1 = position.getDouble("y1");
             double x2 = position.getDouble("x2");
             double y2 = position.getDouble("y2");
 
-            Position p = new Position("traffic", x1, y1, x2, y2);
+            Position p = new Position(road.name + "p" + (i + 1), "traffic", x1, y1, x2, y2);
             positionStringMap.put(p, road.name);
             System.out.println(positionStringMap.get(p));
-            System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
+            System.out.println(p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
         }
     }
 
     public static void main(String[] args) {
-//        IncidentToKnowledge positionMap = new IncidentToKnowledge();
+        IncidentToKnowledge positionMap = new IncidentToKnowledge();
 
     }
 }
