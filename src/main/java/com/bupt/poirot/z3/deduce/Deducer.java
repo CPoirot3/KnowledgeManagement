@@ -24,8 +24,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Deducer {
     private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -33,6 +35,8 @@ public class Deducer {
 
     public Context context;
     public Solver solver;
+
+    public Map<String, Solver> solverMap;
     public RequestContext requestContext;
     long current;
     public static RoadData roadData;
@@ -48,6 +52,7 @@ public class Deducer {
     }
 
     public void init() {
+        solverMap = new HashMap<>();
         targets = new ArrayList<>();
         bufferQueue = new LinkedList<>();
         roadData = Client.roadNameToGPSData.get(requestContext.roadName);
@@ -65,7 +70,9 @@ public class Deducer {
             TrafficIncident trafficIncident = (TrafficIncident) incident;
             String uriString = "<" + IRI + position.name + ">";
 
-            // todo 根据uriString 查询SPARQL 得到路名
+            // todo 根据uriString 查询SPARQL得到路名
+            System.out.println(uriString);
+
 
             float x = trafficIncident.x;
             float y = trafficIncident.y;
@@ -132,8 +139,6 @@ public class Deducer {
                 bufferQueue.addLast(new BufferData(time, speed));
             }
         }
-
-
     }
 
     // TODO

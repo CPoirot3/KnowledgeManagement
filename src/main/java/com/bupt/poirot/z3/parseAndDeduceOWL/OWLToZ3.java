@@ -29,13 +29,10 @@ public class OWLToZ3 {
         Set<DLClause> set = parseOWLToDLClauses.owlToDLClsuses(inputStream);
 
         System.out.println("DLClause number : " + set.size());
-        for (DLClause dlClause : set) {
-            System.out.println(dlClause.toString());
-        }
-
         BoolExpr res = null;
 
         QuantifierGenerate quantifierGenerate = new QuantifierGenerate();
+
         for (DLClause dlClause : set) {
             Quantifier quantifier = quantifierGenerate.mkQuantifier(context, dlClause);
             if (quantifier != null) {
@@ -46,17 +43,22 @@ public class OWLToZ3 {
                 }
             }
         }
+
+        for (String str : quantifierGenerate.stringToFuncMap.keySet()) {
+            System.out.println(str + " " + quantifierGenerate.stringToFuncMap.get(str));
+        }
+
         return res;
     }
 
     public static void main(String[] args) {
 //        File schemaFile = new File("data/models/model_rdf.owl");
-        File schemaFile = new File("/Users/hui.chen/graduatedesign/git_projects/KnowledgeManagement/data/models/new_model.owl");
+        File schemaFile = new File("./data/models/new_model.owl");
 
         try {
             InputStream inputStream = new FileInputStream(schemaFile);
             OWLToZ3 owlToZ3 = new OWLToZ3();
-            BoolExpr boolExpr = owlToZ3.parseFromStream(new Context(), inputStream);
+            owlToZ3.parseFromStream(new Context(), inputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -36,7 +36,6 @@ public class SparqlQueryPerformanceTest {
 
     public static void main(String[] args) throws InterruptedException {
         DatasetFactory datasetFactory = new DatasetFactory();
-        datasetFactory.createDatasetByName("test");
         Dataset dataset = datasetFactory.getDatasetByName("test");
 
         if (dataset == null) {
@@ -78,8 +77,11 @@ public class SparqlQueryPerformanceTest {
         String qs3 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT ?o ?x1 ?y1 ?x2 ?y2 where {" +
                 " {?o info:hasX1 ?x1 . ?o info:hasY1 ?y1 . ?o info:hasX2 ?x2 . ?o info:hasY2 ?y2}  {?s info:hasPosition ?o }}" ;
 
+        String qs4 = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> SELECT ?s where {" +
+                " ?s info:hasPosition info:福中路p1}" ;
+
         dataset.begin(ReadWrite.READ);
-        try(QueryExecution qExec = QueryExecutionFactory.create(qs3, dataset)) {
+        try(QueryExecution qExec = QueryExecutionFactory.create(qs4, dataset)) {
 
             ResultSet rs = qExec.execSelect() ;
             System.out.println(rs.getResourceModel().size());

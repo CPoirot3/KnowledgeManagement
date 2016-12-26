@@ -18,15 +18,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class QuantifierGenerate {
+public class QuantifierGenerate_new2 {
     public Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
 
     public Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
 
 
     public String[] findDomainFormulaString(String dlClauseString) {
-        System.out.println(dlClauseString);
-
         String[] strs = dlClauseString.split(" :- ");
 
         String domain, formula;
@@ -49,8 +47,6 @@ public class QuantifierGenerate {
     }
 
     public Quantifier mkQuantifier(Context ctx, DLClause dlClause) {
-
-//        System.out.println(dlClause.toString());
 
         String[] stringsOfDomainAndFormula = findDomainFormulaString(dlClause.toString());
         String domain = stringsOfDomainAndFormula[0];
@@ -86,31 +82,19 @@ public class QuantifierGenerate {
                         funcRangeSort = ctx.getBoolSort();
                     } else {
                         // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
-                        if (specificName.endsWith("X1")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                        if (specificName.endsWith("Speed")) {
+                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Car");
                             funcRangeSort = ctx.getRealSort();
-                        } else if (specificName.endsWith("X2")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
-                        } else if (specificName.endsWith("Y1")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
-                        } else if (specificName.endsWith("Y2")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
-                        } else if (specificName.endsWith("osition")) {
+                        } else if (specificName.endsWith("Point")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
-                            funcRangeSort = ctx.mkUninterpretedSort("Position");
-                        } else if (Character.isDigit(specificName.indexOf(specificName.length() - 1))) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Positon");
+                            funcRangeSort = ctx.mkUninterpretedSort("Point");
+                        } else if (specificName.endsWith("tude")) {
+                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Point");
                             funcRangeSort = ctx.getRealSort();
                         }
                     }
-                    System.out.println("funcstring : " + funcString);
-
                     funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort[0], funcRangeSort);
                 }
-
 
                 stringToFuncMap.put(funcString, funcDecl);
 
@@ -240,24 +224,21 @@ public class QuantifierGenerate {
                                 funcRangeSort = ctx.getBoolSort();
                             } else {
                                 // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
-                                if (specificName.endsWith("X1")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                                if (specificName.endsWith("Speed")) {
+                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Car");
+//                                    funcRangeSort = ctx.mkUninterpretedSort("Speed");
                                     funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("X2")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+
+                                } else if (specificName.endsWith("Point")) {
+                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
+                                    funcRangeSort = ctx.mkUninterpretedSort("Point");
+
+                                } else if (specificName.endsWith("tude")) {
+                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Point");
                                     funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("Y1")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                                    funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("Y2")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                                    funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("osition")) {
+                                } else if (specificName.endsWith("Position")) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
                                     funcRangeSort = ctx.mkUninterpretedSort("Position");
-                                } else if (Character.isDigit(specificName.indexOf(specificName.length() - 1))) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Positon");
-                                    funcRangeSort = ctx.getRealSort();
                                 }
                             }
                             funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort[0], funcRangeSort);

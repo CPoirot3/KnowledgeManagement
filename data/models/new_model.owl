@@ -8,10 +8,10 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="http://www.semanticweb.org/traffic-ontology"/>
+    
 
 
-
-    <!--
+    <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Object Properties
@@ -19,7 +19,7 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasPosition -->
@@ -28,10 +28,10 @@
         <rdfs:domain rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
     </owl:ObjectProperty>
+    
 
 
-
-    <!--
+    <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Data properties
@@ -39,34 +39,34 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasX1 -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasX1"/>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasX2 -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasX2"/>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasY1 -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasY1"/>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#hasY2 -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/traffic-ontology#hasY2"/>
+    
 
 
-
-    <!--
+    <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Classes
@@ -74,27 +74,12 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#Position -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Position">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
-    </owl:Class>
-
-
-
-    <!-- http://www.semanticweb.org/traffic-ontology#Road -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Road">
-        <owl:equivalentClass>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/traffic-ontology#hasPosition"/>
-                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
-            </owl:Restriction>
-        </owl:equivalentClass>
         <owl:equivalentClass>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/traffic-ontology#hasX1"/>
@@ -124,10 +109,24 @@
             </owl:Restriction>
         </owl:equivalentClass>
     </owl:Class>
+    
 
 
+    <!-- http://www.semanticweb.org/traffic-ontology#Road -->
 
-    <!--
+    <owl:Class rdf:about="http://www.semanticweb.org/traffic-ontology#Road">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/traffic-ontology#hasPosition"/>
+                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Individuals
@@ -135,72 +134,69 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#福中路 -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#福中路">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
-        <ont:hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p1"/>
-        <ont:hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p2"/>
-        <ont:hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p3"/>
-        <ont:hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p4"/>
-        <ont:hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.056446</ont:hasX1>
-        <ont:hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.059447</ont:hasX2>
-        <ont:hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.548233</ont:hasY1>
-        <ont:hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.548283</ont:hasY2>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p1"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p2"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p3"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#福中路p4"/>
     </owl:NamedIndividual>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#福中路p1 -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#福中路p1">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
-        <ont:hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083391</ont:hasX1>
-        <ont:hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.08371</ont:hasX2>
-        <ont:hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.545458</ont:hasY1>
-        <ont:hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.544874</ont:hasY2>
+        <hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083391</hasX1>
+        <hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.08371</hasX2>
+        <hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.545458</hasY1>
+        <hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.544874</hasY2>
     </owl:NamedIndividual>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#福中路p2 -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#福中路p2">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
-        <ont:hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083396</ont:hasX1>
-        <ont:hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083737</ont:hasX2>
-        <ont:hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.544632</ont:hasY1>
-        <ont:hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.544073</ont:hasY2>
+        <hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083396</hasX1>
+        <hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083737</hasX2>
+        <hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.544632</hasY1>
+        <hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.544073</hasY2>
     </owl:NamedIndividual>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#福中路p3 -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#福中路p3">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
-        <ont:hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083494</ont:hasX1>
-        <ont:hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083885</ont:hasX2>
-        <ont:hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.53975</ont:hasY1>
-        <ont:hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.538962</ont:hasY2>
+        <hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083494</hasX1>
+        <hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083885</hasX2>
+        <hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.53975</hasY1>
+        <hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.538962</hasY2>
     </owl:NamedIndividual>
-
+    
 
 
     <!-- http://www.semanticweb.org/traffic-ontology#福中路p4 -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#福中路p4">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Position"/>
-        <ont:hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083418</ont:hasX1>
-        <ont:hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.084065</ont:hasX2>
-        <ont:hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.538995</ont:hasY1>
-        <ont:hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.538186</ont:hasY2>
+        <hasX1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.083418</hasX1>
+        <hasX2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">114.084065</hasX2>
+        <hasY1 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.538995</hasY1>
+        <hasY2 rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22.538186</hasY2>
     </owl:NamedIndividual>
 </rdf:RDF>
 
 
 
 <!-- Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi -->
+
