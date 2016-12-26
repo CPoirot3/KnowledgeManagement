@@ -3,6 +3,10 @@ package com.bupt.poirot.z3.deduce;
 import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.jettyServer.jetty.RoadData;
+import com.bupt.poirot.knowledgeBase.incidents.Incident;
+import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
+import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
+import com.bupt.poirot.knowledgeBase.schemaManage.Position;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
@@ -10,6 +14,7 @@ import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 import org.bson.Document;
+import org.omg.PortableServer.POA;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +29,7 @@ import java.util.List;
 
 public class Deducer {
     private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    public static String IRI = "http://www.semanticweb.org/traffic-ontology#";
 
     public Context context;
     public Solver solver;
@@ -53,73 +59,81 @@ public class Deducer {
         parseTarget();
     }
 
-    public void deduce(DeduceData deduceData) {
-        float x = deduceData.x;
-        float y = deduceData.y;
-        long t = deduceData.t;
-        float speed  = deduceData.speed;
-        String latestTime = deduceData.latestTime;
+    public void deduce(Knowledge knowledge, Incident incident) {
+        if (knowledge != null && knowledge instanceof Position && incident instanceof TrafficIncident) {
+            Position position = (Position) knowledge;
+            TrafficIncident trafficIncident = (TrafficIncident) incident;
+            String uriString = "<" + IRI + position.name + ">";
 
-        if (t - current > 600 * 1000) { // 积累十分钟的时间
-            System.out.println(x + "  " + y + "  " + latestTime);
-            System.out.println(new Date(current));
-            System.out.println("size : " + bufferQueue.size());
-            // 推理一次
-            Document document = new Document();
-            document.append("id", Integer.valueOf(requestContext.id));
-            solver.push();
-            ArithExpr a = context.mkIntConst("valid");
-            ArithExpr b = context.mkIntConst("carsInRoad");
-            int valid = 0;
-            int carsInRoad = 0;
-            for (BufferData bufferData : bufferQueue) {
-                float s = bufferData.speed;
-                carsInRoad++;
-                if (s < 10) {
-                    valid++;
-                }
-            }
-            solver.add(context.mkEq(a, context.mkInt(valid)));
-            solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
+            // todo 根据uriString 查询SPARQL 得到路名
 
-            System.out.println(valid + " " + carsInRoad + " " + ((float)valid)/carsInRoad);
-            int index = -1;
-            for (int i = 0; i < targets.size(); i++) {
+            float x = trafficIncident.x;
+            float y = trafficIncident.y;
+            long time = trafficIncident.time;
+            float speed  = trafficIncident.speed;
+
+            if (time - current > 600 * 1000) { // 积累十分钟的时间
+                System.out.println(new Date(current));
+                System.out.println("size : " + bufferQueue.size());
+                // 推理一次
+                Document document = new Document();
+                document.append("id", Integer.valueOf(requestContext.id));
                 solver.push();
-                solver.add(context.mkNot(targets.get(i)));
-                if (solver.check() == Status.UNSATISFIABLE) {
-                    index = i;
+                ArithExpr a = context.mkIntConst("valid");
+                ArithExpr b = context.mkIntConst("carsInRoad");
+                int valid = 0;
+                int carsInRoad = 0;
+                for (BufferData bufferData : bufferQueue) {
+                    float s = bufferData.speed;
+                    carsInRoad++;
+                    if (s < 10) {
+                        valid++;
+                    }
+                }
+                solver.add(context.mkEq(a, context.mkInt(valid)));
+                solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
+
+                System.out.println(valid + " " + carsInRoad + " " + ((float)valid)/carsInRoad);
+                int index = -1;
+                for (int i = 0; i < targets.size(); i++) {
+                    solver.push();
+                    solver.add(context.mkNot(targets.get(i)));
+                    if (solver.check() == Status.UNSATISFIABLE) {
+                        index = i;
+                        solver.pop();
+                        break;
+                    }
                     solver.pop();
-                    break;
                 }
                 solver.pop();
-            }
-            solver.pop();
 
-            switch (index) {
-                case 0:
-                    document.put("value", 70);
-                    break;
-                case 1:
-                    document.put("value", 50);
-                    break;
-                case 2:
-                    document.put("value", 30);
-                    break;
-                default:
-                    document.put("value", 10);
-                    break;
-            }
+                switch (index) {
+                    case 0:
+                        document.put("value", 70);
+                        break;
+                    case 1:
+                        document.put("value", 50);
+                        break;
+                    case 2:
+                        document.put("value", 30);
+                        break;
+                    default:
+                        document.put("value", 10);
+                        break;
+                }
 
-            document.append("time", String.valueOf(current));
-            MongoTool.flushToDatabase(document);
-            while (!bufferQueue.isEmpty() && bufferQueue.peekFirst().time - current < 300 * 1000) { // 把最前5分钟的数据remove掉
-                bufferQueue.removeFirst();
+                document.append("time", String.valueOf(current));
+                MongoTool.flushToDatabase(document);
+                while (!bufferQueue.isEmpty() && bufferQueue.peekFirst().time - current < 300 * 1000) { // 把最前5分钟的数据remove掉
+                    bufferQueue.removeFirst();
+                }
+                current += 300 * 1000;// 向后移动5分钟
+            } else {
+                bufferQueue.addLast(new BufferData(time, speed));
             }
-            current += 300 * 1000;// 向后移动5分钟
-        } else {
-            bufferQueue.addLast(new BufferData(t, speed));
         }
+
+
     }
 
     // TODO

@@ -111,26 +111,19 @@ public class Client {
 
 	private void deal(String message, String domain) {
 
-		Knowledge knowledge = getKnowledge(message, domain);
-
-		if (knowledge instanceof Position) {
-			// todo
-			DeduceData deduceData = new DeduceData(x, y, t, speed, latestTime);
-			deducer.deduce(deduceData);
-			deducer.deduce(null);
-		}
-	}
-
-	private Knowledge getKnowledge(String line, String domain) {
-		Knowledge res = null;
+		Knowledge knowledge = null;
 
 		IncidentFactory incidentFactory = new IncidentFactory();
-		Incident incident = incidentFactory.transIncident(domain, line);
+		Incident incident = incidentFactory.transIncident(domain, message);
 		if (incident != null) {
-			res = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
+			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}
-		return res;
+
+		deducer.deduce(knowledge, incident);
+
+
 	}
+
 
 	private Knowledge getKnowledge(Incident incident) {
 //		FetchModelClient fetchModelClient = new FetchModelClient();
