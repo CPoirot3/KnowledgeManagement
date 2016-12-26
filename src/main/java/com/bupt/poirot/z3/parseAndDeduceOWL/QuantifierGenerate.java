@@ -25,7 +25,7 @@ public class QuantifierGenerate {
 
 
     public String[] findDomainFormulaString(String dlClauseString) {
-        System.out.println(dlClauseString);
+//        System.out.println(dlClauseString);
 
         String[] strs = dlClauseString.split(" :- ");
 
@@ -50,8 +50,6 @@ public class QuantifierGenerate {
 
     public Quantifier mkQuantifier(Context ctx, DLClause dlClause) {
 
-//        System.out.println(dlClause.toString());
-
         String[] stringsOfDomainAndFormula = findDomainFormulaString(dlClause.toString());
         String domain = stringsOfDomainAndFormula[0];
         String formula = stringsOfDomainAndFormula[1];
@@ -72,43 +70,49 @@ public class QuantifierGenerate {
 
                 String[] variables = string.split(",");
                 Sort[] funcDomainsSort;
-                Sort funcRangeSort = null;
+                Sort funcRangeSort;
                 if (funcDecl != null) {
                     funcDomainsSort = funcDecl.getDomain();
                     funcRangeSort = funcDecl.getRange();
                 } else {
                     // need to mkQuantifier FuncDecl
-                    funcDomainsSort = new Sort[1];
+
                     String specificName = funcString.substring(funcString.indexOf("#") + 1, funcString.length() - 1);
                     if (variables.length == 1) {
+                        funcDomainsSort = new Sort[1];
                         // specificName is form like Point, Road, Car
                         funcDomainsSort[0] = ctx.mkUninterpretedSort(specificName);
                         funcRangeSort = ctx.getBoolSort();
                     } else {
+                        funcDomainsSort = new Sort[2];
                         // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
                         if (specificName.endsWith("X1")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
+                            funcDomainsSort[1] = ctx.getRealSort();
                         } else if (specificName.endsWith("X2")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
+                            funcDomainsSort[1] = ctx.getRealSort();
+
                         } else if (specificName.endsWith("Y1")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
+                            funcDomainsSort[1] = ctx.getRealSort();
+
                         } else if (specificName.endsWith("Y2")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                            funcRangeSort = ctx.getRealSort();
+                            funcDomainsSort[1] = ctx.getRealSort();
+
                         } else if (specificName.endsWith("osition")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
-                            funcRangeSort = ctx.mkUninterpretedSort("Position");
+                            funcDomainsSort[1] = ctx.mkUninterpretedSort("Position");
+
                         } else if (Character.isDigit(specificName.indexOf(specificName.length() - 1))) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Positon");
-                            funcRangeSort = ctx.getRealSort();
+                            funcDomainsSort[1] = ctx.getRealSort();
                         }
+                        funcRangeSort = ctx.getBoolSort();
                     }
-                    System.out.println("funcstring : " + funcString);
 
-                    funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort[0], funcRangeSort);
+                    funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort, funcRangeSort);
                 }
 
 
@@ -154,77 +158,7 @@ public class QuantifierGenerate {
                     String[] variables = string.split(",");
 
                     BoolExpr appFuncExpr = null;
-                    if (isNumeralFunc(funcString)) {
-                        Expr expr = varToExpr.get(variables[0]);
-                        Sort sort = expr.getSort();
-                        Expr e = ctx.mkConst("temp", sort);
-                        Expr tempBody = ctx.mkNot(ctx.mkEq(e, expr)); //
-                        appFuncExpr = ctx.mkForall(new Expr[]{e}, tempBody, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
-                    } else if (hasAtLeastOrAtMost(funcString)) {
-                        if (funcString.startsWith("at")) {
-                            // startsWith form like :  atMost/atLeast
-                            int limit = Integer.MIN_VALUE;
-                            Matcher matcherOfAtLeastAndAtMost = pattern.matcher(funcString);
-                            if (matcherOfAtLeastAndAtMost.find()) {
-                                String conditionName = matcherOfAtLeastAndAtMost.group(1); //
-                                String[] strs = matcherOfAtLeastAndAtMost.group(2).split(" ");
-
-                                limit = Integer.valueOf(strs[0]);
-                                FuncDecl a = stringToFuncMap.get(strs[1]);
-
-                                Expr[] exprs = new Expr[limit];
-                                for (int i = 0; i < limit; i++) {
-                                    exprs[i] = ctx.mkConst("x_" + i, a.getRange());
-                                }
-
-//                                String name = str.substring(funcString.lastIndexOf("(") + 1, funcString.length() - 1);
-                                String name = variables[0];
-                                Expr expr = varToExpr.get(name);
-
-                                Expr restrctExpr = null;
-                                for (int i = 0; i < limit; i++) {
-                                    if (restrctExpr == null) {
-                                        restrctExpr = ctx.mkEq(a.apply(expr), exprs[i]);
-                                    } else {
-                                        restrctExpr = ctx.mkAnd((BoolExpr) restrctExpr, ctx.mkEq(a.apply(expr), exprs[i]));
-                                    }
-                                }
-                                appFuncExpr = ctx.mkExists(exprs, restrctExpr, 1, null, null, ctx.mkSymbol("Q2"), ctx.mkSymbol("skid2"));
-
-                            } else {
-                                throw new RuntimeException();
-                            }
-                        } else {
-                            // startsWith form like :  [Y1 == Y2]atMost
-                            // the info after @ is just a
-                            funcString = funcString.substring(1, funcString.indexOf("@") - 1);
-                            String[] names = funcString.split(" == ");
-                            Expr a = varToExpr.get(names[0]);
-                            Expr b = varToExpr.get(names[1]);
-                            appFuncExpr = ctx.mkEq(a, b);
-                        }
-                    } else if (hasDataName(funcString)) {  // deal with the data like int , float, double
-                        System.out.println("hasDataName ");
-                        System.out.println(funcString);
-
-                        stringToFuncMap.put(funcString, funcDecl);
-                        String varName = variables[0];
-
-                        Expr expr = varToExpr.get(varName);
-                        if (funcString.contains("double")) {
-                            appFuncExpr = ctx.mkIsInteger((RealExpr) expr);
-                        } else if (funcString.contains("float")) {
-                            appFuncExpr = ctx.mkIsInteger((RealExpr) expr);
-                        } else if (funcString.contains("int")) {
-                            appFuncExpr = ctx.mkIsInteger((RealExpr) expr);
-                        }
-                    } else if (hasEquals(funcString)) {
-                        String[] names = funcString.split(" == ");
-                        Expr a = varToExpr.get(names[0]);
-                        Expr b = varToExpr.get(names[1]);
-                        appFuncExpr = ctx.mkEq(a, b);
-                    } else {
-
+                    if (!isNumeralFunc(funcString) && !hasAtLeastOrAtMost(funcString) && !hasDataName(funcString) && !hasEquals(funcString)) {
                         Sort[] funcDomainsSort;
                         Sort funcRangeSort = null;
                         if (funcDecl != null) {
@@ -232,36 +166,31 @@ public class QuantifierGenerate {
                             funcRangeSort = funcDecl.getRange();
                         } else {
                             // need to make FuncDecl
-                            funcDomainsSort = new Sort[1];
                             String specificName = funcString.substring(funcString.indexOf("#") + 1, funcString.length() - 1);
                             if (variables.length == 1) {
+                                funcDomainsSort = new Sort[1];
+
                                 // specificName is form like Point, Road, Car
                                 funcDomainsSort[0] = ctx.mkUninterpretedSort(specificName);
                                 funcRangeSort = ctx.getBoolSort();
                             } else {
+                                funcDomainsSort = new Sort[2];
+                                funcDomainsSort[1] = ctx.getRealSort();
+                                funcRangeSort = ctx.getRealSort();
+
                                 // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
-                                if (specificName.endsWith("X1")) {
+                                if (specificName.endsWith("X1") || specificName.endsWith("X2") || specificName.endsWith("Y1") || specificName.endsWith("Y2")) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                                    funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("X2")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                                    funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("Y1")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                                    funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("Y2")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
-                                    funcRangeSort = ctx.getRealSort();
                                 } else if (specificName.endsWith("osition")) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
-                                    funcRangeSort = ctx.mkUninterpretedSort("Position");
+                                    funcDomainsSort[1] = ctx.mkUninterpretedSort("Position");
                                 } else if (Character.isDigit(specificName.indexOf(specificName.length() - 1))) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Positon");
-                                    funcRangeSort = ctx.getRealSort();
                                 }
                             }
-                            funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort[0], funcRangeSort);
                         }
+
+                        funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort, funcRangeSort);
 
                         stringToFuncMap.put(funcString, funcDecl);
                         Expr[] funcDomainExprs = new Expr[funcDomainsSort.length];
@@ -299,9 +228,9 @@ public class QuantifierGenerate {
             }
         }
 
-        System.out.println();
-        System.out.println("formulaExpr : ");
-        System.out.println(formulaExpr);
+//        System.out.println();
+//        System.out.println("formulaExpr : ");
+//        System.out.println(formulaExpr);
 
         if (preExpr == null || formulaExpr == null) {
             return null;
@@ -318,7 +247,7 @@ public class QuantifierGenerate {
 //        System.out.println(boundVariables.length);
 
         Quantifier res = ctx.mkForall(boundVariables, body, 1, null, null, ctx.mkSymbol("a"), ctx.mkSymbol("b"));
-        System.out.println(res);
+//        System.out.println(res);
         return res;
     }
 
