@@ -9,13 +9,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class IncidentToKnowledge {
-    public Map<String, Road> stringRoadMap;
+    public Map<String, String> map;
     public Map<Position, String> positionStringMap;
+    public IRIManage iriManage;
     public IncidentToKnowledge() {
-        stringRoadMap = new HashMap<>();
+        map = new HashMap<>();
         positionStringMap = new HashMap<>();
+        iriManage = new IRIManage();
         load();
     }
 
@@ -27,7 +30,7 @@ public class IncidentToKnowledge {
     }
 
     private void parse(File file) {
-        Road road = new Road(file.getName().split("\\.")[0]);
+//        Road road = new Road("traffic", file.getName().split("\\.")[0]);
         StringBuilder jsonString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -38,19 +41,33 @@ public class IncidentToKnowledge {
             e.printStackTrace();
         }
         JSONObject jsonObject = new JSONObject(jsonString.toString());
+        String roadName = jsonObject.getString("name");
         JSONArray positions = jsonObject.getJSONArray("positions");
         for (int i = 0; i < positions.length(); i++) {
-            JSONObject position = positions.getJSONObject(i).getJSONObject("p" + (i + 1));
-            double x1 = position.getDouble("x1");
-            double y1 = position.getDouble("y1");
-            double x2 = position.getDouble("x2");
-            double y2 = position.getDouble("y2");
+            JSONObject positionObject = positions.getJSONObject(i);
+            String positionName = positionObject.getString("name");
+            JSONObject data = positionObject.getJSONObject("data");
+            double x1 = data.getDouble("x1");
+            double y1 = data.getDouble("y1");
+            double x2 = data.getDouble("x2");
+            double y2 = data.getDouble("y2");
+            String name = roadName + "#" + positionName;
 
-            Position p = new Position(road.name + "p" + (i + 1), "traffic", x1, y1, x2, y2);
-            positionStringMap.put(p, road.name);
+            String iri = iriManage.knowledgeNameWithSeparator(name);
+            Position p = new Position(iri,"traffic", name, x1, y1, x2, y2);
+            positionStringMap.put(p, p.name);
             System.out.println(positionStringMap.get(p));
-            System.out.println(p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
+            System.out.println(p.getIRI() + " " + p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
         }
+    }
+
+    public static String getOneKey(Set<String> set) {
+        String res = null;
+        for (String string : set) {
+            res = string;
+            break;
+        }
+        return res;
     }
 
     public static void main(String[] args) {

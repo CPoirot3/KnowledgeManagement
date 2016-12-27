@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class IncidentFactory {
     private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public Incident transIncident(String domain, String message) { // name is map to ClassName, lower case
+    public Incident converIncident(String domain, String message) { // name is map to ClassName, lower case
 
         Incident incident = null;
         if (StringUtils.equalsIgnoreCase(domain, "Traffic")) {

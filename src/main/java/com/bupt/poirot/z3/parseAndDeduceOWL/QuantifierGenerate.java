@@ -176,7 +176,7 @@ public class QuantifierGenerate {
                             } else {
                                 funcDomainsSort = new Sort[2];
                                 funcDomainsSort[1] = ctx.getRealSort();
-                                funcRangeSort = ctx.getRealSort();
+                                funcRangeSort = ctx.getBoolSort();
 
                                 // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
                                 if (specificName.endsWith("X1") || specificName.endsWith("X2") || specificName.endsWith("Y1") || specificName.endsWith("Y2")) {

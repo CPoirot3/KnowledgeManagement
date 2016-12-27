@@ -1,11 +1,26 @@
 package com.bupt.poirot.knowledgeBase.schemaManage;
 
-/**
- * Created by hui.chen on 2016/12/23.
- */
-public class Road {
+public class Road implements Knowledge {
+    public String IRI;
+    public String domain;
     public String name;
-    public Road(String name) {
+    public Road(String IRI, String domain, String name) {
+        this.IRI = IRI;
+        this.domain = domain;
         this.name = name;
+    }
+
+    @Override
+    public String getDomain() {
+        return domain;
+    }
+
+    @Override
+    public String getIRI() {
+        return null;
+    }
+
+    public String getName() {
+        return IRI;
     }
 }

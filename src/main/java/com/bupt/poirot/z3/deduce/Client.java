@@ -58,7 +58,7 @@ public class Client {
 
 		this.requestContext = new RequestContext(id, topic, roadName, minCars, a, b, c, speed);
 		this.context = new Context();
-		this.deducer = new Deducer(context, context.mkSolver(), requestContext);
+		this.deducer = new Deducer(context, requestContext);
 	}
 
 	private void getRoadOntology(String roadName) {
@@ -110,41 +110,30 @@ public class Client {
 	}
 
 	private void deal(String message, String domain) {
-
 		Knowledge knowledge = null;
-
 		IncidentFactory incidentFactory = new IncidentFactory();
-		Incident incident = incidentFactory.transIncident(domain, message);
+		Incident incident = incidentFactory.converIncident(domain, message);
 		if (incident != null) {
 			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}
 
 		deducer.deduce(knowledge, incident);
-
-
 	}
 
 
 	private Knowledge getKnowledge(Incident incident) {
-//		FetchModelClient fetchModelClient = new FetchModelClient();
-//		InputStream inputStream = fetchModelClient.fetch(trafficIncident.domain);
-
 		Position position = null;
-		String roadName = null;
 		if (incident instanceof TrafficIncident) {
 			TrafficIncident trafficIncident = (TrafficIncident) incident;
 			for (Position p : incidentToKnowledge.positionStringMap.keySet()) {
 				if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y1 && trafficIncident.y <= p.y2) {
 					position = p;
-					roadName = incidentToKnowledge.positionStringMap.get(p);
 					break;
 				}
 			}
 		}
-
 		return position;
 	}
-
 
 	private TimeData parseTimeSection(String timeSection) {
 		System.out.println("Time section : " + timeSection);

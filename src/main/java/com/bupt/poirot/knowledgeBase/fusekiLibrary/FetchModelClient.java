@@ -168,15 +168,15 @@ public class FetchModelClient {
 //		InputStream inputStream = fetchModel.fetch(host, domain, singleFilterQuery);
 //
 //		Context context = new Context();
-//		Solver solver = context.mkSolver();
+//		Solver mainSolver = context.mkSolver();
 //		Params params = context.mkParams();
 //		params.add("mbqi", true);
-//		solver.setParameters(params);
+//		mainSolver.setParameters(params);
 //
 //		OWLToZ3 owlToZ3 = new OWLToZ3();
 //		BoolExpr preAsumptions = owlToZ3.parseFromStream(context, inputStream);
-//		solver.push();
-//		solver.add(preAsumptions);
+//		mainSolver.push();
+//		mainSolver.add(preAsumptions);
 //
 //        System.out.println();
 //
@@ -205,16 +205,16 @@ public class FetchModelClient {
 //		BoolExpr targetExpr = context.mkAnd(p, context.mkNot(q));
 //		System.out.println(targetExpr);
 //
-//		solver.add(targetExpr);
+//		mainSolver.add(targetExpr);
 //
-//		if (solver.check() == Status.SATISFIABLE) {
+//		if (mainSolver.check() == Status.SATISFIABLE) {
 //			System.out.println("Yes");
 //		} else {
 //			System.out.println("No");
 //		}
 //
-//		solver.pop();
-//		solver.push();
+//		mainSolver.pop();
+//		mainSolver.push();
 //
 //		System.out.println(preAsumptions.equals(context.mkImplies(p, q)));
 //
@@ -238,9 +238,9 @@ public class FetchModelClient {
 //		Expr[] bound = new Expr[]{a, b};
 //		Expr quantifier = context.mkForall(bound , body, 1, null, null, context.mkSymbol("q"), context.mkSymbol("sk"));
 //		System.out.println(quantifier);
-//		solver.reset();
-//		solver.add((BoolExpr)quantifier);
-//		if (solver.check() == Status.UNSATISFIABLE) {
+//		mainSolver.reset();
+//		mainSolver.add((BoolExpr)quantifier);
+//		if (mainSolver.check() == Status.UNSATISFIABLE) {
 //			System.out.println("unsat");
 //		} else {
 //			System.out.println("sat");
@@ -255,9 +255,9 @@ public class FetchModelClient {
 //		BoolExpr quan = context.mkImplies((BoolExpr)quantifier1, (BoolExpr)quantifier2);
 //
 //		System.out.println(quan);
-//		solver.reset();
-//		solver.add(quan);
-//		if (solver.check() == Status.UNSATISFIABLE) {
+//		mainSolver.reset();
+//		mainSolver.add(quan);
+//		if (mainSolver.check() == Status.UNSATISFIABLE) {
 //			System.out.println("unsat");
 //		} else {
 //			System.out.println("sat");

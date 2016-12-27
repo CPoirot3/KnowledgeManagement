@@ -14,7 +14,6 @@ import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 import org.bson.Document;
-import org.omg.PortableServer.POA;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -34,9 +33,10 @@ public class Deducer {
     public static String IRI = "http://www.semanticweb.org/traffic-ontology#";
 
     public Context context;
-    public Solver solver;
+    public Solver knowledgeDeduceSolver;
 
     public Map<String, Solver> solverMap;
+
     public RequestContext requestContext;
     long current;
     public static RoadData roadData;
@@ -44,14 +44,15 @@ public class Deducer {
     LinkedList<BufferData> bufferQueue;
     List<BoolExpr> targets;
 
-    public Deducer(Context context, Solver solver,  RequestContext requestContext) {
+    public Deducer(Context context, RequestContext requestContext) {
         this.context = context;
-        this.solver = solver;
+        this.knowledgeDeduceSolver = context.mkSolver(); //
         this.requestContext = requestContext;
         init();
     }
 
     public void init() {
+
         solverMap = new HashMap<>();
         targets = new ArrayList<>();
         bufferQueue = new LinkedList<>();
@@ -61,17 +62,81 @@ public class Deducer {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        parseTarget();
+
+        knowledgeDeduceSolver = context.mkSolver();
+        loadKnowledge();
+
+
+        parseTarget(); // responsible for init the solverMap
     }
+
+    private void loadKnowledge() {
+
+        // add to the knowledgeDeduceSolver
+
+    }
+
+    // responsible for init the solverMap
+    private void parseTarget() {
+
+        requestContext
+
+        int min = Integer.valueOf(requestContext.minCars);
+        int sereve = Integer.valueOf(requestContext.severe);
+        int conjection = Integer.valueOf(requestContext.conjection);
+        int slightConjection = Integer.valueOf(requestContext.slightConjection);
+
+        ArithExpr a = context.mkIntConst("valid");
+        ArithExpr b = context.mkIntConst("carsInRoad");
+        // target 严重拥堵
+        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(sereve), b)),
+                context.mkGe(b, context.mkInt(min)));
+
+        // 拥堵
+        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(conjection), b)),
+                context.mkGe(b, context.mkInt(min)));
+
+        // 轻微拥堵
+        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(slightConjection), b)),
+                context.mkGe(b, context.mkInt(min)));
+
+        targets.add(targetExpr);
+        targets.add(targetExpr2);
+        targets.add(targetExpr3);
+    }
+
 
     public void deduce(Knowledge knowledge, Incident incident) {
         if (knowledge != null && knowledge instanceof Position && incident instanceof TrafficIncident) {
+
             Position position = (Position) knowledge;
             TrafficIncident trafficIncident = (TrafficIncident) incident;
-            String uriString = "<" + IRI + position.name + ">";
 
             // todo 根据uriString 查询SPARQL得到路名
-            System.out.println(uriString);
+            System.out.println(position.getIRI());
+
+
+            // judge is or not in the scope
+            Solver mainSolver;
+            String scope = null;
+            boolean mark = false;
+            for (String s : solverMap.keySet()) {
+                BoolExpr t = mkBoolExpr(s, position);
+                knowledgeDeduceSolver.push();
+                knowledgeDeduceSolver.add(context.mkNot(t));
+
+                if (knowledgeDeduceSolver.check() != Status.UNSATISFIABLE) {
+                    mark = true;
+                    scope = s;
+                    knowledgeDeduceSolver.pop();
+                    break;
+                }
+                knowledgeDeduceSolver.pop();
+            }
+            if (!mark) { // do not deduce, not in the scope
+                return;
+            }
+            mainSolver = solverMap.get(scope); // get the solver responsible for the scope
 
 
             float x = trafficIncident.x;
@@ -85,7 +150,7 @@ public class Deducer {
                 // 推理一次
                 Document document = new Document();
                 document.append("id", Integer.valueOf(requestContext.id));
-                solver.push();
+                mainSolver.push();
                 ArithExpr a = context.mkIntConst("valid");
                 ArithExpr b = context.mkIntConst("carsInRoad");
                 int valid = 0;
@@ -97,22 +162,22 @@ public class Deducer {
                         valid++;
                     }
                 }
-                solver.add(context.mkEq(a, context.mkInt(valid)));
-                solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
+                mainSolver.add(context.mkEq(a, context.mkInt(valid)));
+                mainSolver.add(context.mkEq(b, context.mkInt(carsInRoad)));
 
                 System.out.println(valid + " " + carsInRoad + " " + ((float)valid)/carsInRoad);
                 int index = -1;
                 for (int i = 0; i < targets.size(); i++) {
-                    solver.push();
-                    solver.add(context.mkNot(targets.get(i)));
-                    if (solver.check() == Status.UNSATISFIABLE) {
+                    mainSolver.push();
+                    mainSolver.add(context.mkNot(targets.get(i)));
+                    if (mainSolver.check() == Status.UNSATISFIABLE) {
                         index = i;
-                        solver.pop();
+                        mainSolver.pop();
                         break;
                     }
-                    solver.pop();
+                    mainSolver.pop();
                 }
-                solver.pop();
+                mainSolver.pop();
 
                 switch (index) {
                     case 0:
@@ -141,13 +206,17 @@ public class Deducer {
         }
     }
 
+    private BoolExpr mkBoolExpr(String s, Position position) {
+        return null;
+    }
+
     // TODO
     private BoolExpr parseTargetBackup(String target) {
         int min = 0;
         List<Solver> solverList = new ArrayList<>();
         int solverSize = target.split("&&").length < 4 ? 4 : target.split("&&").length;
         for(int i = 0; i < solverSize; i++) {
-            // make sure at least one solver
+            // make sure at least one mainSolver
             Solver solver = context.mkSolver();
             Params params = context.mkParams();
             params.add("mbqi", false);
@@ -198,30 +267,6 @@ public class Deducer {
                 context.mkGe(b, context.mkInt(min)));
     }
 
-    private void parseTarget() {
-        int min = Integer.valueOf(requestContext.minCars);
-        int sereve = Integer.valueOf(requestContext.severe);
-        int conjection = Integer.valueOf(requestContext.conjection);
-        int slightConjection = Integer.valueOf(requestContext.slightConjection);
-
-        ArithExpr a = context.mkIntConst("valid");
-        ArithExpr b = context.mkIntConst("carsInRoad");
-        // target 严重拥堵
-        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(sereve), b)),
-                context.mkGe(b, context.mkInt(min)));
-
-        // 拥堵
-        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(conjection), b)),
-                context.mkGe(b, context.mkInt(min)));
-
-        // 轻微拥堵
-        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)) , context.mkMul(context.mkInt(slightConjection), b)),
-                context.mkGe(b, context.mkInt(min)));
-
-        targets.add(targetExpr);
-        targets.add(targetExpr2);
-        targets.add(targetExpr3);
-    }
 
 
     public void getRoadData(String roadName) {
