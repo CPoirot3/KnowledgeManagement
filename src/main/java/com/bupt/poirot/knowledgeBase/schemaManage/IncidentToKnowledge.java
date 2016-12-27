@@ -19,7 +19,6 @@ public class IncidentToKnowledge {
         map = new HashMap<>();
         positionStringMap = new HashMap<>();
         iriManage = new IRIManage();
-        load();
     }
 
     public void load() {

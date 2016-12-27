@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class QuantifierGenerate {
-    public Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
+    public static Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
 
     public Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
 
