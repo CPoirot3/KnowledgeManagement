@@ -7,3 +7,5 @@ mongo.db = traffic
 mongo.collection = traffic
 
 road_schema_dir = data/schema/traffic/roadSchema
+
+traffic_domain = data/models/new_model.owl

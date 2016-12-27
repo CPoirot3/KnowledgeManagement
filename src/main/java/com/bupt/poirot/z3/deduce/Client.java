@@ -48,15 +48,17 @@ public class Client {
 
 	public Client(RequestInfo requestInfo) {
 		int id = Integer.valueOf(requestInfo.infos.get("id"));
+
+		String scope = requestInfo.infos.get("scope");
+
 		String topic = requestInfo.infos.get("topic");
-		String roadName = requestInfo.infos.get("road");
 		String minCars = requestInfo.infos.get("min");
 		String a = requestInfo.infos.get("severe");
 		String b = requestInfo.infos.get("conjection");
 		String c = requestInfo.infos.get("slightConjection");
 		String speed = requestInfo.infos.get("speed");
 
-		this.requestContext = new RequestContext(id, topic, roadName, minCars, a, b, c, speed);
+		this.requestContext = new RequestContext(id, topic, scope, minCars, a, b, c, speed);
 		this.context = new Context();
 		this.deducer = new Deducer(context, requestContext);
 	}
@@ -116,7 +118,6 @@ public class Client {
 		if (incident != null) {
 			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}
-
 		deducer.deduce(knowledge, incident);
 	}
 

@@ -7,6 +7,8 @@ import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Position;
+import com.bupt.poirot.utils.Config;
+import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
@@ -16,6 +18,9 @@ import com.microsoft.z3.Status;
 import org.bson.Document;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
@@ -52,11 +57,10 @@ public class Deducer {
     }
 
     public void init() {
-
         solverMap = new HashMap<>();
         targets = new ArrayList<>();
         bufferQueue = new LinkedList<>();
-        roadData = Client.roadNameToGPSData.get(requestContext.roadName);
+        roadData = Client.roadNameToGPSData.get(requestContext.scope);
         try {
             current = formater.parse("2011/04/25 15:00:00").getTime();
         } catch (ParseException e) {
@@ -66,20 +70,25 @@ public class Deducer {
         knowledgeDeduceSolver = context.mkSolver();
         loadKnowledge();
 
-
         parseTarget(); // responsible for init the solverMap
     }
 
     private void loadKnowledge() {
-
         // add to the knowledgeDeduceSolver
-
+        OWLToZ3 owlToZ3 = new OWLToZ3();
+        File file = new File(Config.getString("traffic_domain")); // only load knowledge for specific domain
+        try {
+            BoolExpr knoweledgeInFormOfZ3 = owlToZ3.parseFromStream(context, new FileInputStream(file));
+            knowledgeDeduceSolver.add(knoweledgeInFormOfZ3);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     // responsible for init the solverMap
     private void parseTarget() {
 
-        requestContext
+        String scope = requestContext.scope;
 
         int min = Integer.valueOf(requestContext.minCars);
         int sereve = Integer.valueOf(requestContext.severe);
@@ -114,7 +123,6 @@ public class Deducer {
 
             // todo 根据uriString 查询SPARQL得到路名
             System.out.println(position.getIRI());
-
 
             // judge is or not in the scope
             Solver mainSolver;
@@ -207,6 +215,7 @@ public class Deducer {
     }
 
     private BoolExpr mkBoolExpr(String s, Position position) {
+
         return null;
     }
 
@@ -268,7 +277,6 @@ public class Deducer {
     }
 
 
-
     public void getRoadData(String roadName) {
         String owlSyntax = Client.roadNameToOWLSyntax.get(roadName);
         System.out.println(owlSyntax);
@@ -283,9 +291,9 @@ public class Deducer {
         InputStream inputStream = fetchModelClient.fetch("http://localhost:3030", "traffic", query);
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
+            String message;
+            while ((message = bufferedReader.readLine()) != null) {
+                System.out.println(message);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -325,11 +333,6 @@ public class Deducer {
             return false;
         }
 
-        return true;
-    }
-
-    public static boolean isInTimeSection(long t) {
-        // TODO
         return true;
     }
 
