@@ -31,23 +31,35 @@ public class Client {
 	public Deducer deducer;
 	IncidentToKnowledge incidentToKnowledge;
 
+	static int count = 0;
+
 	public Client(RequestInfo requestInfo) {
 		int id = Integer.valueOf(requestInfo.infos.get("id"));
+		System.out.println("id : " + id);
 		String scope = requestInfo.infos.get("scope");
+		System.out.println("scope : " + scope);
 		String topic = requestInfo.infos.get("topic");
-		String minCars = requestInfo.infos.get("min");
+		System.out.println("topic : " + topic);
+		String min = requestInfo.infos.get("min");
+		System.out.println("min : " + min);
 		String a = requestInfo.infos.get("severe");
-		String b = requestInfo.infos.get("conjection");
-		String c = requestInfo.infos.get("slightConjection");
+		System.out.println("severe : " + a);
+		String b = requestInfo.infos.get("medium");
+		System.out.println("medium : " + b);
+		String c = requestInfo.infos.get("slight");
+		System.out.println("slight : " + c);
 		String speed = requestInfo.infos.get("speed");
+		System.out.println("speed : " + speed);
+//		System.out.println(id + " " + scope + " " + topic + " " + minCars + " " + a + " " + b + " " + c + " " + speed);
 
-		this.requestContext = new RequestContext(id, topic, scope, minCars, a, b, c, speed);
+		this.requestContext = new RequestContext(id, topic, scope, min, a, b, c, speed);
 		this.context = new Context();
 
 		this.deducer = new Deducer(context, requestContext);
 	}
 
 	public void workflow() {
+		System.out.println("begin workflow");
 		init();
 		acceptData();
 	}
@@ -56,7 +68,6 @@ public class Client {
         // TODO
 		incidentToKnowledge = new IncidentToKnowledge();
 		incidentToKnowledge.load();
-
 
 	}
 
@@ -76,16 +87,28 @@ public class Client {
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
+		System.out.println("dealt done");
+
 	}
 
 	private void deal(String message, String domain) {
 		Knowledge knowledge = null;
 		IncidentFactory incidentFactory = new IncidentFactory();
 		Incident incident = incidentFactory.converIncident(domain, message);
+
 		if (incident != null) {
 			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}
-		deducer.deduce(knowledge, incident);
+		if (knowledge != null) {
+			System.out.println(knowledge.getIRI());
+			deducer.deduce(knowledge, incident);
+		} else {
+			incident = null;
+			count++;
+			if (count % 1000000 == 0) {
+				System.gc();
+			}
+		}
 	}
 
 
@@ -94,12 +117,13 @@ public class Client {
 		if (incident instanceof TrafficIncident) {
 			TrafficIncident trafficIncident = (TrafficIncident) incident;
 			for (Position p : incidentToKnowledge.positionStringMap.keySet()) {
-				if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y1 && trafficIncident.y <= p.y2) {
+				if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y2 && trafficIncident.y <= p.y1) {
 					position = p;
 					break;
 				}
 			}
 		}
+
 		return position;
 	}
 
@@ -120,7 +144,6 @@ public class Client {
 		TimeData timeData = new TimeData(begin, end);
 		return timeData;
 	}
-
 
 	public static void main(String[] args) {
 

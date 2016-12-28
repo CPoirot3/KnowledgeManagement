@@ -10,8 +10,6 @@ import java.io.InputStreamReader;
 public class Test {
 
     private static void fillRoadnameToOWLTriplets(String roadName) {
-        String owlSyntax = Client.roadNameToOWLSyntax.get(roadName);
-        System.out.println(owlSyntax);
 
         String query = "SELECT ?subject ?predicate ?object\n" +
                 "WHERE {\n" +

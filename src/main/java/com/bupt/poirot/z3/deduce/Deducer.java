@@ -17,18 +17,15 @@ import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.FuncDecl;
-import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 import com.microsoft.z3.Status;
 import org.bson.Document;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,9 +45,8 @@ public class Deducer {
 
     public RequestContext requestContext;
     long current;
-    LinkedList<BufferData> bufferQueue;
+    LinkedList<Incident> bufferQueue;
     ScopeManage scopeManage;
-
 
     public Deducer(Context context, RequestContext requestContext) {
         this.context = context;
@@ -98,51 +94,45 @@ public class Deducer {
 
         int min = Integer.valueOf(requestContext.minCars);
         int sereve = Integer.valueOf(requestContext.severe);
-        int conjection = Integer.valueOf(requestContext.conjection);
-        int slightConjection = Integer.valueOf(requestContext.slightConjection);
+        int medium = Integer.valueOf(requestContext.conjection);
+        int slight = Integer.valueOf(requestContext.slightConjection);
 
         ArithExpr a = context.mkIntConst("valid");
         ArithExpr b = context.mkIntConst("carsInRoad");
         // target 严重拥堵
-        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)), context.mkMul(context.mkInt(sereve), b)),
+        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkDiv(a, b), context.mkReal(sereve, 100)),
                 context.mkGe(b, context.mkInt(min)));
         Solver solverOfSevere = context.mkSolver();
+        solverOfSevere.add(targetExpr);
         list.add(solverOfSevere);
 
         // 拥堵
-        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)), context.mkMul(context.mkInt(conjection), b)),
+        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkDiv(a, b), context.mkReal(medium, 100)),
                 context.mkGe(b, context.mkInt(min)));
         Solver solverOfMedium = context.mkSolver();
+        solverOfMedium.add(targetExpr2);
         list.add(solverOfMedium);
 
         // 轻微拥堵
-        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkMul(a, context.mkInt(100)), context.mkMul(context.mkInt(slightConjection), b)),
+        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkDiv(a, b), context.mkReal(slight, 100)),
                 context.mkGe(b, context.mkInt(min)));
-        Solver solverOfSmall = context.mkSolver();
-        list.add(solverOfSmall);
-
-//        targets.add(targetExpr);
-//        targets.add(targetExpr2);
-//        targets.add(targetExpr3);
+        Solver solverOfSlight = context.mkSolver();
+        solverOfSlight.add(targetExpr3);
+        list.add(solverOfSlight);
 
         solverMap.put(scope, list);
-
     }
-
 
     public void deduce(Knowledge knowledge, Incident incident) {
         if (knowledge != null && knowledge instanceof Position && incident instanceof TrafficIncident) {
-
             Position position = (Position) knowledge;
-            TrafficIncident trafficIncident = (TrafficIncident) incident;
-
+            bufferQueue.addLast(incident);
             System.out.println(position.getIRI());
 
             // judge is or not in the scope
             String scope = null;
             boolean mark = false;
             for (String s : solverMap.keySet()) {
-
                 // TODO
                 TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManage.getKnowledge(s);
                 BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), position);
@@ -150,7 +140,7 @@ public class Deducer {
                 knowledgeDeduceSolver.push();
                 knowledgeDeduceSolver.add(context.mkNot(t));
 
-                if (knowledgeDeduceSolver.check() != Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
+                if (knowledgeDeduceSolver.check() == Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
                     mark = true;
                     scope = s;
                     knowledgeDeduceSolver.pop();
@@ -161,14 +151,12 @@ public class Deducer {
             if (!mark) { // do not deduce, not in the scope
                 return;
             }
+
+
             List<Solver> solverList = solverMap.get(scope); // get the solver responsible for the scope
+            System.out.println("solverList.size() : " + solverList.size());
 
-
-            float x = trafficIncident.x;
-            float y = trafficIncident.y;
-            long time = trafficIncident.time;
-            float speed = trafficIncident.speed;
-
+            long time = ((TrafficIncident)bufferQueue.peekLast()).time;
             if (time - current > 600 * 1000) { // 积累十分钟的时间
                 System.out.println(new Date(current));
                 System.out.println("size : " + bufferQueue.size());
@@ -177,17 +165,17 @@ public class Deducer {
                 document.append("id", Integer.valueOf(requestContext.id));
                 document.append("time", String.valueOf(current));
 
+                boolean sat = false;
                 for (int i = 0; i < solverList.size(); i++) {
                     Solver solver = solverList.get(i);
                     solver.push();
-
                     ArithExpr a = context.mkIntConst("valid");
                     ArithExpr b = context.mkIntConst("carsInRoad");
                     int valid = 0;
-                    int carsInRoad = 0;
-                    for (BufferData bufferData : bufferQueue) {
-                        float s = bufferData.speed;
-                        carsInRoad++;
+                    int carsInRoad = bufferQueue.size();
+                    for (Incident incident1 : bufferQueue) {
+                        TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
+                        float s = trafficIncident1.speed;
                         if (s < 10) {
                             valid++;
                         }
@@ -195,35 +183,47 @@ public class Deducer {
                     solver.add(context.mkEq(a, context.mkInt(valid)));
                     solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
 
+
                     System.out.println(valid + " " + carsInRoad + " " + ((float) valid) / carsInRoad);
                     if (solver.check() == Status.UNSATISFIABLE) {
-                        document.put("value", ResultManager.get(i));
+                        document.append("value", ResultManager.get(i));
                         solver.pop();
+                        sat = true;
                         break;
                     }
                     solver.pop();
                 }
 
-                if (document.containsKey("value")) {
-                    document.put("value", ResultManager.get(-1));
+                if (!sat) {
+                    document.append("value", ResultManager.get(-1));
                 }
+
+                System.out.println(document);
                 MongoTool.flushToDatabase(document);
 
-
-                while (!bufferQueue.isEmpty() && bufferQueue.peekFirst().time - current < 300 * 1000) { // 把最前5分钟的数据remove掉
-                    bufferQueue.removeFirst();
+                while (!bufferQueue.isEmpty() ) { // 把最前5分钟的数据remove掉
+                    TrafficIncident trafficIncident = (TrafficIncident)bufferQueue.peekFirst();
+                    if (trafficIncident.time - current < 300 * 1000) {
+                        bufferQueue.removeFirst();
+                    } else {
+                        break;
+                    }
                 }
                 current += 300 * 1000;// 向后移动5分钟
-            } else {
-                bufferQueue.addLast(new BufferData(time, speed));
             }
         }
     }
 
     private BoolExpr mkBoolExpr(String iri, Position position) {
+        iri = iri.split("#")[0] + "#hasPosition>";
         FuncDecl funcDecl = QuantifierGenerate.stringToFuncMap.get(iri);
+//        System.out.println(QuantifierGenerate.stringToFuncMap.size());
+//        for (String key : QuantifierGenerate.stringToFuncMap.keySet()) {
+//            System.out.println(key  + "  : " + QuantifierGenerate.stringToFuncMap.get(key));
+//        }
         if (funcDecl == null) {
-            System.out.println("don't found funcDecl");
+            System.out.println("don't found funcDecl for iri : " + iri);
+            throw new RuntimeException("don't found funcDecl in Deducer.mkBoolExpr()");
         }
 
         Sort[] domains = funcDecl.getDomain();
@@ -234,7 +234,6 @@ public class Deducer {
         BoolExpr res = context.mkEq(context.mkApp(funcDecl, exprs), context.mkTrue());
         return res;
     }
-
 
     public void getRoadData(String roadName) {
         String query = "SELECT ?subject ?predicate ?object\n" +
@@ -292,6 +291,8 @@ public class Deducer {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+
     }
 
 }

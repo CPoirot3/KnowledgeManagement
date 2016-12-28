@@ -61,7 +61,6 @@ public class DataHandler extends AbstractHandler {
 
 	private void deal(Map<String, String[]> params) {
 		RequestInfo requestInfo = new RequestInfo(params);
-
 	    Client client = new Client(requestInfo);
 	    client.workflow();
 	}

@@ -18,6 +18,7 @@ public class ScopeManage {
 
     public void addTarget(String scope, String domain) {
         String scopeIRI = iriManage.knowledgeName(scope);
+        System.out.println(scope + " " + scopeIRI);
         TargetKnowledge targetKnowledge = new TargetKnowledge(scopeIRI, domain, scope);
         map.put(scope, targetKnowledge);
     }

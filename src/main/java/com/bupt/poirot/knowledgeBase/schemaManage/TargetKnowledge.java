@@ -9,7 +9,7 @@ public class TargetKnowledge implements Knowledge {
     public String domain;
     public String name;
 
-    public TargetKnowledge(String domain, String IRI, String name) {
+    public TargetKnowledge(String IRI, String domain, String name) {
         this.IRI = IRI;
         this.domain = domain;
         this.name = name;
