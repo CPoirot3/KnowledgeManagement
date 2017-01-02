@@ -180,9 +180,9 @@ public class Deducer {
                             valid++;
                         }
                     }
+
                     solver.add(context.mkEq(a, context.mkInt(valid)));
                     solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
-
 
                     System.out.println(valid + " " + carsInRoad + " " + ((float) valid) / carsInRoad);
                     if (solver.check() == Status.UNSATISFIABLE) {
