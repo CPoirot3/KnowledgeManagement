@@ -19,7 +19,6 @@ public class ParseOWLToOWLOntology {
 		OWLOntology owlOntology = null;
 		try {
 			OntManager ontManager = new OntManager();
-
 			owlOntology = ontManager.ontologyManager.loadOntologyFromOntologyDocument(inputStream);
 
 		} catch (Exception e) {

@@ -3,6 +3,7 @@ package com.bupt.poirot.z3.library;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.FPNum;
 import com.microsoft.z3.IntExpr;
 import com.microsoft.z3.RatNum;
 import com.microsoft.z3.Solver;
@@ -96,6 +97,10 @@ public class Z3Factory {
             System.out.println("not proved");
             System.out.println(solver.getModel());
         }
+        System.out.println();
+
+        FPNum fpNum = ctx.mkFP(100, ctx.mkFPSort(2, 10));
+        System.out.println(fpNum);
     }
 
 

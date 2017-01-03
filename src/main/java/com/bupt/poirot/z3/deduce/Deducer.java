@@ -68,7 +68,6 @@ public class Deducer {
         knowledgeDeduceSolver = context.mkSolver();
         loadKnowledge();
 
-
         scopeManage = new ScopeManage();
         scopeManage.addTarget(requestContext.scope, requestContext.topic); // 加入一个scope，用TargetKnowledge保存其IRI, topic is also domain
 

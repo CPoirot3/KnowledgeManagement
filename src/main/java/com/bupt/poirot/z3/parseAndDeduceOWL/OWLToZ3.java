@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -16,18 +13,16 @@ import java.util.regex.Pattern;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
+import com.microsoft.z3.FPNum;
 import com.microsoft.z3.FuncDecl;
 import com.microsoft.z3.Quantifier;
 import com.microsoft.z3.RealExpr;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
-import com.microsoft.z3.Status;
+
 import org.semanticweb.HermiT.Configuration;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.HermiT.model.Atom;
-import org.semanticweb.HermiT.model.AtomicConcept;
-import org.semanticweb.HermiT.model.AtomicRole;
-import org.semanticweb.HermiT.model.Constant;
 import org.semanticweb.HermiT.model.DLClause;
 import org.semanticweb.HermiT.model.DLOntology;
 import org.semanticweb.HermiT.model.Individual;
@@ -210,6 +205,7 @@ public class OWLToZ3 {
 //            System.out.println(Status.UNSATISFIABLE);
 //        }
 
+
         res = null;
         for (BoolExpr boolExpr : solver.getAssertions()) {
             if (res == null) {
@@ -218,6 +214,8 @@ public class OWLToZ3 {
                 res = context.mkAnd(res, boolExpr);
             }
         }
+
+
         return res;
     }
 
