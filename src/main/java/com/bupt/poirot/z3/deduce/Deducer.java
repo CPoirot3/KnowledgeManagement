@@ -175,7 +175,6 @@ public class Deducer {
                     ArithExpr totalReal = context.mkReal(0,1);
                     ArithExpr validReal =  context.mkReal(0,1);
 
-
                     Z3Factory z3Factory = new Z3Factory();
 
                     for (Incident incident1 : bufferQueue) {
