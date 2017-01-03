@@ -10,6 +10,7 @@ import com.bupt.poirot.knowledgeBase.schemaManage.Position;
 import com.bupt.poirot.knowledgeBase.schemaManage.ScopeManage;
 import com.bupt.poirot.knowledgeBase.schemaManage.TargetKnowledge;
 import com.bupt.poirot.utils.Config;
+import com.bupt.poirot.z3.library.Z3Factory;
 import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 import com.bupt.poirot.z3.parseAndDeduceOWL.QuantifierGenerate;
 import com.microsoft.z3.ArithExpr;
@@ -169,22 +170,28 @@ public class Deducer {
                 for (int i = 0; i < solverList.size(); i++) {
                     Solver solver = solverList.get(i);
                     solver.push();
-                    ArithExpr a = context.mkIntConst("valid");
-                    ArithExpr b = context.mkIntConst("carsInRoad");
-                    int valid = 0;
-                    int carsInRoad = bufferQueue.size();
+                    ArithExpr valid = context.mkIntConst("valid");
+                    ArithExpr total = context.mkIntConst("carsInRoad");
+                    ArithExpr totalReal = context.mkReal(0,1);
+                    ArithExpr validReal =  context.mkReal(0,1);
+
+
+                    Z3Factory z3Factory = new Z3Factory();
+
                     for (Incident incident1 : bufferQueue) {
                         TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
+                        totalReal = z3Factory.plus(context, totalReal);
+
                         float s = trafficIncident1.speed;
                         if (s < 10) {
-                            valid++;
+                            validReal = z3Factory.plus(context, validReal);
                         }
                     }
 
-                    solver.add(context.mkEq(a, context.mkInt(valid)));
-                    solver.add(context.mkEq(b, context.mkInt(carsInRoad)));
+                    solver.add(context.mkEq(valid, validReal));
+                    solver.add(context.mkEq(total, totalReal));
+//                    System.out.println(valid + "\n" + total);
 
-                    System.out.println(valid + " " + carsInRoad + " " + ((float) valid) / carsInRoad);
                     if (solver.check() == Status.UNSATISFIABLE) {
                         document.append("value", ResultManager.get(i));
                         solver.pop();

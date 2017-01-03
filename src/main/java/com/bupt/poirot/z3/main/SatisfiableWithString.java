@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.Expr;
 import com.microsoft.z3.FuncDecl;
 import com.microsoft.z3.IntExpr;
 import com.microsoft.z3.Model;
@@ -162,21 +163,8 @@ public class SatisfiableWithString {
 		}
 	}
 
-	public static void get() {
-		Context ctx = new Context();
-		ArithExpr valid = ctx.mkReal(0, 1);
-		ArithExpr total = ctx.mkReal(1, 1);
-
-		Sort[] domain = new Sort[2];
-		FuncDecl funcDecl = ctx.mkFuncDecl("pluspuls", domain, ctx.mkIntSort());
-
-		BoolExpr res = ctx.mkGe(ctx.mkDiv(valid, total), ctx.mkReal(8, 10));
-		System.out.println(res);
-
-	}
 
 	public static void main(String[] args){
 //		System.out.println(getSatifiable("x<=10^y>=10^x>=y"));
-		get();
 	}
 }

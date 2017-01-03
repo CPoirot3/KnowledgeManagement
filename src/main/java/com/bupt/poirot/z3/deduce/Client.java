@@ -68,7 +68,6 @@ public class Client {
         // TODO
 		incidentToKnowledge = new IncidentToKnowledge();
 		incidentToKnowledge.load();
-
 	}
 
 	public void acceptData() { // 数据
@@ -123,7 +122,6 @@ public class Client {
 				}
 			}
 		}
-
 		return position;
 	}
 
