@@ -1,6 +1,6 @@
 package com.bupt.poirot.z3.deduce;
 
-import com.bupt.poirot.jettyServer.jetty.RequestInfo;
+import com.bupt.poirot.jettyServer.jetty.TargetInfo;
 import com.bupt.poirot.jettyServer.jetty.TimeData;
 import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.IncidentFactory;
@@ -8,7 +8,6 @@ import com.bupt.poirot.knowledgeBase.schemaManage.IncidentToKnowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Position;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
-import com.bupt.poirot.knowledgeBase.schemaManage.ScopeManage;
 import com.bupt.poirot.utils.Config;
 import com.microsoft.z3.Context;
 import org.apache.jena.atlas.RuntimeIOException;
@@ -33,22 +32,22 @@ public class Client {
 
 	static int count = 0;
 
-	public Client(RequestInfo requestInfo) {
-		int id = Integer.valueOf(requestInfo.infos.get("id"));
+	public Client(TargetInfo targetInfo) {
+		int id = Integer.valueOf(targetInfo.infos.get("id"));
 		System.out.println("id : " + id);
-		String scope = requestInfo.infos.get("scope");
+		String scope = targetInfo.infos.get("scope");
 		System.out.println("scope : " + scope);
-		String topic = requestInfo.infos.get("topic");
+		String topic = targetInfo.infos.get("topic");
 		System.out.println("topic : " + topic);
-		String min = requestInfo.infos.get("min");
+		String min = targetInfo.infos.get("min");
 		System.out.println("min : " + min);
-		String a = requestInfo.infos.get("severe");
+		String a = targetInfo.infos.get("severe");
 		System.out.println("severe : " + a);
-		String b = requestInfo.infos.get("medium");
+		String b = targetInfo.infos.get("medium");
 		System.out.println("medium : " + b);
-		String c = requestInfo.infos.get("slight");
+		String c = targetInfo.infos.get("slight");
 		System.out.println("slight : " + c);
-		String speed = requestInfo.infos.get("speed");
+		String speed = targetInfo.infos.get("speed");
 		System.out.println("speed : " + speed);
 //		System.out.println(id + " " + scope + " " + topic + " " + minCars + " " + a + " " + b + " " + c + " " + speed);
 

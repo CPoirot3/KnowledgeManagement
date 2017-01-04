@@ -3,10 +3,10 @@ package com.bupt.poirot.jettyServer.jetty;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestInfo {
+public class TargetInfo {
     public Map<String, String> infos;
 
-    public RequestInfo(Map<String, String[]> params) {
+    public TargetInfo(Map<String, String[]> params) {
         infos = new HashMap<>();
 
         for (String key : params.keySet()) {
