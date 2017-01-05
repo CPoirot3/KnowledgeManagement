@@ -53,7 +53,6 @@ public class Client {
 
 		this.requestContext = new RequestContext(id, topic, scope, min, a, b, c, speed);
 		this.context = new Context();
-
 		this.deducer = new Deducer(context, requestContext);
 	}
 
@@ -86,7 +85,6 @@ public class Client {
 			e.printStackTrace();
 		}
 		System.out.println("dealt done");
-
 	}
 
 	private void deal(String message, String domain) {
