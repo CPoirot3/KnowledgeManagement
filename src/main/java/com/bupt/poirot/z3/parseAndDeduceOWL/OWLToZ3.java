@@ -37,12 +37,14 @@ public class OWLToZ3 {
 
 //        ParseOWLToDLClauses parseOWLToDLClauses = new ParseOWLToDLClauses();
         Set<DLClause> set = dlOntology.getDLClauses();
-
         System.out.println("DLClause number : " + set.size());
         BoolExpr res = null;
 
         QuantifierGenerate quantifierGenerate = new QuantifierGenerate();
 
+        for (DLClause dlClause : set) {
+            System.out.println(dlClause.toString());
+        }
         for (DLClause dlClause : set) {
 //            System.out.println(dlClause.toString());
             Quantifier quantifier = quantifierGenerate.mkQuantifier(context, dlClause);
@@ -60,7 +62,6 @@ public class OWLToZ3 {
             System.out.println(str + " " + map.get(str));
         }
         Solver solver = context.mkSolver();
-
 
 //        Set<Individual> setIndividuals = dlOntology.getAllIndividuals();
 //        for (Individual individual : setIndividuals) {
@@ -133,7 +134,6 @@ public class OWLToZ3 {
 
             Sort[] domains = funcDecl.getDomain();
             Expr[] exprs = new Expr[domains.length];
-
 //            System.out.println(atom.getArity());
             for (int i = 0; i < atom.getArity(); i++) {
                 Term term = atom.getArgument(i);
@@ -204,7 +204,6 @@ public class OWLToZ3 {
 //        } else {
 //            System.out.println(Status.UNSATISFIABLE);
 //        }
-
 
         res = null;
         for (BoolExpr boolExpr : solver.getAssertions()) {

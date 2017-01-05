@@ -111,7 +111,6 @@ public class QuantifierGenerate {
                         }
                         funcRangeSort = ctx.getBoolSort();
                     }
-
                     funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort, funcRangeSort);
                 }
 
