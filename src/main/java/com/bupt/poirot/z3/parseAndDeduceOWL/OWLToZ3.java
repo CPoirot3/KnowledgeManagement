@@ -131,7 +131,6 @@ public class OWLToZ3 {
             String dlPredicateString = atom.getDLPredicate().toString();
 //            System.out.println(dlPredicateString);
             FuncDecl funcDecl = map.get(dlPredicateString);
-
             Sort[] domains = funcDecl.getDomain();
             Expr[] exprs = new Expr[domains.length];
 //            System.out.println(atom.getArity());

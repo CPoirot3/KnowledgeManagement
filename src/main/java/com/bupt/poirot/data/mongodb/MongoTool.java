@@ -14,34 +14,18 @@ public class MongoTool {
         public static final MongoClient mongoClient = new MongoClient(host, port);
     }
 
-    public static MongoClient getMongoClient() {
+    public MongoClient getMongoClient() {
         return ClientHelper.mongoClient;
     }
 
 
-    public static void flushToDatabase(Document document) {
+    public void flushToDatabase(Document document) {
         String dbName = Config.getString("mongo.db");
         String collectionName = Config.getString("mongo.collection");
 
-        MongoDatabase mongoDatabase = MongoTool.getMongoClient().getDatabase(dbName);
+        MongoDatabase mongoDatabase = getMongoClient().getDatabase(dbName);
         MongoCollection mongoCollection = mongoDatabase.getCollection(collectionName);
         mongoCollection.insertOne(document);
     }
 
-    public static void main(String[] args) {
-//        String dbName = Config.getString("mongo.db");
-//        String collectionName = Config.getString("mongo.collection");
-//        System.out.println(dbName + "  " + collectionName);
-//
-//        MongoDatabase mongoDatabase = MongoTool.getMongoClient().getDatabase(dbName);
-//        MongoCollection mongoCollection = mongoDatabase.getCollection(collectionName);
-
-//        Document filter = new Document();
-//        filter.put("id", 1);
-//        Document document = (Document) mongoCollection.findOneAndDelete(filter);
-//
-//        System.out.println(document);
-
-        flushToDatabase(new Document().append("id", 1));
-    }
 }

@@ -15,9 +15,7 @@ import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-
 public class DataHandler extends AbstractHandler {
-	
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -50,7 +48,8 @@ public class DataHandler extends AbstractHandler {
 		}
 		String id = params.get("id")[0];
 		System.out.println("id : " + id);
-		MongoDatabase mongoDatabase = MongoTool.getMongoClient().getDatabase("traffic");
+		MongoTool mongoTool = new MongoTool();
+		MongoDatabase mongoDatabase = mongoTool.getMongoClient().getDatabase("traffic");
 		MongoCollection mongoCollection = mongoDatabase.getCollection("traffic");
 
 		Document filter = new Document();
