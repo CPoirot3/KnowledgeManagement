@@ -1,6 +1,5 @@
 package com.bupt.poirot.z3.deduce;
 
-import com.bupt.poirot.jettyServer.jetty.TargetInfo;
 import com.bupt.poirot.jettyServer.jetty.TimeData;
 import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.IncidentFactory;
@@ -26,34 +25,14 @@ public class Client {
 	private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	public Context context;
-	public RequestContext requestContext;
 	public Deducer deducer;
 	IncidentToKnowledge incidentToKnowledge;
 
 	static int count = 0;
 
 	public Client(TargetInfo targetInfo) {
-		int id = Integer.valueOf(targetInfo.infos.get("id"));
-		System.out.println("id : " + id);
-		String scope = targetInfo.infos.get("scope");
-		System.out.println("scope : " + scope);
-		String topic = targetInfo.infos.get("topic");
-		System.out.println("topic : " + topic);
-		String min = targetInfo.infos.get("min");
-		System.out.println("min : " + min);
-		String a = targetInfo.infos.get("severe");
-		System.out.println("severe : " + a);
-		String b = targetInfo.infos.get("medium");
-		System.out.println("medium : " + b);
-		String c = targetInfo.infos.get("slight");
-		System.out.println("slight : " + c);
-		String speed = targetInfo.infos.get("speed");
-		System.out.println("speed : " + speed);
-//		System.out.println(id + " " + scope + " " + topic + " " + minCars + " " + a + " " + b + " " + c + " " + speed);
-
-		this.requestContext = new RequestContext(id, topic, scope, min, a, b, c, speed);
 		this.context = new Context();
-		this.deducer = new Deducer(context, requestContext);
+		this.deducer = new Deducer(context, targetInfo);
 	}
 
 	public void workflow() {

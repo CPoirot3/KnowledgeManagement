@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.bupt.poirot.jettyServer.jetty.TargetInfo;
+import com.bupt.poirot.jettyServer.jetty.ParamsParse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
@@ -18,7 +18,7 @@ public class HandlerThread extends Thread {
 	private HttpServletResponse response;
 	private boolean finished = false;
 	private Exception exception = null;
-	private Map<Integer, TargetInfo> requestInfo;
+	private Map<Integer, ParamsParse> requestInfo;
 
 	@Override
 	public void run() {
@@ -42,7 +42,7 @@ public class HandlerThread extends Thread {
 
 	public HandlerThread(int id, AbstractHandler _realHandler, String target,
 			Request baseRequest, HttpServletRequest request,
-			HttpServletResponse response, Map<Integer, TargetInfo> requestInfo) {
+			HttpServletResponse response, Map<Integer, ParamsParse> requestInfo) {
 		super("Handler #" + String.valueOf(id));
 		this.id = id;
 		this._realHandler = _realHandler;

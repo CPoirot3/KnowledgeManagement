@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.z3.deduce.Client;
+import com.bupt.poirot.z3.deduce.TargetInfo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -59,7 +60,26 @@ public class DataHandler extends AbstractHandler {
 	}
 
 	private void deal(Map<String, String[]> params) {
-		TargetInfo targetInfo = new TargetInfo(params);
+		ParamsParse paramsParse = new ParamsParse(params);
+		int id = Integer.valueOf(paramsParse.infos.get("id"));
+		System.out.println("id : " + id);
+		String scope = paramsParse.infos.get("scope");
+		System.out.println("scope : " + scope);
+		String topic = paramsParse.infos.get("topic");
+		System.out.println("topic : " + topic);
+		String min = paramsParse.infos.get("min");
+		System.out.println("min : " + min);
+		String a = paramsParse.infos.get("severe");
+		System.out.println("severe : " + a);
+		String b = paramsParse.infos.get("medium");
+		System.out.println("medium : " + b);
+		String c = paramsParse.infos.get("slight");
+		System.out.println("slight : " + c);
+		String speed = paramsParse.infos.get("speed");
+		System.out.println("speed : " + speed);
+//		System.out.println(id + " " + scope + " " + topic + " " + minCars + " " + a + " " + b + " " + c + " " + speed);
+
+		TargetInfo targetInfo = new TargetInfo(id, topic, scope, min, a, b, c, speed);
 	    Client client = new Client(targetInfo);
 	    client.workflow();
 	}
