@@ -6,9 +6,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-/**
- * Created by hui.chen on 2016/12/26.
- */
 public class IncidentFactory {
     private static DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 

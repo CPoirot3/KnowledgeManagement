@@ -1,6 +1,5 @@
 package com.bupt.poirot.target;
 
-import com.bupt.poirot.jettyServer.jetty.ParamsParse;
 import com.bupt.poirot.z3.deduce.TargetInfo;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
@@ -15,8 +14,7 @@ public class TargetToBoolExpr {
 
     }
 
-    // responsible for init the solverMap
-    public List<Solver> parseTarget(Context context, TargetInfo targetInfo, String scope) {
+    public List<Solver> parseTargetToBoolExpr(Context ctx, TargetInfo targetInfo) {
 
         List<Solver> list = new ArrayList<>();
         int min = Integer.valueOf(targetInfo.minCars);
@@ -24,26 +22,26 @@ public class TargetToBoolExpr {
         int medium = Integer.valueOf(targetInfo.conjection);
         int slight = Integer.valueOf(targetInfo.slightConjection);
 
-        ArithExpr a = context.mkIntConst("valid");
-        ArithExpr b = context.mkIntConst("carsInRoad");
+        ArithExpr a = ctx.mkIntConst("valid");
+        ArithExpr b = ctx.mkIntConst("carsInRoad");
         // target 严重拥堵
-        BoolExpr targetExpr = context.mkAnd(context.mkGe(context.mkDiv(a, b), context.mkReal(sereve, 100)),
-                context.mkGe(b, context.mkInt(min)));
-        Solver solverOfSevere = context.mkSolver();
+        BoolExpr targetExpr = ctx.mkAnd(ctx.mkGe(ctx.mkDiv(a, b), ctx.mkReal(sereve, 100)),
+                ctx.mkGe(b, ctx.mkInt(min)));
+        Solver solverOfSevere = ctx.mkSolver();
         solverOfSevere.add(targetExpr);
         list.add(solverOfSevere);
 
         // 拥堵
-        BoolExpr targetExpr2 = context.mkAnd(context.mkGe(context.mkDiv(a, b), context.mkReal(medium, 100)),
-                context.mkGe(b, context.mkInt(min)));
-        Solver solverOfMedium = context.mkSolver();
+        BoolExpr targetExpr2 = ctx.mkAnd(ctx.mkGe(ctx.mkDiv(a, b), ctx.mkReal(medium, 100)),
+                ctx.mkGe(b, ctx.mkInt(min)));
+        Solver solverOfMedium = ctx.mkSolver();
         solverOfMedium.add(targetExpr2);
         list.add(solverOfMedium);
 
         // 轻微拥堵
-        BoolExpr targetExpr3 = context.mkAnd(context.mkGe(context.mkDiv(a, b), context.mkReal(slight, 100)),
-                context.mkGe(b, context.mkInt(min)));
-        Solver solverOfSlight = context.mkSolver();
+        BoolExpr targetExpr3 = ctx.mkAnd(ctx.mkGe(ctx.mkDiv(a, b), ctx.mkReal(slight, 100)),
+                ctx.mkGe(b, ctx.mkInt(min)));
+        Solver solverOfSlight = ctx.mkSolver();
         solverOfSlight.add(targetExpr3);
         list.add(solverOfSlight);
 

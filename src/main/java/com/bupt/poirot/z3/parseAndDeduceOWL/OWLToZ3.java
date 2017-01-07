@@ -7,47 +7,41 @@ import java.io.InputStream;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
-import com.microsoft.z3.FPNum;
 import com.microsoft.z3.FuncDecl;
 import com.microsoft.z3.Quantifier;
-import com.microsoft.z3.RealExpr;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 
-import org.semanticweb.HermiT.Configuration;
-import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.HermiT.model.Atom;
 import org.semanticweb.HermiT.model.DLClause;
 import org.semanticweb.HermiT.model.DLOntology;
-import org.semanticweb.HermiT.model.Individual;
 import org.semanticweb.HermiT.model.Term;
 
 public class OWLToZ3 {
 
     public BoolExpr parseFromStream(Context context, InputStream inputStream) {
-        ParseOWLToOWLOntology parseOWLToOWLOntology = new ParseOWLToOWLOntology();
-        Reasoner reasoner = new Reasoner(new Configuration(), parseOWLToOWLOntology.parse(inputStream));
-        DLOntology dlOntology = reasoner.getDLOntology();
+        ParseOWLToDLOntology parseOWLToDLOntology = new ParseOWLToDLOntology();
 
-//        ParseOWLToDLClauses parseOWLToDLClauses = new ParseOWLToDLClauses();
-        Set<DLClause> set = dlOntology.getDLClauses();
+        DLOntology dlOntology = parseOWLToDLOntology.parse(inputStream);
+
+        ParseOWLToDLClauses parseOWLToDLClauses = new ParseOWLToDLClauses();
+        Set<DLClause> set = parseOWLToDLClauses.owlToDLClsuses(dlOntology);
         System.out.println("DLClause number : " + set.size());
-        BoolExpr res = null;
-
-        QuantifierGenerate quantifierGenerate = new QuantifierGenerate();
-
         for (DLClause dlClause : set) {
             System.out.println(dlClause.toString());
         }
+        BoolExpr res = null;
+
+        FuncDeclGenerate funcDeclGenerate = new FuncDeclGenerate();
+
+
         for (DLClause dlClause : set) {
 //            System.out.println(dlClause.toString());
-            Quantifier quantifier = quantifierGenerate.mkQuantifier(context, dlClause);
+            Quantifier quantifier = funcDeclGenerate.getFuncDecl(context, dlClause);
             if (quantifier != null) {
                 if (res != null) {
                     res = context.mkAnd(res, quantifier);
@@ -57,7 +51,7 @@ public class OWLToZ3 {
             }
         }
 
-        Map<String, FuncDecl> map = quantifierGenerate.stringToFuncMap;
+        Map<String, FuncDecl> map = funcDeclGenerate.stringToFuncMap;
         for (String str : map.keySet()) {
             System.out.println(str + " " + map.get(str));
         }

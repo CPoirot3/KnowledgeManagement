@@ -74,6 +74,7 @@ public class Client {
 		if (incident != null) {
 			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}
+
 		if (knowledge != null) {
 			System.out.println(knowledge.getIRI());
 			deducer.deduce(knowledge, incident);

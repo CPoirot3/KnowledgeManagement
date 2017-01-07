@@ -26,13 +26,11 @@ import java.util.Set;
  */
 public class ParseOWLToDLClauses {
 
-	public Set<DLClause> owlToDLClsuses(InputStream inputStream){
+	public Set<DLClause> owlToDLClsuses(DLOntology dlOntology){
 		Reasoner reasoner = null;
 		try {
-			ParseOWLToOWLOntology parseOWLToOWLOntology = new ParseOWLToOWLOntology();
-
-			reasoner = new Reasoner(new Configuration(), parseOWLToOWLOntology.parse(inputStream));
-			DLOntology dlOntology = reasoner.getDLOntology();
+//			reasoner = new Reasoner(new Configuration(), parseOWLToOWLOntology.parse(inputStream));
+//			DLOntology dlOntology = reasoner.getDLOntology();
 			Set<Individual> set = dlOntology.getAllIndividuals();
 			for (Individual individual : set) {
 				System.out.println(individual.getIRI());
@@ -112,12 +110,7 @@ public class ParseOWLToDLClauses {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (reasoner != null) {
-			DLOntology dlOntology = reasoner.getDLOntology();
-			return dlOntology.getDLClauses();
-		} else {
-			return new HashSet<>();
-		}
+		return dlOntology.getDLClauses();
 	}
 }
 
@@ -130,7 +123,7 @@ public class ParseOWLToDLClauses {
 //	public Set<DLClause> owlToDLClsuses(InputStream inputStream){
 //		Reasoner reasoner = null;
 //		try {
-//			ParseOWLToOWLOntology parseOWLToOWLOntology = new ParseOWLToOWLOntology();
+//			ParseOWLToDLOntology parseOWLToOWLOntology = new ParseOWLToDLOntology();
 //
 //			reasoner = new Reasoner(new Configuration(), parseOWLToOWLOntology.parse(inputStream));
 //

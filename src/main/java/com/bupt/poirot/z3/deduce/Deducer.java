@@ -6,13 +6,11 @@ import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Position;
-import com.bupt.poirot.knowledgeBase.schemaManage.ScopeManage;
+import com.bupt.poirot.knowledgeBase.schemaManage.ScopeManager;
 import com.bupt.poirot.knowledgeBase.schemaManage.TargetKnowledge;
-import com.bupt.poirot.target.LoadTargetKnowledge;
 import com.bupt.poirot.target.TargetParser;
-import com.bupt.poirot.target.TargetToBoolExpr;
 import com.bupt.poirot.z3.library.Z3Factory;
-import com.bupt.poirot.z3.parseAndDeduceOWL.QuantifierGenerate;
+import com.bupt.poirot.z3.parseAndDeduceOWL.FuncDeclGenerate;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
@@ -40,7 +38,7 @@ public class Deducer {
     public Solver knowledgeDeduceSolver;
     public Map<String, List<Solver>> solverMap;
     LinkedList<Incident> bufferQueue;
-    ScopeManage scopeManage;
+    ScopeManager scopeManager;
     long current;
 
     public Deducer(Context context, TargetInfo targetInfo) {
@@ -49,7 +47,7 @@ public class Deducer {
         this.knowledgeDeduceSolver = context.mkSolver();
         solverMap = new HashMap<>();
         bufferQueue = new LinkedList<>();
-        scopeManage = new ScopeManage();
+        scopeManager = new ScopeManager();
         init();
     }
 
@@ -61,7 +59,7 @@ public class Deducer {
         }
 
         TargetParser targetParser = new TargetParser(targetInfo);
-        targetParser.parse(context, knowledgeDeduceSolver, solverMap, scopeManage);
+        targetParser.parse(context, knowledgeDeduceSolver, solverMap, scopeManager);
     }
 
 
@@ -76,7 +74,7 @@ public class Deducer {
             boolean mark = false;
             for (String s : solverMap.keySet()) {
                 // TODO
-                TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManage.getKnowledge(s);
+                TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManager.getKnowledge(s);
                 BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), position);
 
                 knowledgeDeduceSolver.push();
@@ -164,7 +162,7 @@ public class Deducer {
 
     private BoolExpr mkBoolExpr(String iri, Position position) {
         iri = iri.split("#")[0] + "#hasPosition>";
-        FuncDecl funcDecl = QuantifierGenerate.stringToFuncMap.get(iri);
+        FuncDecl funcDecl = FuncDeclGenerate.stringToFuncMap.get(iri);
         if (funcDecl == null) {
             System.out.println("don't found funcDecl for iri : " + iri);
             throw new RuntimeException("don't found funcDecl in Deducer.mkBoolExpr()");
