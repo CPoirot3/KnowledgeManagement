@@ -7,17 +7,17 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.StringTokenizer;
 
 public class SparqlQuery {
-    public Query q;
     public Dataset dataset;
     public SystemState systemState;
 
-    public SparqlQuery(Query query, Dataset dataset) {
-        this.q = query;
+    public SparqlQuery(Dataset dataset) {
+
         this.dataset = dataset;
     }
 
@@ -29,7 +29,7 @@ public class SparqlQuery {
         return resultSet;
     }
 
-    public ResultSet queryDataset(String queryString, Dataset dataset) {
+    public ResultSet queryDataset(String queryString) {
         ResultSet resultSet = null;
         Query query = QueryFactory.create(queryString) ;
         QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
@@ -40,10 +40,16 @@ public class SparqlQuery {
 
 
     public static void main(String[] args) {
-        StringTokenizer stringTokenizer = new StringTokenizer("a b c");
-        while (stringTokenizer.hasMoreTokens()) {
-            System.out.println(stringTokenizer.nextToken());
-        }
 
+        DatasetFactory datasetFactory = new DatasetFactory();
+        Dataset dataset = datasetFactory.getDatasetByName("test");
+
+        SparqlQuery sparqlQuery = new SparqlQuery(dataset);
+        String queryString = "PREFIX info: <http://www.semanticweb.org/traffic-ontology#> " +
+                "SELECT * where {" +
+                "info:福中路 ?p ?o }" ;
+        ResultSet resultSet = sparqlQuery.queryDataset(queryString);
+
+        ResultSetFormatter.out(resultSet);
     }
 }

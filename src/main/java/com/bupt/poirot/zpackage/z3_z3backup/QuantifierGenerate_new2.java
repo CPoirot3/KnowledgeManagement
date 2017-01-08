@@ -236,9 +236,9 @@ public class QuantifierGenerate_new2 {
                                 } else if (specificName.endsWith("tude")) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Point");
                                     funcRangeSort = ctx.getRealSort();
-                                } else if (specificName.endsWith("Position")) {
+                                } else if (specificName.endsWith("TrafficKnowdedge")) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
-                                    funcRangeSort = ctx.mkUninterpretedSort("Position");
+                                    funcRangeSort = ctx.mkUninterpretedSort("TrafficKnowdedge");
                                 }
                             }
                             funcDecl = ctx.mkFuncDecl(funcString, funcDomainsSort[0], funcRangeSort);

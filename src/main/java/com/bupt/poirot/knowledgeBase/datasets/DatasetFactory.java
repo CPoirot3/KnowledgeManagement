@@ -47,12 +47,6 @@ public class DatasetFactory {
         return dataset;
     }
 
-    public void backupDatasetByName(String datasetName) {
-        Dataset dataset = datasetMap.get(datasetName);
-        if (dataset != null) {
-
-        }
-    }
 
     public static void main(String[] args) {
         DatasetFactory datasetFactory = new DatasetFactory();

@@ -87,23 +87,23 @@ public class FuncDeclGenerate {
                         funcDomainsSort = new Sort[2];
                         // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
                         if (specificName.endsWith("X1")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                            funcDomainsSort[0] = ctx.mkUninterpretedSort("TrafficKnowdedge");
                             funcDomainsSort[1] = ctx.getRealSort();
                         } else if (specificName.endsWith("X2")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                            funcDomainsSort[0] = ctx.mkUninterpretedSort("TrafficKnowdedge");
                             funcDomainsSort[1] = ctx.getRealSort();
 
                         } else if (specificName.endsWith("Y1")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                            funcDomainsSort[0] = ctx.mkUninterpretedSort("TrafficKnowdedge");
                             funcDomainsSort[1] = ctx.getRealSort();
 
                         } else if (specificName.endsWith("Y2")) {
-                            funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                            funcDomainsSort[0] = ctx.mkUninterpretedSort("TrafficKnowdedge");
                             funcDomainsSort[1] = ctx.getRealSort();
 
                         } else if (specificName.endsWith("osition")) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
-                            funcDomainsSort[1] = ctx.mkUninterpretedSort("Position");
+                            funcDomainsSort[1] = ctx.mkUninterpretedSort("TrafficKnowdedge");
 
                         } else if (Character.isDigit(specificName.indexOf(specificName.length() - 1))) {
                             funcDomainsSort[0] = ctx.mkUninterpretedSort("Positon");
@@ -179,10 +179,10 @@ public class FuncDeclGenerate {
 
                                 // specificName is form like hasSpeed, hasBeginPoint, hasEndPoint, hasLongitude, hasLatitude
                                 if (specificName.endsWith("X1") || specificName.endsWith("X2") || specificName.endsWith("Y1") || specificName.endsWith("Y2")) {
-                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("Position");
+                                    funcDomainsSort[0] = ctx.mkUninterpretedSort("TrafficKnowdedge");
                                 } else if (specificName.endsWith("osition")) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Road");
-                                    funcDomainsSort[1] = ctx.mkUninterpretedSort("Position");
+                                    funcDomainsSort[1] = ctx.mkUninterpretedSort("TrafficKnowdedge");
                                 } else if (Character.isDigit(specificName.indexOf(specificName.length() - 1))) {
                                     funcDomainsSort[0] = ctx.mkUninterpretedSort("Positon");
                                 }

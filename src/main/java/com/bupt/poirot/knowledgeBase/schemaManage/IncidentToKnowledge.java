@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class IncidentToKnowledge {
     public Map<String, String> map;
-    public Map<Position, String> positionStringMap;
+    public Map<TrafficKnowdedge, String> positionStringMap;
     public IRIManage iriManage;
     public IncidentToKnowledge() {
         map = new HashMap<>();
@@ -53,7 +53,7 @@ public class IncidentToKnowledge {
             String name = roadName + "#" + positionName;
 
             String iri = iriManage.knowledgeNameWithSeparator(name);
-            Position p = new Position(iri,"traffic", name, x1, y1, x2, y2);
+            TrafficKnowdedge p = new TrafficKnowdedge(iri,"traffic", name, x1, y1, x2, y2);
             positionStringMap.put(p, p.name);
             System.out.println(positionStringMap.get(p));
             System.out.println(p.getIRI() + " " + p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);

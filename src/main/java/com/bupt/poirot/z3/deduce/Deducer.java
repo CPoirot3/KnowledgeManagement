@@ -4,8 +4,8 @@ import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
+import com.bupt.poirot.knowledgeBase.schemaManage.TrafficKnowdedge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
-import com.bupt.poirot.knowledgeBase.schemaManage.Position;
 import com.bupt.poirot.knowledgeBase.schemaManage.ScopeManager;
 import com.bupt.poirot.knowledgeBase.schemaManage.TargetKnowledge;
 import com.bupt.poirot.target.TargetParser;
@@ -35,7 +35,7 @@ public class Deducer {
     public Context context;
     public TargetInfo targetInfo;
 
-    public Solver knowledgeDeduceSolver;
+    public Solver scopeDeduceSolver;
     public Map<String, List<Solver>> solverMap;
     LinkedList<Incident> bufferQueue;
     ScopeManager scopeManager;
@@ -44,7 +44,7 @@ public class Deducer {
     public Deducer(Context context, TargetInfo targetInfo) {
         this.context = context;
         this.targetInfo = targetInfo;
-        this.knowledgeDeduceSolver = context.mkSolver();
+        this.scopeDeduceSolver = context.mkSolver();
         solverMap = new HashMap<>();
         bufferQueue = new LinkedList<>();
         scopeManager = new ScopeManager();
@@ -59,15 +59,15 @@ public class Deducer {
         }
 
         TargetParser targetParser = new TargetParser(targetInfo);
-        targetParser.parse(context, knowledgeDeduceSolver, solverMap, scopeManager);
+        targetParser.parse(context, scopeDeduceSolver, solverMap, scopeManager);
     }
 
 
     public void deduce(Knowledge knowledge, Incident incident) {
-        if (knowledge != null && knowledge instanceof Position && incident instanceof TrafficIncident) { // 存在映射
-            Position position = (Position) knowledge;
+        if (knowledge != null && knowledge instanceof TrafficKnowdedge && incident instanceof TrafficIncident) { // 存在映射
+            TrafficKnowdedge trafficKnowdedge = (TrafficKnowdedge) knowledge;
             bufferQueue.addLast(incident);
-//            System.out.println(position.getIRI());
+//            System.out.println(trafficKnowdedge.getIRI());
 
             // judge is or not in the scope
             String scope = null;
@@ -75,18 +75,18 @@ public class Deducer {
             for (String s : solverMap.keySet()) {
                 // TODO
                 TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManager.getKnowledge(s);
-                BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), position);
+                BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), trafficKnowdedge);
 
-                knowledgeDeduceSolver.push();
-                knowledgeDeduceSolver.add(context.mkNot(t));
+                scopeDeduceSolver.push();
+                scopeDeduceSolver.add(context.mkNot(t));
 
-                if (knowledgeDeduceSolver.check() == Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
+                if (scopeDeduceSolver.check() == Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
                     mark = true;
                     scope = s;
-                    knowledgeDeduceSolver.pop();
+                    scopeDeduceSolver.pop();
                     break;
                 }
-                knowledgeDeduceSolver.pop();
+                scopeDeduceSolver.pop();
             }
             if (!mark) { // do not deduce, not in the scope
                 return;
@@ -113,7 +113,6 @@ public class Deducer {
                     ArithExpr total = context.mkIntConst("carsInRoad");
                     ArithExpr totalReal = context.mkReal(0,1);
                     ArithExpr validReal =  context.mkReal(0,1);
-
                     Z3Factory z3Factory = new Z3Factory();
 
                     for (Incident incident1 : bufferQueue) {
@@ -160,7 +159,7 @@ public class Deducer {
         }
     }
 
-    private BoolExpr mkBoolExpr(String iri, Position position) {
+    private BoolExpr mkBoolExpr(String iri, TrafficKnowdedge trafficKnowdedge) {
         iri = iri.split("#")[0] + "#hasPosition>";
         FuncDecl funcDecl = FuncDeclGenerate.stringToFuncMap.get(iri);
         if (funcDecl == null) {
@@ -170,12 +169,11 @@ public class Deducer {
         Sort[] domains = funcDecl.getDomain();
         Expr[] exprs = new Expr[domains.length];
         exprs[0] = context.mkConst(iri, domains[0]);
-        exprs[1] = context.mkConst(position.getIRI(), domains[1]);
+        exprs[1] = context.mkConst(trafficKnowdedge.getIRI(), domains[1]);
 
         BoolExpr res = context.mkEq(context.mkApp(funcDecl, exprs), context.mkTrue());
         return res;
     }
-
 
 
     // 根据gps坐标推理判断属于哪条路

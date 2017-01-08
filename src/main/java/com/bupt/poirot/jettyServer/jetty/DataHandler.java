@@ -22,10 +22,11 @@ public class DataHandler extends AbstractHandler {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 
 		String path = request.getPathInfo();
-		System.out.println(path);
+		System.out.println(request.getRequestURL());
 
 		Map<String, String[]> params = request.getParameterMap();
 		if (path.endsWith("data")) {
+			System.out.println("Begin get result from mongodb");
 			Document doc = getResult(params);
 			response.setContentType("text/json;charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -38,8 +39,12 @@ public class DataHandler extends AbstractHandler {
 			System.out.println(doc.toJson());
 			response.getWriter().println(doc.toJson());
 			response.flushBuffer();
+			System.out.println("end get result from mongodb");
+
 		} else if (path.endsWith("deduce")) {
+			System.out.println("Begin deduce");
 			deal(params);
+			System.out.println("end deduce");
 		}
 	}
 

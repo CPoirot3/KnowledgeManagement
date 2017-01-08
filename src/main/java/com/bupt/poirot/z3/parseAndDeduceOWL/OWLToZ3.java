@@ -63,7 +63,7 @@ public class OWLToZ3 {
 //            String iri = individual.toString();
 //            BoolExpr boolExpr;
 //            if (Character.isDigit(iri.charAt(iri.length() - 2))) {
-//                FuncDecl funcDecl = map.get(StrUtils.replaceSuffixName(iri, "Position"));
+//                FuncDecl funcDecl = map.get(StrUtils.replaceSuffixName(iri, "TrafficKnowdedge"));
 //                Sort[] sorts = funcDecl.getDomain();
 //                Expr[] exprs = new Expr[sorts.length];
 //                exprs[0] = context.mkConst(iri, sorts[0]);
@@ -217,6 +217,7 @@ public class OWLToZ3 {
 
         try {
             InputStream inputStream = new FileInputStream(schemaFile);
+
             OWLToZ3 owlToZ3 = new OWLToZ3();
             owlToZ3.parseFromStream(new Context(), inputStream);
         } catch (FileNotFoundException e) {

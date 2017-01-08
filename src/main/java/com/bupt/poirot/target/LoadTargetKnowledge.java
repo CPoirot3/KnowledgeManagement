@@ -19,7 +19,7 @@ public class LoadTargetKnowledge {
     }
 
     public void load(Context context, Solver knowledgeDeduceSolver) {
-        // add to the knowledgeDeduceSolver
+        // add to the scopeDeduceSolver
         OWLToZ3 owlToZ3 = new OWLToZ3();
         File file = new File(Config.getString("traffic_domain")); // only load knowledge for specific domain
         try {

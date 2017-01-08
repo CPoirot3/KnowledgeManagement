@@ -5,7 +5,7 @@ import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.IncidentFactory;
 import com.bupt.poirot.knowledgeBase.schemaManage.IncidentToKnowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
-import com.bupt.poirot.knowledgeBase.schemaManage.Position;
+import com.bupt.poirot.knowledgeBase.schemaManage.TrafficKnowdedge;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
 import com.bupt.poirot.utils.Config;
 import com.microsoft.z3.Context;
@@ -89,17 +89,18 @@ public class Client {
 
 
 	private Knowledge getKnowledge(Incident incident) {
-		Position position = null;
+		TrafficKnowdedge trafficKnowdedge = null;
 		if (incident instanceof TrafficIncident) {
-			TrafficIncident trafficIncident = (TrafficIncident) incident;
-			for (Position p : incidentToKnowledge.positionStringMap.keySet()) {
+			TrafficIncident trafficIncident = new TrafficIncident("traffic");
+			trafficIncident = (TrafficIncident) incident;
+			for (TrafficKnowdedge p : incidentToKnowledge.positionStringMap.keySet()) {
 				if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y2 && trafficIncident.y <= p.y1) {
-					position = p;
+					trafficKnowdedge = p;
 					break;
 				}
 			}
 		}
-		return position;
+		return trafficKnowdedge;
 	}
 
 	private TimeData parseTimeSection(String timeSection) {

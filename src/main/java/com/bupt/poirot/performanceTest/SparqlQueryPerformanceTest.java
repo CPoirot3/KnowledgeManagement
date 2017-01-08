@@ -82,7 +82,6 @@ public class SparqlQueryPerformanceTest {
 
         dataset.begin(ReadWrite.READ);
         try(QueryExecution qExec = QueryExecutionFactory.create(qs4, dataset)) {
-
             ResultSet rs = qExec.execSelect() ;
             System.out.println(rs.getResourceModel().size());
             ResultSetFormatter.out(rs);

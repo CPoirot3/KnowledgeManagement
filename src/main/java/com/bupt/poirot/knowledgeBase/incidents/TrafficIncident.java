@@ -15,6 +15,9 @@ public class TrafficIncident implements Incident {
     public float speed; // 速度
     public byte direction; // 方向 0, 1, 2, 3, 4, 5, 6, 7
 
+    public TrafficIncident(String domain) {
+        this.domain = domain;
+    }
 
     public TrafficIncident(String domain, String name, String carName, long time, float x, float y, boolean status,
                       float speed, byte direction) {
