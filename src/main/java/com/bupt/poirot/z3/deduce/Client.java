@@ -55,6 +55,7 @@ public class Client {
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				count++;
+//				Thread.sleep(1);
 				if (count % 1000000 == 0) {
 					System.out.println("dealt lines : " + count);
 				}

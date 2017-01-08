@@ -84,14 +84,16 @@ public class Deducer {
                     mark = true;
                     scope = s;
                     scopeDeduceSolver.pop();
+                    System.out.println("在推理范围内");
                     break;
+                } else {
+                    System.out.println("不在此目标推理范围");
                 }
                 scopeDeduceSolver.pop();
             }
             if (!mark) { // do not deduce, not in the scope
                 return;
             }
-
 
             List<Solver> solverList = solverMap.get(scope); // get the solver responsible for the scope
             System.out.println("solverList.size() : " + solverList.size());
@@ -118,18 +120,21 @@ public class Deducer {
                     for (Incident incident1 : bufferQueue) {
                         TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
                         totalReal = z3Factory.plus(context, totalReal);
-
                         float s = trafficIncident1.speed;
                         if (s < 10) {
                             validReal = z3Factory.plus(context, validReal);
                         }
                     }
 
+
                     solver.add(context.mkEq(valid, validReal));
                     solver.add(context.mkEq(total, totalReal));
 //                    System.out.println(valid + "\n" + total);
 
                     if (solver.check() == Status.UNSATISFIABLE) {
+                        for (BoolExpr boolExpr : solver.getAssertions()) {
+                            System.out.println(boolExpr);
+                        }
                         document.append("value", ResultManager.get(i));
                         solver.pop();
                         sat = true;
