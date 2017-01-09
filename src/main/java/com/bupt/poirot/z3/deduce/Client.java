@@ -27,10 +27,10 @@ public class Client {
 	public Context context;
 	public Deducer deducer;
 	IncidentToKnowledge incidentToKnowledge;
-
 	static int count = 0;
 
 	public Client(TargetInfo targetInfo) {
+		System.out.println("construct client");
 		this.context = new Context();
 		this.deducer = new Deducer(context, targetInfo);
 	}
@@ -42,12 +42,16 @@ public class Client {
 	}
 
 	public void init() {
-        // TODO
+		System.out.println("init begin : ");
 		incidentToKnowledge = new IncidentToKnowledge();
 		incidentToKnowledge.load();
+		System.out.println("init done : ");
+
 	}
 
 	public void acceptData() { // 数据
+
+		System.out.println("begin accept data : ");
 		File file = new File(Config.getString("data_file"));
 		System.out.println(file.getAbsoluteFile());
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
@@ -60,6 +64,9 @@ public class Client {
 					System.out.println("dealt lines : " + count);
 				}
 				deal(line, "traffic");
+				if (count > 2000000) {
+					break;
+				}
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();

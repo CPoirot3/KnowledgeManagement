@@ -35,6 +35,8 @@ public class Deducer {
     public Context context;
     public TargetInfo targetInfo;
 
+    public Map<String, FuncDecl> funcDeclMap;
+
     public Solver scopeDeduceSolver;
     public Map<String, List<Solver>> solverMap;
     LinkedList<Incident> bufferQueue;
@@ -42,12 +44,14 @@ public class Deducer {
     long current;
 
     public Deducer(Context context, TargetInfo targetInfo) {
+        System.out.println("Construct Deducer :");
         this.context = context;
         this.targetInfo = targetInfo;
         this.scopeDeduceSolver = context.mkSolver();
         solverMap = new HashMap<>();
         bufferQueue = new LinkedList<>();
         scopeManager = new ScopeManager();
+        funcDeclMap = new HashMap<>();
         init();
     }
 
@@ -59,7 +63,7 @@ public class Deducer {
         }
 
         TargetParser targetParser = new TargetParser(targetInfo);
-        targetParser.parse(context, scopeDeduceSolver, solverMap, scopeManager);
+        targetParser.parse(context, scopeDeduceSolver, solverMap, scopeManager, funcDeclMap);
     }
 
 
@@ -73,9 +77,9 @@ public class Deducer {
             String scope = null;
             boolean mark = false;
             for (String s : solverMap.keySet()) {
-                // TODO
                 TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManager.getKnowledge(s);
                 BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), trafficKnowdedge);
+                System.out.println("范围表达式 :" + t);
 
                 scopeDeduceSolver.push();
                 scopeDeduceSolver.add(context.mkNot(t));
@@ -91,6 +95,7 @@ public class Deducer {
                 }
                 scopeDeduceSolver.pop();
             }
+            System.out.println();
             if (!mark) { // do not deduce, not in the scope
                 return;
             }
@@ -165,10 +170,10 @@ public class Deducer {
     }
 
     private BoolExpr mkBoolExpr(String iri, TrafficKnowdedge trafficKnowdedge) {
-        iri = iri.split("#")[0] + "#hasPosition>";
-        FuncDecl funcDecl = FuncDeclGenerate.stringToFuncMap.get(iri);
+        String funcName = iri.split("#")[0] + "#hasPosition>";
+        FuncDecl funcDecl = funcDeclMap.get(funcName);
         if (funcDecl == null) {
-            System.out.println("don't found funcDecl for iri : " + iri);
+            System.out.println("don't found funcDecl for iri : " + funcName);
             throw new RuntimeException("don't found funcDecl in Deducer.mkBoolExpr()");
         }
         Sort[] domains = funcDecl.getDomain();

@@ -55,8 +55,8 @@ public class IncidentToKnowledge {
             String iri = iriManage.knowledgeNameWithSeparator(name);
             TrafficKnowdedge p = new TrafficKnowdedge(iri,"traffic", name, x1, y1, x2, y2);
             positionStringMap.put(p, p.name);
-            System.out.println(positionStringMap.get(p));
-            System.out.println(p.getIRI() + " " + p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
+//            System.out.println(positionStringMap.get(p));
+//            System.out.println(p.getIRI() + " " + p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
         }
     }
 

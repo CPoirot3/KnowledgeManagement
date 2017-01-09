@@ -19,16 +19,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FuncDeclGenerate {
-    public static Map<String, FuncDecl> stringToFuncMap = new HashMap<>();
-
-    public Pattern pattern = Pattern.compile("(.+)\\((.+?)\\)");
-
+    public Map<String, FuncDecl> stringToFuncMap;
+    public Pattern pattern;
+    public FuncDeclGenerate() {
+        stringToFuncMap = new HashMap<>();
+        pattern = Pattern.compile("(.+)\\((.+?)\\)");
+    }
 
     public String[] findDomainFormulaString(String dlClauseString) {
-//        System.out.println(dlClauseString);
-
         String[] strs = dlClauseString.split(" :- ");
-
         String domain, formula;
         if (strs[0].contains("atLeast") || strs[0].contains("atMost") || strs[0].contains(" v ")) {
             domain = strs[1];

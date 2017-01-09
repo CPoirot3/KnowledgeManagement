@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ import org.semanticweb.HermiT.model.Term;
 
 public class OWLToZ3 {
 
-    public BoolExpr parseFromStream(Context context, InputStream inputStream) {
+    public BoolExpr parseFromStream(Context context, InputStream inputStream, Map<String, FuncDecl> funcDeclMap) {
         ParseOWLToDLOntology parseOWLToDLOntology = new ParseOWLToDLOntology();
 
         DLOntology dlOntology = parseOWLToDLOntology.parse(inputStream);
@@ -34,13 +35,12 @@ public class OWLToZ3 {
         for (DLClause dlClause : set) {
             System.out.println(dlClause.toString());
         }
-        BoolExpr res = null;
 
+        BoolExpr res = null;
         FuncDeclGenerate funcDeclGenerate = new FuncDeclGenerate();
 
-
+        System.out.println("mark");
         for (DLClause dlClause : set) {
-//            System.out.println(dlClause.toString());
             Quantifier quantifier = funcDeclGenerate.getFuncDecl(context, dlClause);
             if (quantifier != null) {
                 if (res != null) {
@@ -52,145 +52,47 @@ public class OWLToZ3 {
         }
 
         Map<String, FuncDecl> map = funcDeclGenerate.stringToFuncMap;
+
+        System.out.println("Z3函数如下 :");
         for (String str : map.keySet()) {
             System.out.println(str + " " + map.get(str));
+            funcDeclMap.put(str, map.get(str));
         }
         Solver solver = context.mkSolver();
 
-//        Set<Individual> setIndividuals = dlOntology.getAllIndividuals();
-//        for (Individual individual : setIndividuals) {
-////            System.out.println(individual);
-//            String iri = individual.toString();
-//            BoolExpr boolExpr;
-//            if (Character.isDigit(iri.charAt(iri.length() - 2))) {
-//                FuncDecl funcDecl = map.get(StrUtils.replaceSuffixName(iri, "TrafficKnowdedge"));
-//                Sort[] sorts = funcDecl.getDomain();
-//                Expr[] exprs = new Expr[sorts.length];
-//                exprs[0] = context.mkConst(iri, sorts[0]);
-//                boolExpr = context.mkEq(context.mkApp(funcDecl, exprs), context.mkTrue());
-//            } else {
-//                FuncDecl funcDecl = map.get(StrUtils.replaceSuffixName(iri, "Road"));
-//                Sort[] sorts = funcDecl.getDomain();
-//                Expr[] exprs = new Expr[sorts.length];
-//                exprs[0] = context.mkConst(iri, sorts[0]);
-//                boolExpr = context.mkEq(context.mkApp(funcDecl, exprs), context.mkTrue());
-//            }
-//            solver.add(boolExpr);
-//            count++;
-//            System.out.println(boolExpr);
-//        }
-
-        /*System.out.println();
-        System.out.println("getAllAtomicConcepts");
-        Set<AtomicConcept> setAtoms = dlOntology.getAllAtomicConcepts();
-        for (AtomicConcept atomicConcept :setAtoms) {
-            System.out.println(atomicConcept);
-        }
-        System.out.println();
-
-        System.out.println("getAllAtomicDataRoles");
-        Set<AtomicRole> atomicRoles = dlOntology.getAllAtomicDataRoles();
-        for (AtomicRole atomicConcept : atomicRoles) {
-            System.out.println(atomicConcept);
-        }
-        System.out.println();
-
-        System.out.println("getAllAtomicObjectRoles");
-        Set<AtomicRole> atomicObjectRoles = dlOntology.getAllAtomicObjectRoles();
-        for (AtomicRole atomicConcept : atomicObjectRoles) {
-            System.out.println(atomicConcept);
-            System.out.println();
-        }
-        System.out.println();
-
-        System.out.println("getAllIndividuals");
-        Set<Individual> individuals = dlOntology.getAllIndividuals();
-        for (Individual atomicConcept : individuals) {
-            System.out.println(atomicConcept);
-        }
-        System.out.println();
-
-        System.out.println("getNegativeFacts");
-        Set<Atom> setAtom = dlOntology.getNegativeFacts();
-        for (Atom atom : setAtom) {
-            System.out.println(atom);
-        }
-        System.out.println();*/
-
-        System.out.println("getPositiveFacts");
         Set<Atom> positiveFacts = dlOntology.getPositiveFacts();
-        System.out.println(positiveFacts.size());
+        System.out.println("PositiveFacts set size : " + positiveFacts.size());
+        System.out.println();
         for (Atom atom : positiveFacts) {
-            System.out.println(atom);
+            System.out.println("Atom : " + atom);
             String dlPredicateString = atom.getDLPredicate().toString();
-//            System.out.println(dlPredicateString);
             FuncDecl funcDecl = map.get(dlPredicateString);
             Sort[] domains = funcDecl.getDomain();
             Expr[] exprs = new Expr[domains.length];
-//            System.out.println(atom.getArity());
             for (int i = 0; i < atom.getArity(); i++) {
                 Term term = atom.getArgument(i);
                 String termString = term.toString();
-//                System.out.println(termString);
                 if (termString.endsWith("xsd:decimal")) {
                     String decimalString = termString.substring(1, termString.indexOf("^^") - 1);
-//                    System.out.println(decimalString);
                     exprs[i] = context.mkReal(decimalString);
                 } else {
                     exprs[i] = context.mkConst(termString, domains[i]);
                 }
             }
-
             BoolExpr boolExpr = context.mkEq(context.mkApp(funcDecl, exprs), context.mkTrue());
             solver.add(boolExpr);
-            System.out.println(boolExpr);
+            System.out.println("BoolExpr : " + boolExpr);
             System.out.println();
         }
         System.out.println();
 
-//        System.out.println("数据属性 :");
-//        Map<AtomicRole,Map<Individual,Set<Constant>>> m_dataPropertyAssertions = dlOntology.getDataPropertyAssertions();
-//        for (AtomicRole atomicRole : m_dataPropertyAssertions.keySet()) {
-//            System.out.println("数据属性  " + atomicRole + " :");
+//        FuncDecl funcDecl = map.get("<http://www.semanticweb.org/traffic-ontology#hasPosition>");
+//        Sort[] domains = funcDecl.getDomain();
+//        Expr[] exprs = new Expr[domains.length];
+//        exprs[0] = context.mkConst("<http://www.semanticweb.org/traffic-ontology#福中路>", domains[0]);
+//        exprs[1] = context.mkConst("<http://www.semanticweb.org/traffic-ontology#福中路p4>", domains[1]);
 //
-//            FuncDecl funcDecl = map.get(atomicRole.toString());
-//            Sort[] domains = funcDecl.getDomain();
-//
-//            Map<Individual, Set<Constant>> dataRoleMap = m_dataPropertyAssertions.get(atomicRole);
-//            for (Individual individual : dataRoleMap.keySet()) {
-//                String iri = individual.toString();
-//                System.out.print(iri + "\t: ");
-//                Expr[] exprs = new Expr[domains.length];
-//                exprs[0] = context.mkConst(iri, domains[0]);
-//                for (Constant constant : dataRoleMap.get(individual)) {
-////                    int data = (int)(Float.parseFloat(constant.getDataValue().toString()) * 1000000);
-////                    exprs[1] = context.mkReal(data, 1000000);
-//                    exprs[1] = context.mkReal(constant.getDataValue().toString());
-//                    System.out.print(constant + "  ");
-//                }
-//                System.out.println();
-//                BoolExpr boolExpr = context.mkEq(context.mkApp(funcDecl, exprs), context.mkTrue());
-//                solver.add(boolExpr);
-//                count++;
-//                System.out.println(boolExpr);
-//                System.out.println();
-//            }
-//            System.out.println();
-//        }
-
-//        System.out.println(solver.getAssertions().length);
-
-//        for(Expr e : solver.getAssertions()) {
-//            System.out.println(e);
-//        }
-
-        FuncDecl funcDecl = map.get("<http://www.semanticweb.org/traffic-ontology#hasPosition>");
-        Sort[] domains = funcDecl.getDomain();
-        Expr[] exprs = new Expr[domains.length];
-        exprs[0] = context.mkConst("<http://www.semanticweb.org/traffic-ontology#福中路>", domains[0]);
-        exprs[1] = context.mkConst("<http://www.semanticweb.org/traffic-ontology#福中路p4>", domains[1]);
-
-        solver.add(context.mkEq(context.mkApp(funcDecl, exprs), context.mkFalse()));
+//        solver.add(context.mkEq(context.mkApp(funcDecl, exprs), context.mkFalse()));
 
 //        if (solver.check() == Status.SATISFIABLE) {
 //            System.out.println(solver.getModel());
@@ -207,7 +109,7 @@ public class OWLToZ3 {
             }
         }
 
-
+        System.out.println("Solver length : " + solver.getAssertions().length);
         return res;
     }
 
@@ -218,8 +120,9 @@ public class OWLToZ3 {
         try {
             InputStream inputStream = new FileInputStream(schemaFile);
 
+            Map<String, FuncDecl> funcDeclMap = new HashMap<>();
             OWLToZ3 owlToZ3 = new OWLToZ3();
-            owlToZ3.parseFromStream(new Context(), inputStream);
+            owlToZ3.parseFromStream(new Context(), inputStream, funcDeclMap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
