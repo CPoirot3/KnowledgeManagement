@@ -131,7 +131,6 @@ public class Deducer {
                         }
                     }
 
-
                     solver.add(context.mkEq(valid, validReal));
                     solver.add(context.mkEq(total, totalReal));
 //                    System.out.println(valid + "\n" + total);
