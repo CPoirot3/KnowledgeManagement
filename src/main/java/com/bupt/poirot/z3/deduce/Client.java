@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Client {
 
@@ -54,23 +55,33 @@ public class Client {
 		System.out.println("begin accept data : ");
 		File file = new File(Config.getString("data_file"));
 		System.out.println(file.getAbsoluteFile());
+		Date init = new Date();
+		Date begin = init;
+
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
 			String line;
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				count++;
 //				Thread.sleep(1);
-				if (count % 1000000 == 0) {
-					System.out.println("dealt lines : " + count);
+				if (count % 300000 == 0) {
+//					Thread.sleep(1000 + begin.getTime() - (new Date().getTime()));
+//					System.out.println("dealt lines : " + count);
+//					System.out.println("current :" + new Date());
+//					Date cur = new Date();
+//					System.out.println(cur.getTime() - begin.getTime());
+//					begin = cur;
 				}
 				deal(line, "traffic");
-				if (count > 2000000) {
-					break;
-				}
+//				if (count > 2000000) {
+//					break;
+//				}
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
+		Date end = new Date();
+		System.out.println(((double)end.getTime() - init.getTime()) * 1000 / count);
 		System.out.println("dealt done");
 	}
 
