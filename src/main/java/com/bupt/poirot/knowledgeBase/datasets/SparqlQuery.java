@@ -37,8 +37,6 @@ public class SparqlQuery {
         return resultSet;
     }
 
-
-
     public static void main(String[] args) {
 
         DatasetFactory datasetFactory = new DatasetFactory();

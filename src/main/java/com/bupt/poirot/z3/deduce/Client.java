@@ -106,7 +106,6 @@ public class Client {
 		}
 	}
 
-
 	private Knowledge getKnowledge(Incident incident) {
 		TrafficKnowdedge trafficKnowdedge = null;
 		if (incident instanceof TrafficIncident) {
