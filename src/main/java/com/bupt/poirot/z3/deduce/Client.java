@@ -8,7 +8,11 @@ import com.bupt.poirot.knowledgeBase.schemaManage.Knowledge;
 import com.bupt.poirot.knowledgeBase.schemaManage.TrafficKnowdedge;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
 import com.bupt.poirot.utils.Config;
+import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+import com.microsoft.z3.IntExpr;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
 import org.apache.jena.atlas.RuntimeIOException;
 
 import java.io.BufferedReader;
@@ -19,6 +23,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 
 public class Client {
 
@@ -30,10 +35,20 @@ public class Client {
 	IncidentToKnowledge incidentToKnowledge;
 	static int count = 0;
 
+	public LinkedList<String> buffer;
+	public LinkedList<String> messageBuffer;
+
+	public long lastDeduce = -1;
+	public Solver timeSolver;
+
 	public Client(TargetInfo targetInfo) {
 		System.out.println("construct client");
 		this.context = new Context();
 		this.deducer = new Deducer(context, targetInfo);
+
+		timeSolver = context.mkSolver();
+		buffer = new LinkedList<>();
+		messageBuffer = new LinkedList<>();
 	}
 
 	public void workflow() {
@@ -72,7 +87,9 @@ public class Client {
 //					System.out.println(cur.getTime() - begin.getTime());
 //					begin = cur;
 				}
+
 				deal(line, "traffic");
+
 //				if (count > 2000000) {
 //					break;
 //				}
@@ -85,27 +102,75 @@ public class Client {
 		System.out.println("dealt done");
 	}
 
-	private void deal(String message, String domain) {
-		Knowledge knowledge = null;
-		IncidentFactory incidentFactory = new IncidentFactory();
-		Incident incident = incidentFactory.converIncident(domain, message);
+	private void deal(String message, String domain) throws InterruptedException {
 
-		if (incident != null) {
-			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
-		}
-
-		if (knowledge != null) {
-			System.out.println(knowledge.getIRI());
-			deducer.deduce(knowledge, incident);
+		if (buffer.size() >= 20000) { // 每秒钟发送1000
+			long x = new Date().getTime();
+			int size = buffer.size();
+			System.out.println("buffer size : " + size);
+			while (!buffer.isEmpty()) {
+				deduce(buffer.removeFirst(), domain);
+			}
+			System.out.println(("20000条处理时间 : " + (new Date().getTime() - x)));
+			Thread.sleep(980);
 		} else {
-			incident = null;
-			count++;
-			if (count % 1000000 == 0) {
-				System.gc();
+			buffer.add(message);
+		}
+	}
+
+	long start = 0;
+
+	public void deduceInSection(String message, String domain) {
+
+		if (timeSolver.getAssertions().length == 0) {
+			start = new Date().getTime();
+			IntExpr cur = context.mkIntConst("cur");
+			timeSolver.push();
+			BoolExpr boolExpr = context.mkGe(cur, context.mkInt(start + 20 * 1000));
+			System.out.println(boolExpr);
+			timeSolver.add(context.mkNot(boolExpr));
+			messageBuffer.add(message);
+			System.out.println(timeSolver.getAssertions().length);
+		} else {
+			BoolExpr boolExpr = context.mkGe(context.mkIntConst("cur"), context.mkInt(new Date().getTime()));
+//			System.out.println(boolExpr);
+			timeSolver.add(boolExpr);
+
+			if (timeSolver.check() == Status.UNSATISFIABLE) {
+
+				while (!messageBuffer.isEmpty()) {
+					deduce(messageBuffer.removeFirst(), domain);
+				}
+				double average = ((double)(new Date().getTime() - start)) / timeSolver.getAssertions().length;
+				System.out.println("Time Solver : " + timeSolver.getAssertions().length + "  average : " + average);
+				System.out.println();
+				timeSolver.pop();
+			} else {
+				messageBuffer.add(message);
 			}
 		}
 	}
 
+	public void deduce(String message, String domain) {
+		Knowledge knowledge = null;
+		IncidentFactory incidentFactory = new IncidentFactory();
+		Incident incident = incidentFactory.converIncident(domain, message);
+		if (incident != null) {
+			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
+		}
+		deducer.deduce(knowledge, incident);
+
+//		if (knowledge != null) {
+//			System.out.println(knowledge.getIRI());
+//			deducer.deduce(knowledge, incident);
+//		} else {
+//			incident = null;
+//			count++;
+//			if (count % 1000000 == 0) {
+//				System.gc();
+//			}
+//		}
+	}
 	private Knowledge getKnowledge(Incident incident) {
 		TrafficKnowdedge trafficKnowdedge = null;
 		if (incident instanceof TrafficIncident) {

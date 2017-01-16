@@ -1,6 +1,5 @@
 package com.bupt.poirot.z3.deduce;
 
-import com.bupt.poirot.jettyServer.jetty.RoadData;
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.knowledgeBase.incidents.Incident;
 import com.bupt.poirot.knowledgeBase.incidents.TrafficIncident;
@@ -10,12 +9,12 @@ import com.bupt.poirot.knowledgeBase.schemaManage.ScopeManager;
 import com.bupt.poirot.knowledgeBase.schemaManage.TargetKnowledge;
 import com.bupt.poirot.target.TargetParser;
 import com.bupt.poirot.z3.library.Z3Factory;
-import com.bupt.poirot.z3.parseAndDeduceOWL.FuncDeclGenerate;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.FuncDecl;
+import com.microsoft.z3.IntExpr;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Sort;
 import com.microsoft.z3.Status;
@@ -68,11 +67,12 @@ public class Deducer {
 
 
     public void deduce(Knowledge knowledge, Incident incident) {
+        bufferQueue.addLast(incident);
+
         if (knowledge != null && knowledge instanceof TrafficKnowdedge && incident instanceof TrafficIncident) { // 存在映射
             TrafficKnowdedge trafficKnowdedge = (TrafficKnowdedge) knowledge;
             bufferQueue.addLast(incident);
 //            System.out.println(trafficKnowdedge.getIRI());
-
             // judge is or not in the scope
             String scope = null;
             boolean mark = false;
@@ -104,6 +104,9 @@ public class Deducer {
             System.out.println("solverList.size() : " + solverList.size());
 
             long time = ((TrafficIncident)bufferQueue.peekLast()).time;
+            Solver timeSolver = context.mkSolver();
+            IntExpr t = context.mkInt(time);
+            timeSolver.add(context.mkNot(context.mkGe(t, context.mkInt(current))));
             if (time - current > 600 * 1000) { // 积累十分钟的时间
                 System.out.println(new Date(current));
                 System.out.println("size : " + bufferQueue.size());
@@ -185,41 +188,41 @@ public class Deducer {
     }
 
 
-    // 根据gps坐标推理判断属于哪条路
-    public static boolean isInTheRoad(double x, double y) {
-        // get roadData
-        RoadData roadData = null;
-        double m = (roadData.x1 - x) * (roadData.y2 - y);
-        double n = (roadData.x2 - x) * (roadData.y1 - y);
-        double result = m * n;
-        if (Math.abs(result) > 0.00000000001) {
-            return false;
-        }
-
-        if ((roadData.x1 - x) * (roadData.x2 - x) + (roadData.y1 - y) * (roadData.y2 - y) > 0) {
-            return false;
-        }
-
-        double ax = x - roadData.x1;
-        double ay = y - roadData.y1;
-
-        double bx = roadData.x2 - roadData.x1;
-        double by = roadData.y2 - roadData.x2;
-
-        double aLength = Math.sqrt(ax * ax + ay * ay);
-        double bLength = Math.sqrt(bx * bx + by * by);
-
-        double cos = aLength * bLength / (ax * bx + ay * by);
-        double sin = Math.sqrt(1.0 - cos * cos);
-
-        double distane = aLength * sin;
-
-        if (distane > 0.00000001) {
-            return false;
-        }
-
-        return true;
-    }
+//    // 根据gps坐标推理判断属于哪条路
+//    public static boolean isInTheRoad(double x, double y) {
+//        // get roadData
+//        RoadData roadData = null;
+//        double m = (roadData.x1 - x) * (roadData.y2 - y);
+//        double n = (roadData.x2 - x) * (roadData.y1 - y);
+//        double result = m * n;
+//        if (Math.abs(result) > 0.00000000001) {
+//            return false;
+//        }
+//
+//        if ((roadData.x1 - x) * (roadData.x2 - x) + (roadData.y1 - y) * (roadData.y2 - y) > 0) {
+//            return false;
+//        }
+//
+//        double ax = x - roadData.x1;
+//        double ay = y - roadData.y1;
+//
+//        double bx = roadData.x2 - roadData.x1;
+//        double by = roadData.y2 - roadData.x2;
+//
+//        double aLength = Math.sqrt(ax * ax + ay * ay);
+//        double bLength = Math.sqrt(bx * bx + by * by);
+//
+//        double cos = aLength * bLength / (ax * bx + ay * by);
+//        double sin = Math.sqrt(1.0 - cos * cos);
+//
+//        double distane = aLength * sin;
+//
+//        if (distane > 0.00000001) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
     public static void main(String[] args) {
         try {

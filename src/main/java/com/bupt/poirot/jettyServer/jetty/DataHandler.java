@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bupt.poirot.data.mongodb.MongoTool;
+import com.bupt.poirot.knowledgeBase.datasets.DatasetFactory;
 import com.bupt.poirot.z3.deduce.Client;
 import com.bupt.poirot.z3.deduce.TargetInfo;
 import com.mongodb.client.MongoCollection;
@@ -45,7 +46,15 @@ public class DataHandler extends AbstractHandler {
 			System.out.println("Begin deduce");
 			deal(params);
 			System.out.println("end deduce");
+		} else if (path.endsWith("dataset")) {
+			System.out.println("Begin deduce");
+			knowledgeManage(params);
+			System.out.println("end deduce");
 		}
+	}
+
+	private void knowledgeManage(Map<String, String[]> params) {
+		DatasetFactory datasetFactory = new DatasetFactory();
 	}
 
 	private Document getResult(Map<String, String[]> params) {
