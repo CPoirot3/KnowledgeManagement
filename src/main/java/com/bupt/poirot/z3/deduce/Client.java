@@ -104,15 +104,15 @@ public class Client {
 
 	private void deal(String message, String domain) throws InterruptedException {
 
-		if (buffer.size() >= 20000) { // 每秒钟发送1000
+		if (buffer.size() >= 50000) { // 每秒钟发送1000
 			long x = new Date().getTime();
 			int size = buffer.size();
 			System.out.println("buffer size : " + size);
 			while (!buffer.isEmpty()) {
 				deduce(buffer.removeFirst(), domain);
 			}
-			System.out.println(("20000条处理时间 : " + (new Date().getTime() - x)));
 			Thread.sleep(980);
+			System.out.println(("20000条处理时间 : " + (new Date().getTime() - x)));
 		} else {
 			buffer.add(message);
 		}
@@ -152,9 +152,10 @@ public class Client {
 	}
 
 	public void deduce(String message, String domain) {
-		Knowledge knowledge = null;
+
 		IncidentFactory incidentFactory = new IncidentFactory();
 		Incident incident = incidentFactory.converIncident(domain, message);
+		Knowledge knowledge = null;
 		if (incident != null) {
 			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
 		}

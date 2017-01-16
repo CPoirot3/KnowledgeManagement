@@ -49,6 +49,7 @@ public class Deducer {
         this.scopeDeduceSolver = context.mkSolver();
         solverMap = new HashMap<>();
         bufferQueue = new LinkedList<>();
+
         scopeManager = new ScopeManager();
         funcDeclMap = new HashMap<>();
         init();
@@ -60,14 +61,12 @@ public class Deducer {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         TargetParser targetParser = new TargetParser(targetInfo);
         targetParser.parse(context, scopeDeduceSolver, solverMap, scopeManager, funcDeclMap);
     }
 
 
     public void deduce(Knowledge knowledge, Incident incident) {
-        bufferQueue.addLast(incident);
 
         if (knowledge != null && knowledge instanceof TrafficKnowdedge && incident instanceof TrafficIncident) { // 存在映射
             TrafficKnowdedge trafficKnowdedge = (TrafficKnowdedge) knowledge;
@@ -80,7 +79,6 @@ public class Deducer {
                 TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManager.getKnowledge(s);
                 BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), trafficKnowdedge);
                 System.out.println("范围表达式 :" + t);
-
                 scopeDeduceSolver.push();
                 scopeDeduceSolver.add(context.mkNot(t));
 
@@ -107,7 +105,7 @@ public class Deducer {
             Solver timeSolver = context.mkSolver();
             IntExpr t = context.mkInt(time);
             timeSolver.add(context.mkNot(context.mkGe(t, context.mkInt(current))));
-            if (time - current > 600 * 1000) { // 积累十分钟的时间
+            if (time - current > 600 * 1000) { // 积累分钟的时间
                 System.out.println(new Date(current));
                 System.out.println("size : " + bufferQueue.size());
                 // 推理一次
