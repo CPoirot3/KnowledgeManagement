@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class Deducer {
     public Solver scopeDeduceSolver;
     public Map<String, List<Solver>> solverMap;
     LinkedList<Incident> bufferQueue;
+
     ScopeManager scopeManager;
     long current;
 
@@ -70,9 +72,6 @@ public class Deducer {
 
         if (knowledge != null && knowledge instanceof TrafficKnowdedge && incident instanceof TrafficIncident) { // 存在映射
             TrafficKnowdedge trafficKnowdedge = (TrafficKnowdedge) knowledge;
-            bufferQueue.addLast(incident);
-//            System.out.println(trafficKnowdedge.getIRI());
-            // judge is or not in the scope
             String scope = null;
             boolean mark = false;
             for (String s : solverMap.keySet()) {
@@ -81,7 +80,6 @@ public class Deducer {
                 System.out.println("范围表达式 :" + t);
                 scopeDeduceSolver.push();
                 scopeDeduceSolver.add(context.mkNot(t));
-
                 if (scopeDeduceSolver.check() == Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
                     mark = true;
                     scope = s;
@@ -93,18 +91,14 @@ public class Deducer {
                 }
                 scopeDeduceSolver.pop();
             }
-            System.out.println();
             if (!mark) { // do not deduce, not in the scope
                 return;
             }
 
             List<Solver> solverList = solverMap.get(scope); // get the solver responsible for the scope
             System.out.println("solverList.size() : " + solverList.size());
-
+            bufferQueue.addLast(incident);
             long time = ((TrafficIncident)bufferQueue.peekLast()).time;
-            Solver timeSolver = context.mkSolver();
-            IntExpr t = context.mkInt(time);
-            timeSolver.add(context.mkNot(context.mkGe(t, context.mkInt(current))));
             if (time - current > 600 * 1000) { // 积累分钟的时间
                 System.out.println(new Date(current));
                 System.out.println("size : " + bufferQueue.size());
@@ -125,11 +119,13 @@ public class Deducer {
 
                     for (Incident incident1 : bufferQueue) {
                         TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
+
                         totalReal = z3Factory.plus(context, totalReal);
                         float s = trafficIncident1.speed;
                         if (s < 10) {
                             validReal = z3Factory.plus(context, validReal);
                         }
+
                     }
 
                     solver.add(context.mkEq(valid, validReal));
@@ -229,5 +225,101 @@ public class Deducer {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void deduce(LinkedList<Incident> incidentBuffer, LinkedList<Knowledge> knowledges) {
+        bufferQueue.clear();
+        List<Solver> solverList = null;
+        Iterator<Incident> iterator = incidentBuffer.iterator();
+        while(iterator.hasNext()) {
+            Incident incident = iterator.next();
+            Knowledge knowledge = knowledges.removeFirst();
+
+            if (knowledge != null && knowledge instanceof TrafficKnowdedge && incident instanceof TrafficIncident) { // 存在映射
+                TrafficKnowdedge trafficKnowdedge = (TrafficKnowdedge) knowledge;
+                String scope = null;
+                boolean mark = false;
+                for (String s : solverMap.keySet()) {
+                    TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManager.getKnowledge(s);
+                    BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), trafficKnowdedge);
+                    System.out.println("范围表达式 :" + t);
+                    scopeDeduceSolver.push();
+                    scopeDeduceSolver.add(context.mkNot(t));
+                    if (scopeDeduceSolver.check() == Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
+                        mark = true;
+                        scope = s;
+                        scopeDeduceSolver.pop();
+                        System.out.println("在推理范围内");
+                        break;
+                    } else {
+                        System.out.println("不在此目标推理范围");
+                    }
+                    scopeDeduceSolver.pop();
+                }
+                if (!mark) { // do not deduce, not in the scope
+                    continue;
+                }
+                solverList = solverMap.get(scope); // get the solver responsible for the scope
+                bufferQueue.addLast(incident);
+            }
+        }
+
+        for (String key : solverMap.keySet()) {
+            solverList = solverMap.get(key);
+            break;
+        }
+        if (solverList != null) {
+            System.out.println("size : " + bufferQueue.size());
+            // 推理一次
+            int size = bufferQueue.size();
+
+            for (int j = 0; j < Math.max(0, 5000 - size); j++) {
+                bufferQueue.add(new TrafficIncident("test", "test", "test", 10, 10, 10, true, 10, (byte)1));
+            }
+            System.out.println("size : " + bufferQueue.size());
+            Document document = new Document();
+            document.append("id", Integer.valueOf(targetInfo.id));
+            document.append("time", String.valueOf(current));
+
+            boolean sat = false;
+            for (int i = 0; i < solverList.size(); i++) {
+                Solver solver = solverList.get(i);
+                solver.push();
+                ArithExpr valid = context.mkIntConst("valid");
+                ArithExpr total = context.mkIntConst("carsInRoad");
+                ArithExpr totalReal = context.mkReal(0,1);
+                ArithExpr validReal =  context.mkReal(0,1);
+                Z3Factory z3Factory = new Z3Factory();
+
+                for (Incident incident1 : bufferQueue) {
+                    TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
+                    totalReal = z3Factory.plus(context, totalReal);
+                    float s = trafficIncident1.speed;
+                    if (s < 10) {
+                        validReal = z3Factory.plus(context, validReal);
+                    }
+                }
+
+                solver.add(context.mkEq(valid, validReal));
+                solver.add(context.mkEq(total, totalReal));
+
+                if (solver.check() == Status.UNSATISFIABLE) {
+                    document.append("value", ResultManager.get(i));
+                    solver.pop();
+                    sat = true;
+                    break;
+                }
+                solver.pop();
+            }
+
+            if (!sat) {
+                document.append("value", ResultManager.get(-1));
+            }
+            System.out.println(document);
+            MongoTool mongoTool = new MongoTool();
+            mongoTool.flushToDatabase(document);
+        }
+
     }
 }

@@ -36,7 +36,7 @@ public class Client {
 	static int count = 0;
 
 	public LinkedList<String> buffer;
-	public LinkedList<String> messageBuffer;
+	public LinkedList<Incident> incidentBuffer;
 
 	public long lastDeduce = -1;
 	public Solver timeSolver;
@@ -48,7 +48,7 @@ public class Client {
 
 		timeSolver = context.mkSolver();
 		buffer = new LinkedList<>();
-		messageBuffer = new LinkedList<>();
+		incidentBuffer = new LinkedList<>();
 	}
 
 	public void workflow() {
@@ -62,7 +62,6 @@ public class Client {
 		incidentToKnowledge = new IncidentToKnowledge();
 		incidentToKnowledge.load();
 		System.out.println("init done : ");
-
 	}
 
 	public void acceptData() { // 数据
@@ -70,87 +69,88 @@ public class Client {
 		System.out.println("begin accept data : ");
 		File file = new File(Config.getString("data_file"));
 		System.out.println(file.getAbsoluteFile());
-		Date init = new Date();
-		Date begin = init;
-
+		int count = 0;
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"))) {
 			String line;
-			int count = 0;
+			long begin = new Date().getTime();
 			while ((line = reader.readLine()) != null) {
-				count++;
-//				Thread.sleep(1);
-				if (count % 300000 == 0) {
-//					Thread.sleep(1000 + begin.getTime() - (new Date().getTime()));
-//					System.out.println("dealt lines : " + count);
-//					System.out.println("current :" + new Date());
-//					Date cur = new Date();
-//					System.out.println(cur.getTime() - begin.getTime());
-//					begin = cur;
-				}
-
 				deal(line, "traffic");
-
-//				if (count > 2000000) {
-//					break;
-//				}
+				count++;
+				if (count == 400000) {
+					long diff = (new Date().getTime() - begin);
+					System.out.println(diff);
+					System.out.println((400000 - incidentBuffer.size()) * 1000 / diff);
+					break;
+				}
 			}
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}
-		Date end = new Date();
-		System.out.println(((double)end.getTime() - init.getTime()) * 1000 / count);
-		System.out.println("dealt done");
 	}
 
 	private void deal(String message, String domain) throws InterruptedException {
-
-		if (buffer.size() >= 50000) { // 每秒钟发送1000
+		buffer.add(message);
+		if (buffer.size() >= 5000) { // 每秒钟发送1000
 			long x = new Date().getTime();
 			int size = buffer.size();
 			System.out.println("buffer size : " + size);
 			while (!buffer.isEmpty()) {
-				deduce(buffer.removeFirst(), domain);
+				deduceInSection(buffer.removeFirst(), domain);
 			}
-			Thread.sleep(980);
-			System.out.println(("20000条处理时间 : " + (new Date().getTime() - x)));
-		} else {
-			buffer.add(message);
+			Thread.sleep(1000);
 		}
 	}
-
-	long start = 0;
 
 	public void deduceInSection(String message, String domain) {
 
-		if (timeSolver.getAssertions().length == 0) {
-			start = new Date().getTime();
-			IntExpr cur = context.mkIntConst("cur");
-			timeSolver.push();
-			BoolExpr boolExpr = context.mkGe(cur, context.mkInt(start + 20 * 1000));
-			System.out.println(boolExpr);
-			timeSolver.add(context.mkNot(boolExpr));
-			messageBuffer.add(message);
-			System.out.println(timeSolver.getAssertions().length);
+		IncidentFactory incidentFactory = new IncidentFactory();
+		Incident incident = incidentFactory.converIncident(domain, message);
+
+		if (incidentBuffer.isEmpty()) {
+			incidentBuffer.addLast(incident);
 		} else {
-			BoolExpr boolExpr = context.mkGe(context.mkIntConst("cur"), context.mkInt(new Date().getTime()));
-//			System.out.println(boolExpr);
-			timeSolver.add(boolExpr);
-
-			if (timeSolver.check() == Status.UNSATISFIABLE) {
-
-				while (!messageBuffer.isEmpty()) {
-					deduce(messageBuffer.removeFirst(), domain);
+			incidentBuffer.addLast(incident);
+			TrafficIncident trafficIncident = (TrafficIncident) incident;
+			if (trafficIncident.time - ((TrafficIncident)incidentBuffer.peekFirst()).time > 600 * 1000) {
+//				for (Incident incident1: incidentBuffer) {
+//					deduce(incident1);
+//				}
+				System.out.println("deduce queue size : " + incidentBuffer.size());
+				deduce(incidentBuffer);
+				long last = ((TrafficIncident)incidentBuffer.peekFirst()).time;
+				while (!incidentBuffer.isEmpty() && ((TrafficIncident)incidentBuffer.peekFirst()).time - last < 6 * 1000) {
+					incidentBuffer.removeFirst();
 				}
-				double average = ((double)(new Date().getTime() - start)) / timeSolver.getAssertions().length;
-				System.out.println("Time Solver : " + timeSolver.getAssertions().length + "  average : " + average);
-				System.out.println();
-				timeSolver.pop();
-			} else {
-				messageBuffer.add(message);
 			}
 		}
 	}
 
+	private void deduce(LinkedList<Incident> incidentBuffer) {
+		LinkedList<Knowledge> knowledges = new LinkedList<>();
+		for (Incident incident : incidentBuffer) {
+			knowledges.add(getKnowledge(incident));
+		}
+
+		deducer.deduce(incidentBuffer, knowledges);
+	}
+
+	public void deduce(Incident incident) {
+
+		Knowledge knowledge = null;
+		if (incident != null) {
+			knowledge = getKnowledge(incident);// todo 根据事件对象映射成位置（知识库中已有的知识)
+		}
+		if (knowledge != null) {
+			System.out.println(knowledge.getIRI());
+			deducer.deduce(knowledge, incident);
+		} else {
+			incident = null;
+			count++;
+			if (count % 1000000 == 0) {
+				System.gc();
+			}
+		}
+	}
 	public void deduce(String message, String domain) {
 
 		IncidentFactory incidentFactory = new IncidentFactory();
