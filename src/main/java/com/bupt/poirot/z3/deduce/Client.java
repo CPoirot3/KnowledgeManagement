@@ -44,11 +44,14 @@ public class Client {
 	public Client(TargetInfo targetInfo) {
 		System.out.println("construct client");
 		this.context = new Context();
+		System.out.println("construct client mid");
+
 		this.deducer = new Deducer(context, targetInfo);
 
 		timeSolver = context.mkSolver();
 		buffer = new LinkedList<>();
 		incidentBuffer = new LinkedList<>();
+		System.out.println("construct client end");
 	}
 
 	public void workflow() {
@@ -58,10 +61,8 @@ public class Client {
 	}
 
 	public void init() {
-		System.out.println("init begin : ");
 		incidentToKnowledge = new IncidentToKnowledge();
 		incidentToKnowledge.load();
-		System.out.println("init done : ");
 	}
 
 	public void acceptData() { // 数据
@@ -78,9 +79,9 @@ public class Client {
 				count++;
 				if (count == 400000) {
 					long diff = (new Date().getTime() - begin);
-					System.out.println(diff);
+					System.out.println("time for 400000 message : " + diff);
 					System.out.println((400000 - incidentBuffer.size()) * 1000 / diff);
-					break;
+//					break;
 				}
 			}
 		} catch (Exception e ) {
@@ -91,13 +92,11 @@ public class Client {
 	private void deal(String message, String domain) throws InterruptedException {
 		buffer.add(message);
 		if (buffer.size() >= 5000) { // 每秒钟发送1000
-			long x = new Date().getTime();
-			int size = buffer.size();
-			System.out.println("buffer size : " + size);
+//			long x = new Date().getTime();
 			while (!buffer.isEmpty()) {
 				deduceInSection(buffer.removeFirst(), domain);
 			}
-			Thread.sleep(1000);
+//			Thread.sleep(1000);
 		}
 	}
 
@@ -111,14 +110,16 @@ public class Client {
 		} else {
 			incidentBuffer.addLast(incident);
 			TrafficIncident trafficIncident = (TrafficIncident) incident;
-			if (trafficIncident.time - ((TrafficIncident)incidentBuffer.peekFirst()).time > 600 * 1000) {
-//				for (Incident incident1: incidentBuffer) {
-//					deduce(incident1);
-//				}
-				System.out.println("deduce queue size : " + incidentBuffer.size());
-				deduce(incidentBuffer);
+
+			TrafficIncident firstTrafficIncident = (TrafficIncident)incidentBuffer.peekFirst();
+
+			if (trafficIncident.time - firstTrafficIncident.time > 3600 * 1000) {
+				System.out.println("deduce once, the deduce queue size is : " + incidentBuffer.size());
+				deduce(incidentBuffer); // 遍历但不删除
+
+				// 删除一段时间的数据
 				long last = ((TrafficIncident)incidentBuffer.peekFirst()).time;
-				while (!incidentBuffer.isEmpty() && ((TrafficIncident)incidentBuffer.peekFirst()).time - last < 6 * 1000) {
+				while (!incidentBuffer.isEmpty() && ((TrafficIncident)incidentBuffer.peekFirst()).time - last < 600 * 1000) {
 					incidentBuffer.removeFirst();
 				}
 			}
@@ -175,11 +176,10 @@ public class Client {
 	private Knowledge getKnowledge(Incident incident) {
 		TrafficKnowdedge trafficKnowdedge = null;
 		if (incident instanceof TrafficIncident) {
-			TrafficIncident trafficIncident = new TrafficIncident("traffic");
-			trafficIncident = (TrafficIncident) incident;
+			TrafficIncident trafficIncident = (TrafficIncident) incident;
 			for (TrafficKnowdedge p : incidentToKnowledge.positionStringMap.keySet()) {
 				if (trafficIncident.x >= p.x1 && trafficIncident.x <= p.x2 && trafficIncident.y >= p.y2 && trafficIncident.y <= p.y1) {
-					trafficKnowdedge = p;
+					trafficKnowdedge = new TrafficKnowdedge(p.getIRI(), p.domain, p.name, p.x1, p.y1, p.x2, p.y2);
 					break;
 				}
 			}

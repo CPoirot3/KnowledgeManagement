@@ -15,7 +15,6 @@ public class TargetToBoolExpr {
     }
 
     public List<Solver> parseTargetToBoolExpr(Context ctx, TargetInfo targetInfo) {
-
         List<Solver> list = new ArrayList<>();
         int min = Integer.valueOf(targetInfo.minCars);
         int sereve = Integer.valueOf(targetInfo.severe);

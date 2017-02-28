@@ -11,6 +11,7 @@ import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.knowledgeBase.datasets.DatasetFactory;
 import com.bupt.poirot.z3.deduce.Client;
 import com.bupt.poirot.z3.deduce.TargetInfo;
+import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -44,12 +45,14 @@ public class DataHandler extends AbstractHandler {
 
 		} else if (path.endsWith("deduce")) {
 			System.out.println("Begin deduce");
+			JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("result", "success");
+			response.getWriter().println(jsonObject.toString());
+			response.flushBuffer();
 			deal(params);
 			System.out.println("end deduce");
 		} else if (path.endsWith("dataset")) {
-			System.out.println("Begin deduce");
 			knowledgeManage(params);
-			System.out.println("end deduce");
 		}
 	}
 

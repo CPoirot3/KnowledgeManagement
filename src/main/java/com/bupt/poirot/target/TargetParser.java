@@ -21,11 +21,12 @@ public class TargetParser {
         PubSub pubsub = new PubSub();
         pubsub.subscribe(targetInfo.topic);
 
+        System.out.println("loadTargetKnowledge");
         scopeManager.addTarget(targetInfo.scope, targetInfo.topic); // 加入一个scope，用TargetKnowledge保存其IRI, topic is also domain
         LoadTargetKnowledge loadTargetKnowledge = new LoadTargetKnowledge();
         loadTargetKnowledge.load(context, knowledgeDeduceSolver, funcDeclMap);
-        System.out.println("mark");
 
+        System.out.println("parse target param to BoolExpr");
         TargetToBoolExpr targetToBoolExpr = new TargetToBoolExpr();
         List<Solver> list = targetToBoolExpr.parseTargetToBoolExpr(context, targetInfo); // responsible for init the solverMap
         solverMap.put(targetInfo.scope, list);

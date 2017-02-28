@@ -181,57 +181,11 @@ public class Deducer {
         return res;
     }
 
-
-//    // 根据gps坐标推理判断属于哪条路
-//    public static boolean isInTheRoad(double x, double y) {
-//        // get roadData
-//        RoadData roadData = null;
-//        double m = (roadData.x1 - x) * (roadData.y2 - y);
-//        double n = (roadData.x2 - x) * (roadData.y1 - y);
-//        double result = m * n;
-//        if (Math.abs(result) > 0.00000000001) {
-//            return false;
-//        }
-//
-//        if ((roadData.x1 - x) * (roadData.x2 - x) + (roadData.y1 - y) * (roadData.y2 - y) > 0) {
-//            return false;
-//        }
-//
-//        double ax = x - roadData.x1;
-//        double ay = y - roadData.y1;
-//
-//        double bx = roadData.x2 - roadData.x1;
-//        double by = roadData.y2 - roadData.x2;
-//
-//        double aLength = Math.sqrt(ax * ax + ay * ay);
-//        double bLength = Math.sqrt(bx * bx + by * by);
-//
-//        double cos = aLength * bLength / (ax * bx + ay * by);
-//        double sin = Math.sqrt(1.0 - cos * cos);
-//
-//        double distane = aLength * sin;
-//
-//        if (distane > 0.00000001) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
-    public static void main(String[] args) {
-        try {
-            long beginTime = formater.parse("2011/04/25 15:00:00").getTime();
-            System.out.println(beginTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void deduce(LinkedList<Incident> incidentBuffer, LinkedList<Knowledge> knowledges) {
         bufferQueue.clear();
         List<Solver> solverList = null;
         Iterator<Incident> iterator = incidentBuffer.iterator();
+
         while(iterator.hasNext()) {
             Incident incident = iterator.next();
             Knowledge knowledge = knowledges.removeFirst();
@@ -244,6 +198,7 @@ public class Deducer {
                     TargetKnowledge targetKnowledge = (TargetKnowledge) scopeManager.getKnowledge(s);
                     BoolExpr t = mkBoolExpr(targetKnowledge.getIRI(), trafficKnowdedge);
                     System.out.println("范围表达式 :" + t);
+
                     scopeDeduceSolver.push();
                     scopeDeduceSolver.add(context.mkNot(t));
                     if (scopeDeduceSolver.check() == Status.UNSATISFIABLE) { // 判断position是否在我们要推理的scope内
@@ -253,10 +208,11 @@ public class Deducer {
                         System.out.println("在推理范围内");
                         break;
                     } else {
-                        System.out.println("不在此目标推理范围");
+                        System.out.println("不在此目标推理范围 : " );
                     }
                     scopeDeduceSolver.pop();
                 }
+
                 if (!mark) { // do not deduce, not in the scope
                     continue;
                 }
@@ -265,18 +221,18 @@ public class Deducer {
             }
         }
 
+
+        // 推理一次
+        System.out.println("important deduce size : " + bufferQueue.size());
         for (String key : solverMap.keySet()) {
             solverList = solverMap.get(key);
             break;
         }
         if (solverList != null) {
-            System.out.println("size : " + bufferQueue.size());
-            // 推理一次
-            int size = bufferQueue.size();
-
-            for (int j = 0; j < Math.max(0, 5000 - size); j++) {
-                bufferQueue.add(new TrafficIncident("test", "test", "test", 10, 10, 10, true, 10, (byte)1));
-            }
+//            int size = bufferQueue.size();
+//            for (int j = 0; j < Math.max(0, 5000 - size); j++) {
+//                bufferQueue.add(new TrafficIncident("test", "test", "test", 10, 10, 10, true, 10, (byte)1));
+//            }
             System.out.println("size : " + bufferQueue.size());
             Document document = new Document();
             document.append("id", Integer.valueOf(targetInfo.id));
@@ -320,6 +276,47 @@ public class Deducer {
             MongoTool mongoTool = new MongoTool();
             mongoTool.flushToDatabase(document);
         }
-
     }
+
+
+
+
+
+
+    //    // 根据gps坐标推理判断属于哪条路
+//    public static boolean isInTheRoad(double x, double y) {
+//        // get roadData
+//        RoadData roadData = null;
+//        double m = (roadData.x1 - x) * (roadData.y2 - y);
+//        double n = (roadData.x2 - x) * (roadData.y1 - y);
+//        double result = m * n;
+//        if (Math.abs(result) > 0.00000000001) {
+//            return false;
+//        }
+//
+//        if ((roadData.x1 - x) * (roadData.x2 - x) + (roadData.y1 - y) * (roadData.y2 - y) > 0) {
+//            return false;
+//        }
+//
+//        double ax = x - roadData.x1;
+//        double ay = y - roadData.y1;
+//
+//        double bx = roadData.x2 - roadData.x1;
+//        double by = roadData.y2 - roadData.x2;
+//
+//        double aLength = Math.sqrt(ax * ax + ay * ay);
+//        double bLength = Math.sqrt(bx * bx + by * by);
+//
+//        double cos = aLength * bLength / (ax * bx + ay * by);
+//        double sin = Math.sqrt(1.0 - cos * cos);
+//
+//        double distane = aLength * sin;
+//
+//        if (distane > 0.00000001) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
+
 }
