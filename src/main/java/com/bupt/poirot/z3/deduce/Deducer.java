@@ -188,6 +188,7 @@ public class Deducer {
 
         while(iterator.hasNext()) {
             Incident incident = iterator.next();
+            current = ((TrafficIncident)incident).time;
             Knowledge knowledge = knowledges.removeFirst();
 
             if (knowledge != null && knowledge instanceof TrafficKnowdedge && incident instanceof TrafficIncident) { // 存在映射
@@ -252,7 +253,8 @@ public class Deducer {
                     TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
                     totalReal = z3Factory.plus(context, totalReal);
                     float s = trafficIncident1.speed;
-                    if (s < 10) {
+                    System.out.println(s);
+                    if (s < 7) {
                         validReal = z3Factory.plus(context, validReal);
                     }
                 }
@@ -260,8 +262,16 @@ public class Deducer {
                 solver.add(context.mkEq(valid, validReal));
                 solver.add(context.mkEq(total, totalReal));
 
+                System.out.println(validReal);
+                System.out.println(totalReal);
+
+
                 if (solver.check() == Status.UNSATISFIABLE) {
+                    for (Expr expr : solver.getAssertions()) {
+                        System.out.println(expr);
+                    }
                     document.append("value", ResultManager.get(i));
+                    document.append("state", ResultManager.nameMap.get(i));
                     solver.pop();
                     sat = true;
                     break;
@@ -271,6 +281,7 @@ public class Deducer {
 
             if (!sat) {
                 document.append("value", ResultManager.get(-1));
+                document.append("state", ResultManager.nameMap.get(-1));
             }
             System.out.println(document);
             MongoTool mongoTool = new MongoTool();

@@ -113,13 +113,13 @@ public class Client {
 
 			TrafficIncident firstTrafficIncident = (TrafficIncident)incidentBuffer.peekFirst();
 
-			if (trafficIncident.time - firstTrafficIncident.time > 3600 * 1000) {
+			if (trafficIncident.time - firstTrafficIncident.time >= 3600 * 1000) {
 				System.out.println("deduce once, the deduce queue size is : " + incidentBuffer.size());
 				deduce(incidentBuffer); // 遍历但不删除
 
 				// 删除一段时间的数据
 				long last = ((TrafficIncident)incidentBuffer.peekFirst()).time;
-				while (!incidentBuffer.isEmpty() && ((TrafficIncident)incidentBuffer.peekFirst()).time - last < 600 * 1000) {
+				while (!incidentBuffer.isEmpty() && ((TrafficIncident)incidentBuffer.peekFirst()).time - last < 300 * 1000) {
 					incidentBuffer.removeFirst();
 				}
 			}

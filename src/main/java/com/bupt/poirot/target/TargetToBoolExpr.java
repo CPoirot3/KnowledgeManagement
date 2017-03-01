@@ -28,7 +28,7 @@ public class TargetToBoolExpr {
                 ctx.mkGe(b, ctx.mkInt(min)));
         System.out.println(targetExpr);
         Solver solverOfSevere = ctx.mkSolver();
-        solverOfSevere.add(targetExpr);
+        solverOfSevere.add(ctx.mkNot(targetExpr));
         list.add(solverOfSevere);
 
         // 拥堵
@@ -36,7 +36,7 @@ public class TargetToBoolExpr {
                 ctx.mkGe(b, ctx.mkInt(min)));
         System.out.println(targetExpr2);
         Solver solverOfMedium = ctx.mkSolver();
-        solverOfMedium.add(targetExpr2);
+        solverOfMedium.add(ctx.mkNot(targetExpr2));
         list.add(solverOfMedium);
 
         // 轻微拥堵
@@ -44,7 +44,7 @@ public class TargetToBoolExpr {
                 ctx.mkGe(b, ctx.mkInt(min)));
         System.out.println(targetExpr3);
         Solver solverOfSlight = ctx.mkSolver();
-        solverOfSlight.add(targetExpr3);
+        solverOfSlight.add(ctx.mkNot(targetExpr3));
         list.add(solverOfSlight);
 
         return list;
