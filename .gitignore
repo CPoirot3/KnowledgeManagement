@@ -8,6 +8,8 @@ run/*
 .classpath
 .project
 bin
+bin/
+build/
 *.class
 *.txt
 .gradle/*

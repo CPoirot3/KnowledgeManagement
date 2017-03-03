@@ -243,43 +243,48 @@ public class Deducer {
             for (int i = 0; i < solverList.size(); i++) {
                 Solver solver = solverList.get(i);
                 solver.push();
-                ArithExpr valid = context.mkIntConst("valid");
-                ArithExpr total = context.mkIntConst("carsInRoad");
+                ArithExpr valid = context.mkRealConst("valid");
+                ArithExpr total = context.mkRealConst("carsInRoad");
                 ArithExpr totalReal = context.mkReal(0,1);
                 ArithExpr validReal =  context.mkReal(0,1);
                 Z3Factory z3Factory = new Z3Factory();
 
+                int totalCars = 0;
+                int validCars = 0;
                 for (Incident incident1 : bufferQueue) {
                     TrafficIncident trafficIncident1 = (TrafficIncident) incident1;
                     totalReal = z3Factory.plus(context, totalReal);
                     float s = trafficIncident1.speed;
-                    System.out.println(s);
+                    totalCars++;
                     if (s < 7) {
                         validReal = z3Factory.plus(context, validReal);
+                        validCars++;
                     }
                 }
 
                 solver.add(context.mkEq(valid, validReal));
                 solver.add(context.mkEq(total, totalReal));
-
-                System.out.println(validReal);
-                System.out.println(totalReal);
+                for (Expr expr : solver.getAssertions()) {
+                    System.out.println(expr);
+                }
+                System.out.println("valid cars : " + validCars);
+                System.out.println("total cars : " + totalCars);
 
 
                 if (solver.check() == Status.UNSATISFIABLE) {
-                    for (Expr expr : solver.getAssertions()) {
-                        System.out.println(expr);
-                    }
                     document.append("value", ResultManager.get(i));
                     document.append("state", ResultManager.nameMap.get(i));
                     solver.pop();
                     sat = true;
                     break;
+                } else {
+                    System.out.println(solver.getModel());
                 }
                 solver.pop();
             }
 
             if (!sat) {
+                System.out.println("No one target sat");
                 document.append("value", ResultManager.get(-1));
                 document.append("state", ResultManager.nameMap.get(-1));
             }

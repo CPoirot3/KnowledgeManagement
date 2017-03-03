@@ -113,7 +113,7 @@ public class Client {
 
 			TrafficIncident firstTrafficIncident = (TrafficIncident)incidentBuffer.peekFirst();
 
-			if (trafficIncident.time - firstTrafficIncident.time >= 3600 * 1000) {
+			if (trafficIncident.time - firstTrafficIncident.time >= 1200 * 1000) {
 				System.out.println("deduce once, the deduce queue size is : " + incidentBuffer.size());
 				deduce(incidentBuffer); // 遍历但不删除
 
