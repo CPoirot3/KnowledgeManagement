@@ -41,8 +41,6 @@ public class DataHandler extends AbstractHandler {
 			System.out.println(doc.toJson());
 			response.getWriter().println(doc.toJson());
 			response.flushBuffer();
-			System.out.println("end get result from mongodb");
-
 		} else if (path.endsWith("deduce")) {
 			System.out.println("Begin deduce");
 			JsonObject jsonObject = new JsonObject();
