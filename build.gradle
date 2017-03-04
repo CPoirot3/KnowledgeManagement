@@ -41,6 +41,16 @@ dependencies {
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
 
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-configuration2
+	compile group: 'org.apache.commons', name: 'commons-configuration2', version: '2.1.1'
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-configuration2
+	compile group: 'org.apache.commons', name: 'commons-configuration2', version: '2.1.1'
+	// https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+
+
 	// https://mvnrepository.com/artifact/com.espertech/esper
 	compile group: 'com.espertech', name: 'esper', version: '5.5.0'
 
@@ -65,9 +75,6 @@ dependencies {
 	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.23'
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
 	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
-
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
 
 	// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 	compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.4.2'
