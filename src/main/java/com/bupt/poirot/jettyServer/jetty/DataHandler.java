@@ -1,6 +1,9 @@
 package com.bupt.poirot.jettyServer.jetty;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -9,14 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.bupt.poirot.data.mongodb.MongoTool;
 import com.bupt.poirot.knowledgeBase.datasets.DatasetFactory;
+import com.bupt.poirot.knowledgeBase.fusekiLibrary.FetchModelClient;
 import com.bupt.poirot.z3.deduce.Client;
 import com.bupt.poirot.z3.deduce.TargetInfo;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class DataHandler extends AbstractHandler {
 	@Override
@@ -51,7 +58,82 @@ public class DataHandler extends AbstractHandler {
 			System.out.println("end deduce");
 		} else if (path.endsWith("dataset")) {
 			knowledgeManage(params);
+		} else if (path.endsWith("updateScope")) {
+			JsonObject jsonObject = getScopeResult();
+			response.setContentType("text/html; charset=UTF-8");
+			response.getWriter().println(jsonObject.toString());
+			response.flushBuffer();
+		} else if (path.endsWith("updateConcept")) {
+			JsonObject jsonObject = getConceptResult();
+			response.setContentType("text/html; charset=UTF-8");
+			response.getWriter().println(jsonObject.toString());
+			response.flushBuffer();
 		}
+	}
+
+	private JsonObject getScopeResult() {
+		JsonObject jsonObject = new JsonObject();
+		JsonArray jsonArray = new JsonArray();
+
+		String host = "http://localhost:3030";
+		String domain = "traffic";
+		FetchModelClient fetchModelClient = new FetchModelClient();
+		String sparqlString = fetchModelClient.constructSparqlQueryFromPredicateAndObject("rdf:type", "<http://www.semanticweb.org/traffic-ontology#Road>");
+		InputStream inputStream = fetchModelClient.fetch(host, domain, sparqlString);
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder stringBuilder = new StringBuilder();
+		String line;
+		try {
+			while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject scope = new JSONObject(stringBuilder.toString());
+		System.out.println("res " + scope);
+
+		JSONArray resArray = scope.getJSONObject("results").getJSONArray("bindings");
+		for (int i = 0; i < resArray.length(); i++) {
+			String value = resArray.getJSONObject(i).getJSONObject("subject").getString("value");
+			jsonArray.add(value);
+		}
+		jsonObject.add("scopes", jsonArray);
+		return jsonObject;
+	}
+
+	private JsonObject getConceptResult() {
+		JsonObject jsonObject = new JsonObject();
+		JsonArray jsonArray = new JsonArray();
+
+		System.out.println("begin");
+		String host = "http://localhost:3030";
+		String domain = "traffic";
+		FetchModelClient fetchModelClient = new FetchModelClient();
+		String sparqlString = fetchModelClient.constructSparqlQueryFromPredicateAndObject("rdf:type", "<http://www.w3.org/2002/07/owl#Class>");
+		InputStream inputStream = fetchModelClient.fetch(host, domain, sparqlString);
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder stringBuilder = new StringBuilder();
+		String line;
+		try {
+			while ((line = bufferedReader.readLine()) != null) {
+				stringBuilder.append(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		JSONObject scope = new JSONObject(stringBuilder.toString());
+		System.out.println("res " + scope);
+
+		JSONArray resArray = scope.getJSONObject("results").getJSONArray("bindings");
+		for (int i = 0; i < resArray.length(); i++) {
+			String value = resArray.getJSONObject(i).getJSONObject("subject").getString("value");
+			jsonArray.add(value);
+		}
+		jsonObject.add("scopes", jsonArray);
+		return jsonObject;
 	}
 
 	private void knowledgeManage(Map<String, String[]> params) {

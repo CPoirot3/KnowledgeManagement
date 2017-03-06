@@ -13,19 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.microsoft.z3.ArithExpr;
-import com.microsoft.z3.BoolExpr;
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Expr;
-import com.microsoft.z3.FuncDecl;
-import com.microsoft.z3.Params;
-import com.microsoft.z3.Quantifier;
-import com.microsoft.z3.Solver;
-import com.microsoft.z3.Sort;
-import com.microsoft.z3.Status;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,7 +21,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 
-import com.bupt.poirot.z3.parseAndDeduceOWL.OWLToZ3;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -55,8 +42,8 @@ public class FetchModelClient {
 
 	public InputStream fetch(String domain) {
 
-		String host = "http://localhost:3030/";
-		String query = ""; // TODO
+		String host = "http://localhost:3030";
+		String query = "";
 
 		InputStream inputStream = fetch(host, domain, query);
 		return inputStream;
@@ -93,10 +80,11 @@ public class FetchModelClient {
 		try {
 			URI uri = null;
 			if (sparqlQuery == null || sparqlQuery.length() == 0) {
-				sparqlQuery = constructSparqlQueryFromSubject("<http://www.co-ode.org/ontologies/ont.owl#福中路>");
-				uri = new URI(host + "/" + domain + "?singleFilterQuery=" + URLEncoder.encode(sparqlQuery, "utf-8"));
+//				sparqlQuery = constructSparqlQueryFromSubject("<http://www.semanticweb.org/traffic-ontology#福中路>");
+				sparqlQuery = constructSparqlQueryFromPredicateAndObject("rdf:type", "<http://www.semanticweb.org/traffic-ontology#Road>");
+				uri = new URI(host + "/" + domain + "?query=" + URLEncoder.encode(sparqlQuery, "utf-8"));
 			} else {
-				uri = new URI(host + "/" + domain + "?singleFilterQuery=" + URLEncoder.encode(sparqlQuery, "utf-8"));
+				uri = new URI(host + "/" + domain + "?query=" + URLEncoder.encode(sparqlQuery, "utf-8"));
 			}
 			System.out.println("uri : " + uri.toString());
 			httpGet.setURI(uri);
@@ -111,8 +99,16 @@ public class FetchModelClient {
 		return inputStream;
 	}
 
+	public String constructSparqlQueryFromPredicateAndObject(String predicate, String object) {
+		String sparqlQueryString = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT ?subject\n" +
+				"WHERE {\n" +
+				"?subject " + predicate + " " + object + "\t\n" +
+				"}";
+		return sparqlQueryString;
+	}
+
 	public String constructSparqlQueryFromSubject(String subject) {
-		String sparqlQueryString = "SELECT ?subject ?predicate ?object\n" +
+		String sparqlQueryString = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT ?subject ?predicate ?object\n" +
 				"WHERE {\n" +
 				subject + " ?predicate ?object  \t\n" +
 				"}";
@@ -120,7 +116,7 @@ public class FetchModelClient {
 	}
 
 	public String constructSparqlQueryFromPredicate(String predicate) {
-		String sparqlQueryString = "SELECT ?subject ?predicate ?object\n" +
+		String sparqlQueryString = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> SELECT ?subject ?predicate ?object\n" +
 				"WHERE {\n" +
 				"  ?subject " + predicate + " ?object  \t\n" +
 				"}";
@@ -128,7 +124,8 @@ public class FetchModelClient {
 	}
 
 	public String constructSparqlQueryFromObject(String object) {
-		String sparqlQueryString = "SELECT ?subject ?predicate ?object\n" +
+		String sparqlQueryString = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
+				"SELECT ?subject ?predicate ?object\n" +
 				"WHERE {\n" +
 				"  ?subject ?predicate " + object + "  \t\n" +
 				"}";
@@ -137,7 +134,7 @@ public class FetchModelClient {
 
 	public static void main(String[] args) {
 		FetchModelClient fetchModel = new FetchModelClient();
-		InputStream inputStream2 = fetchModel.fetch("shenzhen");
+		InputStream inputStream2 = fetchModel.fetch("traffic");
 		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream2))) {
 			String line;
 			StringBuilder jsonString = new StringBuilder();
