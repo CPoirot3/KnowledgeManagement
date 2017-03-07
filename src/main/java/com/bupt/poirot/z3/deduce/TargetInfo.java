@@ -13,7 +13,7 @@ public class TargetInfo {
     public TargetInfo(int id, String topic, String scope, String minCars, String severe, String conjection, String slightConjection, String speed) {
         this.id = id;
         this.topic = topic;
-        this.scope = scope.split("#")[1];
+        this.scope = scope.contains("#") ? scope.split("#")[1] : scope;
         this.minCars = minCars;
         this.severe = severe;
         this.conjection = conjection;

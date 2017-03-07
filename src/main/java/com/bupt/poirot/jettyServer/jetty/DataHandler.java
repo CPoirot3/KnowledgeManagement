@@ -49,11 +49,11 @@ public class DataHandler extends AbstractHandler {
 			response.getWriter().println(doc.toJson());
 			response.flushBuffer();
 		} else if (path.endsWith("deduce")) {
-			System.out.println("Begin deduce");
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("result", "success");
 			response.getWriter().println(jsonObject.toString());
 			response.flushBuffer();
+			System.out.println("Begin deduce");
 			deal(params);
 			System.out.println("end deduce");
 		} else if (path.endsWith("dataset")) {
