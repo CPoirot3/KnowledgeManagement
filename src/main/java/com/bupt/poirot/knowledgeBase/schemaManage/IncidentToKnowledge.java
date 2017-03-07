@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,9 +24,12 @@ public class IncidentToKnowledge {
 
     public void load() {
         File roadSchemaDir = new File(Config.getString("road_schema_dir"));
+        System.out.println(roadSchemaDir.listFiles().length);
         for (File file : roadSchemaDir.listFiles()) {
+            System.out.println(file.getAbsolutePath());
             parse(file);
         }
+        System.out.println("load json data done");
     }
 
     private void parse(File file) {
@@ -39,7 +43,9 @@ public class IncidentToKnowledge {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(new Date());
         JSONObject jsonObject = new JSONObject(jsonString.toString());
+        System.out.println(new Date());
         String roadName = jsonObject.getString("name");
         JSONArray positions = jsonObject.getJSONArray("positions");
         for (int i = 0; i < positions.length(); i++) {
@@ -55,8 +61,8 @@ public class IncidentToKnowledge {
             String iri = iriManage.knowledgeNameWithSeparator(name);
             TrafficKnowdedge p = new TrafficKnowdedge(iri,"traffic", name, x1, y1, x2, y2);
             positionStringMap.put(p, p.name);
-//            System.out.println(positionStringMap.get(p));
-//            System.out.println(p.getIRI() + " " + p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
+            System.out.println(positionStringMap.get(p));
+            System.out.println(p.getIRI() + " " + p.name + " " + x1 + " " + y1 + " " + x2 + " " + y2);
         }
     }
 

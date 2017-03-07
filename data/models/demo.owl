@@ -209,6 +209,12 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#红岭中路">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#红岭中路p1"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#红岭中路p2"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#红岭中路p3"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#红岭中路p4"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#红岭中路p5"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#红岭中路p6"/>
     </owl:NamedIndividual>
     
 
@@ -289,6 +295,11 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#翠竹路">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#翠竹路p1"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#翠竹路p2"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#翠竹路p3"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#翠竹路p4"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#翠竹路p5"/>
     </owl:NamedIndividual>
     
 
@@ -357,6 +368,11 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/traffic-ontology#金田路">
         <rdf:type rdf:resource="http://www.semanticweb.org/traffic-ontology#Road"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#金田路p1"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#金田路p2"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#金田路p3"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#金田路p4"/>
+        <hasPosition rdf:resource="http://www.semanticweb.org/traffic-ontology#金田路p5"/>
     </owl:NamedIndividual>
     
 

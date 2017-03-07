@@ -44,14 +44,12 @@ public class Client {
 	public Client(TargetInfo targetInfo) {
 		System.out.println("construct client");
 		this.context = new Context();
-		System.out.println("construct client mid");
-
 		this.deducer = new Deducer(context, targetInfo);
 
 		timeSolver = context.mkSolver();
 		buffer = new LinkedList<>();
 		incidentBuffer = new LinkedList<>();
-		System.out.println("construct client end");
+		System.out.println("construct client done");
 	}
 
 	public void workflow() {

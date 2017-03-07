@@ -27,6 +27,7 @@ public class LoadTargetKnowledge {
         try {
             BoolExpr knoweledgeInFormOfZ3 = owlToZ3.parseFromStream(context, new FileInputStream(file), funcDeclMap);
             knowledgeDeduceSolver.add(knoweledgeInFormOfZ3);
+            System.out.println("parse owl to z3 done");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -45,7 +45,7 @@ public class Deducer {
     long current;
 
     public Deducer(Context context, TargetInfo targetInfo) {
-        System.out.println("Construct Deducer :");
+        System.out.println("Construct Deducer begin");
         this.context = context;
         this.targetInfo = targetInfo;
         this.scopeDeduceSolver = context.mkSolver();
@@ -55,6 +55,7 @@ public class Deducer {
         scopeManager = new ScopeManager();
         funcDeclMap = new HashMap<>();
         init();
+        System.out.println("Construct Deducer done");
     }
 
     public void init() {
