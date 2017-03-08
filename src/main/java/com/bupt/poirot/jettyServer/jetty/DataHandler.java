@@ -19,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -156,7 +157,7 @@ public class DataHandler extends AbstractHandler {
 		return document;
 	}
 
-	private void deal(Map<String, String[]> params) {
+	private boolean deal(Map<String, String[]> params) {
 		ParamsParse paramsParse = new ParamsParse(params);
 		int id = Integer.valueOf(paramsParse.infos.get("id"));
 		System.out.println("id : " + id);
@@ -176,8 +177,22 @@ public class DataHandler extends AbstractHandler {
 		System.out.println("speed : " + speed);
 //		System.out.println(id + " " + scope + " " + topic + " " + minCars + " " + a + " " + b + " " + c + " " + speed);
 
-		TargetInfo targetInfo = new TargetInfo(id, topic, scope, min, a, b, c, speed);
-	    Client client = new Client(targetInfo);
-	    client.workflow();
+		if (valid(id, topic, scope, min, a, b, c, speed)) {
+			TargetInfo targetInfo = new TargetInfo(id, topic, scope, min, a, b, c, speed);
+			Client client = new Client(targetInfo);
+			client.workflow();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean valid(int id, String topic, String scope, String min, String a, String b, String c, String speed) {
+		if (StringUtils.isBlank(scope) || StringUtils.isBlank(a) || StringUtils.isBlank(b)
+				|| StringUtils.isBlank(c) || StringUtils.isBlank(speed)) {
+			System.out.println("params is not complete");
+			return false;
+		}
+		return true;
 	}
 }
