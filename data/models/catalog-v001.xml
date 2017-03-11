@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/hui.chen/ontologies/2016/11/untitled-ontology-37" uri="incident.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/hui.chen/ontologies/2016/11/untitled-ontology-37" uri="incident_schema.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="demo.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="for_demo.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="for_test.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="ForDemo.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="model_rdf.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="new_model.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="Test.owl"/>
-        <uri id="Automatically generated entry, Timestamp=1489039213893" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="Untitled.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1489128785749" name="duplicate:http://www.semanticweb.org/hui.chen/ontologies/2016/11/untitled-ontology-37" uri="incident.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1489128785749" name="duplicate:http://www.semanticweb.org/hui.chen/ontologies/2016/11/untitled-ontology-37" uri="incident_schema.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1489128785749" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="demo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1489128785749" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="model_rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1489128785749" name="duplicate:http://www.semanticweb.org/traffic-ontology" uri="new_model.owl"/>
     </group>
 </catalog>
